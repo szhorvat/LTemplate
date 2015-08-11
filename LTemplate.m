@@ -144,8 +144,7 @@ validateFun[LFun[name_, args_List, ret_]] :=
 
 (* must be called within validateTemplate, uses location *)
 validateType[Integer|Real|Complex|"Boolean"|"UTF8String"] := True
-validateType[{Integer|Real|Complex, _Integer?Positive}] := True
-validateType[{Integer|Real|Complex, _Integer?Positive, "Shared"|"Manual"|"Constant"|Automatic}] := True
+validateType[{Integer|Real|Complex, (_Integer?Positive) | Verbatim[_], PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 validateReturnType["Void"] := True
