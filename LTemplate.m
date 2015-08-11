@@ -100,40 +100,65 @@ normalizeTemplate[t_] := t
 
 
 ValidTemplateQ::template = "`` is not a valid template. Templates must follow the syntax LTemplate[name, {class1, class2, \[Ellipsis]}].";
-ValidTemplateQ::class    = "`` is not a valid class. Classes must follow the syntax LClass[name, {fun1, fun2, \[Ellipsis]}.";
-ValidTemplateQ::fun      = "`` is not a valid function. Functions must follow the syntax LFun[name, {arg1, arg2, \[Ellipsis]}, ret].";
-ValidTemplateQ::string   = "String expected instead of ``";
-ValidTemplateQ::name     = "\"``\" is not a valid name. Names must start with a letter and may only contain letters and digits.";
-ValidTemplateQ::type     = "`` is not a valid type.";
+ValidTemplateQ::class    = "In ``: `` is not a valid class. Classes must follow the syntax LClass[name, {fun1, fun2, \[Ellipsis]}.";
+ValidTemplateQ::fun      = "In ``: `` is not a valid function. Functions must follow the syntax LFun[name, {arg1, arg2, \[Ellipsis]}, ret].";
+ValidTemplateQ::string   = "In ``: String expected instead of ``";
+ValidTemplateQ::name     = "In ``: `` is not a valid name. Names must start with a letter and may only contain letters and digits.";
+ValidTemplateQ::type     = "In ``: `` is not a valid type.";
+ValidTemplateQ::dupclass = "In ``: Class `` appears more than once.";
+ValidTemplateQ::dupfun   = "In ``: Function `` appears more than once.";
 
 ValidTemplateQ[tem_] := validateTemplate@normalizeTemplate[tem]
 
-validateName[name_] := Message[ValidTemplateQ::string, name]
-validateName[name_String] :=
-    If[StringMatchQ[name, RegularExpression["[a-zA-Z][a-zA-Z0-9]*"]],
-      True,
-      Message[ValidTemplateQ::name, name]; False
+
+validateTemplate[tem_] := (Message[ValidTemplateQ::template, tem]; False)
+validateTemplate[LTemplate[name_String, classes_List]] :=
+    Block[{classlist = {}, location = "template"},
+      validateName[name] && (And @@ validateClass /@ classes)
     ]
 
-(* TODO: check for duplicate classes or duplicate functions *)
+(* must be called within validateTemplate, uses location, classlist *)
+validateClass[class_] := (Message[ValidTemplateQ::class, location, class]; False)
+validateClass[LClass[name_, funs_List]] :=
+    Block[{funlist = {}, inclass, nameValid},
+      nameValid = validateName[name];
+      If[MemberQ[classlist, name], Message[ValidTemplateQ::dupclass, location, name]; Return[False]];
+      AppendTo[classlist, name];
+      inclass = name;
+      Block[{location = StringTemplate["class ``"][inclass]},
+        nameValid && (And @@ validateFun /@ funs)
+      ]
+    ]
 
-validateTemplate[tem_] := (Message[ValidTemplateQ::class, tem]; False)
-validateTemplate[LTemplate[name_String, classes_List]] := validateName[name] && (And @@ validateClass /@ classes)
-
-validateClass[class_] := (Message[ValidTemplateQ::class, class]; False)
-validateClass[LClass[name_, funs_List]] := validateName[name] && (And @@ validateFun /@ funs)
-
-validateFun[fun_] := (Message[ValidTemplateQ::fun, fun]; False)
+(* must be called within validateClass, uses location, funlist *)
+validateFun[fun_] := (Message[ValidTemplateQ::fun, location, fun]; False)
 validateFun[LFun[name_, args_List, ret_]] :=
-  validateName[name] && (And @@ validateType /@ args) && validateReturnType[ret]
+    Block[{nameValid},
+      nameValid = validateName[name];
+      If[MemberQ[funlist, name], Message[ValidTemplateQ::dupfun, location, name]; Return[False]];
+      AppendTo[funlist, name];
+      Block[{location = StringTemplate["class ``, function ``"][inclass, name]},
+        nameValid && (And @@ validateType /@ args) && validateReturnType[ret]
+      ]
+    ]
 
+(* must be called within validateTemplate, uses location *)
 validateType[Integer|Real|Complex|"Boolean"|"UTF8String"] := True
 validateType[{Integer|Real|Complex, _Integer?Positive}] := True
 validateType[{Integer|Real|Complex, _Integer?Positive, "Shared"|"Manual"|"Constant"|Automatic}] := True
-validateType[type_] := (Message[ValidTemplateQ::type, type]; False)
+validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 validateReturnType["Void"] := True
 validateReturnType[type_] := validateType[type]
+
+(* must be called within validateTemplate, uses location *)
+validateName[name_] := Message[ValidTemplateQ::string, location, name]
+validateName[name_String] :=
+    If[StringMatchQ[name, RegularExpression["[a-zA-Z][a-zA-Z0-9]*"]],
+      True,
+      Message[ValidTemplateQ::name, location, name]; False
+    ]
+
 
 
 (***********  Translate template to library code  **********)
