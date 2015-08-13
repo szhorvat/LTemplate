@@ -32,6 +32,11 @@ Make::usage = "Make[class] creates an instance of class.";
 
 Begin["`Private`"] (* Begin Private Context *)
 
+(* Set up package global variables *)
+
+$packageDirectory = DirectoryName[$InputFileName];
+$includeDirectory = $packageDirectory;
+
 (* Mathematica version checks *)
 
 minVersion = {10.0, 0};
@@ -421,7 +426,7 @@ CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] :=
 
 compileTemplate[tem: LTemplate[libname_String, classes_], opt : OptionsPattern[CreateLibrary]] :=
   Catch[
-    Module[{sourcefile, code, classlist, print},
+    Module[{sourcefile, code, includeDirs, classlist, print},
       print[args__] := Apply[Print, Style[#, Darker@Blue]& /@ {args}];
 
       print["Current directory is: ", Directory[]];
@@ -437,7 +442,8 @@ compileTemplate[tem: LTemplate[libname_String, classes_], opt : OptionsPattern[C
       If[FileExistsQ[sourcefile], print[sourcefile, " already exists and will be overwritten."]];
       Export[sourcefile, code, "String"];
       print["Compiling library code ..."];
-      CreateLibrary[{sourcefile}, libname, opt]
+      includeDirs = Append[OptionValue["IncludeDirectories"], $includeDirectory];
+      CreateLibrary[{sourcefile}, libname, "IncludeDirectories" -> includeDirs, Sequence@@FilterRules[{opt}, Except["IncludeDirectories"]]]
     ],
     compileTemplate
   ]
