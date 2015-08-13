@@ -371,8 +371,9 @@ loadTemplate[tem : LTemplate[libname_String, classes_]] := (
     loadClass[libname] /@ classes;
   )
 
-loadClass[libname_][LClass[classname_String, funs_]] := (
-    Clear[#]& @ symName[classname];
+loadClass[libname_][tem : LClass[classname_String, funs_]] := (
+    ClearAll[#]& @ symName[classname];
+    With[{sym = Symbol@symName[classname]}, MessageName[sym, "usage"] = formatTemplate[tem]];
     loadFun[libname, classname] /@ funs
   )
 
@@ -395,7 +396,7 @@ LoadTemplate[tem_] :=
 unloadTemplate[LTemplate[libname_String, classes_]] :=
   Module[{res},
     res = LibraryUnload[libname];
-    Clear /@ symName /@ Cases[classes, LClass[name_, __] :> name];
+    ClearAll /@ symName /@ Cases[classes, LClass[name_, __] :> name];
     res
   ]
 
@@ -414,6 +415,8 @@ Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symNa
 
 
 (********************* Compile template ********************)
+
+(* TODO: Allow for specifying additional implementation files. *)
 
 CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] :=
   With[{t = normalizeTemplate[tem]},
@@ -452,12 +455,18 @@ compileTemplate[tem: LTemplate[libname_String, classes_], opt : OptionsPattern[C
 (****************** Pretty print a template ********************)
 
 FormatTemplate[template_] :=
-  Block[{LFun, LClass, LTemplate},
+    Block[{LFun, LClass, LTemplate},
     (* If the template is invalid, we report errors but we do not abort.
        Pretty-printing is still useful for invalid templates to facilitate finding mistakes.
      *)
-    ValidTemplateQ[template];
-    With[{tem = normalizeTemplate[template]},
+      ValidTemplateQ[template];
+      formatTemplate@normalizeTemplate[template]
+    ]
+
+
+formatTemplate[template_] :=
+  Block[{LFun, LClass, LTemplate},
+    With[{tem = template /. normalizeTypesRules},
       LFun[name_, args_, ret_] := StringTemplate["`` ``(``)"][ret, name, StringJoin@Riffle[ToString /@ args, ", "]];
       LClass[name_, funs_] := StringTemplate["class ``:\n``"][name, StringJoin@Riffle["    " <> ToString[#] & /@ funs, "\n"]];
       LTemplate[name_, classes_] := StringTemplate["template ``\n\n"][name] <> Riffle[ToString /@ classes, "\n\n"];
