@@ -1,0 +1,871 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["LTemplate Tutorial", "Title"],
+
+Cell["speed up writing LibraryLink code", "Subtitle"],
+
+Cell[CellGroupData[{
+
+Cell["What is LTemplate?", "Section"],
+
+Cell[TextData[{
+ "LTemplate is a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " package that reduces the amount of boilerplate code to write when \
+extending ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " through LibraryLink."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Introduction through examples", "Section"],
+
+Cell["Let\[CloseCurlyQuote]s load the package first.", "Text"],
+
+Cell[BoxData[
+ RowBox[{"<<", "LTemplate`"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["A basic example", "Subsection"],
+
+Cell["\<\
+LTemplate needs the current directory to contain the user written code.  For \
+this example, we will create these files in the temporary directory.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+
+Cell["\<\
+LTemplate uses C++ and requires working with classes instead of top level \
+functions.  After compiling and loading a template, classes can be \
+instantiated as managed library expressions.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+  "code", "=", 
+   "\"\<\n#include \\\"LTemplate.h\\\"\n\nclass Demo {\npublic:\n\t// basic \
+example\n\tmint addTwo(mint a, mint b) { return a+b; }\n\n\t// trace of real \
+matrix\n\tdouble trace(mma::RealMatrixRef mat) {\n\t\tif (mat.rows() != \
+mat.cols())\n\t\t\tthrow mma::LibraryError(\\\"trace: Square matrix expected.\
+\\\");\n\t\tdouble sum = 0.0;\n\t\tfor (mint i=0; i < mat.rows(); ++i) {\n\t\t\
+\tsum += mat(i,i);\n\t\t\tmma::check_abort(); // allow for user aborts\n\t\t}\
+\n\t\treturn sum;\n\t}\n\n\t// demo for user abort\n\tvoid hang() { \n\t\t\
+mma::print(\\\"Going into infinite loop ... try aborting now.\\\");\n\t\t\
+while(true) { \n\t\t\tsleep(1); \n\t\t\tmma::check_abort(); \n\t\t} \n\t}\n};\
+\n\>\""}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<Demo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  "]"}]], "Input"],
+
+Cell[BoxData["\<\"Demo.h\"\>"], "Output"]
+}, Open  ]],
+
+Cell["\<\
+Let us now define a template which mirrors the structure of this class:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LTemplate", "[", 
+    RowBox[{"\"\<DemoLib\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"LClass", "[", 
+       RowBox[{"\"\<Demo\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"LFun", "[", 
+           RowBox[{"\"\<addTwo\>\"", ",", 
+            RowBox[{"{", 
+             RowBox[{"Integer", ",", "Integer"}], "}"}], ",", "Integer"}], 
+           "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"LFun", "[", 
+           RowBox[{"\"\<trace\>\"", ",", 
+            RowBox[{"{", 
+             RowBox[{"{", 
+              RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "Real"}], "]"}], 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"LFun", "[", 
+           RowBox[{"\"\<hang\>\"", ",", 
+            RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}]}], 
+         "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], 
+      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input"],
+
+Cell[TextData[{
+ "The type specifications are identical to the ones used in \
+LibraryFunctionLoad[], except for tensors with arbitrary element types (",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", 
+    RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]]],
+ "), which are disallowed."
+}], "Text"],
+
+Cell["Templates can be formatted for readability:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"template", "//", "FormatTemplate"}]], "Input"],
+
+Cell[BoxData["\<\"template DemoLib\\n\\nclass Demo:\\n    Integer \
+addTwo(Integer, Integer)\\n    Real trace({Real, 2})\\n    Void hang()\"\>"], \
+"Output"]
+}, Open  ]],
+
+Cell["\<\
+Let\[CloseCurlyQuote]s generate code from the template and compile it.  \
+CompileTemplate has the same options as CreateLibrary.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{",", " ", 
+    RowBox[{"\"\<ShellCommandFunction\>\"", " ", "\[Rule]", " ", "Print"}], 
+    ",", " ", 
+    RowBox[{"\"\<ShellOutputFunction\>\"", "\[Rule]", "Print"}]}], "*)"}], 
+  "\[IndentingNewLine]", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"DemoLib\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["DemoLib", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/DemoLib.dylib\"\>"], "Output"]
+}, Open  ]],
+
+Cell["You can inspect the generated code:", "Text"],
+
+Cell[BoxData[
+ RowBox[{"SystemOpen", "[", "\"\<LTemplate-DemoLib.cpp\>\"", "]"}]], "Input"],
+
+Cell["Automatically load the functions defined in the template:", "Text"],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+
+Cell["\<\
+This creates a DemoLib symbol within LTemplate`Classes`, which has associated \
+definitions that allow calling member functions and is also the base symbol \
+for managed library expressions.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LTemplate`Classes`*"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"class Demo:\\n    Integer addTwo(Integer, Integer)\\n    Real \
+trace({Real, 2})\\n    Void hang()\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-4c510a9f-f4c9-48fe-94be-07475a238e46"]
+}, Open  ]],
+
+Cell["Let\[CloseCurlyQuote]s create an instance of the class ...", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"demo", "=", 
+  RowBox[{"Make", "[", "Demo", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Demo", "[", "1", "]"}]], "Output"]
+}, Open  ]],
+
+Cell["... and call the defined member functions:", "Text"],
+
+Cell["Add two numbers:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"demo", "@", 
+  RowBox[{"\"\<addTwo\>\"", "[", 
+   RowBox[{"123", ",", "234"}], "]"}]}]], "Input"],
+
+Cell[BoxData["357"], "Output"]
+}, Open  ]],
+
+Cell["Trace of a real matrix:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"demo", "@", 
+  RowBox[{"\"\<trace\>\"", "[", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData["2.0657298513779105`"], "Output"]
+}, Open  ]],
+
+Cell["\<\
+Error checking and reporting is supported through throwing a LibraryError \
+exception.  Messages can otherwise be issued using mma::message() or \
+mma::print().\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"demo", "@", 
+  RowBox[{"\"\<trace\>\"", "[", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "6"}], "}"}]}], "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"trace: Square matrix expected.\\\"\\)\
+\[NoBreak]\"\>"}]], "Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+User aborts are supported too, though mma::check_abort().  This function will \
+never return so you\[CloseCurlyQuote]ll need to use Evaluation \[Rule] Abort \
+Evaluation.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"demo", "@", 
+  RowBox[{"\"\<hang\>\"", "[", "]"}]}]], "Input"],
+
+Cell[BoxData["\<\"Going into infinite loop ... try aborting now.\"\>"], \
+"Print"],
+
+Cell[BoxData["$Aborted"], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["A solution to returning multiple values", "Subsection"],
+
+Cell[TextData[{
+ "LibraryLink doesn\[CloseCurlyQuote]t support returning multiple \
+heterogeneous results (e.g. two tensors of different dimensions) without \
+using a ",
+ StyleBox["MathLink",
+  FontSlant->"Italic"],
+ " connection.  A workaround is having separate functions for \
+initialization/computation, retrieving each piece of result and finally \
+cleanup.  Doing all this manually is very tedious, but LTemplate makes it \
+quite easy."
+}], "Text"],
+
+Cell["\<\
+Let\[CloseCurlyQuote]s look at a simple example which computes the mean and \
+variance of a list in a single loop, then returns them separately.  We need \
+one function for the computation, and one function for each return.  We also \
+need to store results before they\[CloseCurlyQuote]re returned.  This storage \
+space would normally need to be cleaned up manually, but since LTemplate uses \
+managed library expressions, this will be taken care of automatically.  We \
+include a constructor and destructor that report when they are called, to \
+demonstrate automatic cleanup.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+  "code", "=", 
+   "\"\<\nclass MeanVariance {\n\tdouble m, v;\n\npublic:\n\tMeanVariance() { \
+mma::print(\\\"constructor called\\\"); }\n\t~MeanVariance() { \
+mma::print(\\\"destructor called\\\"); }\n\n\tvoid compute(mma::RealTensorRef \
+vec) {\n\t\tdouble sum = 0.0, sum2 = 0.0;\n\t\tfor (mint i=0; i < \
+vec.length(); ++i) {\n\t\t\tsum  += vec[i];\n\t\t\tsum2 += vec[i]*vec[i];\n\t\
+\t}\n\t\tm = sum / vec.length();\n\t\tv = sum2 / vec.length() - m*m;\n\t}\n\n\
+\tdouble mean() { return m; }\n\tdouble variance() { return v; }\n};\n\>\""}],
+   ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<MeanVariance.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  "]"}]], "Input"],
+
+Cell[BoxData["\<\"MeanVariance.h\"\>"], "Output"]
+}, Open  ]],
+
+Cell["\<\
+If a template contains only a single class, LTemplate can be omitted.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<MeanVariance\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<compute\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "_", ",", "\"\<Constant\>\""}], "}"}], "}"}], 
+         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<mean\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "Real"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<variance\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "Real"}], "]"}]}], "\[IndentingNewLine]", 
+      "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"MeanVariance\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["MeanVariance", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"LTemplate-MeanVariance.cpp\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" already exists and will be overwritten.\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["LTemplate-MeanVariance.cpp", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" already exists and will be overwritten.", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/MeanVariance.dylib\"\>"], "Output"]
+}, Open  ]],
+
+Cell["\<\
+Setting up all of this manually would have taken a lot of time and a lot of \
+boilerplate code.  This class with only three functions required 102 lines of \
+code:\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Length", "@", 
+  RowBox[{"StringSplit", "[", 
+   RowBox[{
+    RowBox[{"Import", "[", 
+     RowBox[{"\"\<LTemplate-MeanVariance.cpp\>\"", ",", "\"\<String\>\""}], 
+     "]"}], ",", "\"\<\\n\>\""}], "]"}]}]], "Input"],
+
+Cell[BoxData["102"], "Output"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[TextData[{
+ "On the ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " side, we use Module to create temporary objects that live only until all \
+results are retrieved:"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"meanVariance", "[", "arr_", "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"obj", "=", 
+      RowBox[{"Make", "[", "MeanVariance", "]"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"obj", "@", 
+      RowBox[{"\"\<compute\>\"", "[", "arr", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"obj", "@", 
+        RowBox[{"\"\<mean\>\"", "[", "]"}]}], ",", 
+       RowBox[{"obj", "@", 
+        RowBox[{"\"\<variance\>\"", "[", "]"}]}]}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input"],
+
+Cell["Let\[CloseCurlyQuote]s test it:", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"list", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", "100"}], "]"}]}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"meanVariance", "[", "list", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"constructor called\"\>"], "Print"],
+
+Cell[BoxData["\<\"destructor called\"\>"], "Print"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.5080857598031503`", ",", "0.07924119881789504`"}], 
+  "}"}]], "Output"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Reference", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Mathematica", "Subsection"],
+
+Cell["Refer to usage messages until this section is finished.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LTemplate`*"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicModuleBox[{Typeset`open$$ = True}, 
+  PaneSelectorBox[{False->
+   RowBox[{
+    OpenerBox[Dynamic[Typeset`open$$],
+     ImageSize->Small], 
+    StyleBox["LTemplate`", "InfoHeading"]}], True->GridBox[{
+     {
+      RowBox[{
+       OpenerBox[Dynamic[Typeset`open$$],
+        ImageSize->Small], 
+       StyleBox["LTemplate`", "InfoHeading"]}]},
+     {GridBox[{
+        {
+         ButtonBox["CompileTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "CompileTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LClass",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "LClass", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LoadTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "LoadTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["Make",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "Make", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["UnloadTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "UnloadTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"]},
+        {
+         ButtonBox["FormatTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "FormatTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LFun",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "LFun", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "LTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["TranslateTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "TranslateTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["ValidTemplateQ",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+            "ValidTemplateQ", "LTemplate`"}},
+          ButtonNote->"LTemplate`"]}
+       },
+       DefaultBaseStyle->"InfoGrid",
+       GridBoxItemSize->{"Columns" -> {{
+            Scaled[0.19]}}}]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
+   Dynamic[Typeset`open$$],
+   ImageSize->Automatic]]], "Print", "InfoCell"],
+
+Cell[BoxData[
+ StyleBox["\<\"LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \
+\[Ellipsis]}] represents a library template.\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["C++", "Subsection"],
+
+Cell["Basic LibraryLink types are mapped to C++ equivalents as", "Text"],
+
+Cell["\<\
+Integer\t\t\tmint
+Real\t\t\tdouble
+Complex\t\t\tmma::complex_t  =  std::complex<double>
+\"UTF8String\"\tchar *
+\"Boolean\"\t\tbool\
+\>", "Program"],
+
+Cell["Tensors are mapped as", "Text"],
+
+Cell["\<\
+{Integer, _}\tIntTensorRef     =  TensorRef<mint>
+{Real, _}\t\tRealTensorRef    =  TensorRef<double>
+{Complex, _}\tComplexTensorRef =  TensorRef<mma::complex_t>\
+\>", "Program"],
+
+Cell[TextData[{
+ StyleBox["MatrixRef<T>", "Program"],
+ " makes it easier to work with 2D tensors by providing direct indexing \
+though ",
+ StyleBox["operator (mint i, mint j)", "Program"],
+ "."
+}], "Text"],
+
+Cell[TextData[{
+ "The tensor types are simple wrappers around ",
+ StyleBox["MTensor", "Program"],
+ ", and act as references, i.e. multiple ",
+ StyleBox["TensorRef", "Program"],
+ " may point to the same LibraryLink tensor."
+}], "Text"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{1065, 708},
+WindowMargins->{{44, Automatic}, {39, Automatic}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
+2015)",
+StyleDefinitions->"Default.nb"
+]
