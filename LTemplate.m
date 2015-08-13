@@ -336,8 +336,8 @@ types = Dispatch@{
 
 symName[classname_String] := "LTemplate`Classes`" <> classname
 
-loadTemplate[LTemplate[libname_String, classes_]] := (
-    Quiet@LibraryUnload[libname];
+loadTemplate[tem : LTemplate[libname_String, classes_]] := (
+    Quiet@unloadTemplate[tem];
     loadClass[libname] /@ classes;
   )
 
