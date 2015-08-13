@@ -179,7 +179,7 @@ public:
 class RealMatrixRef : public RealTensorRef {
     mint nrows, ncols;
 public:
-    RealMatrixRef(const IntTensorRef &t) : RealTensorRef(t) {
+    RealMatrixRef(const RealTensorRef &t) : RealTensorRef(t) {
         if (rank() != 2)
             throw LibraryError("RealMatrixRef: Matrix expected.");
         nrows = dimensions()[0];
