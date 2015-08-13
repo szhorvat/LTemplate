@@ -56,8 +56,11 @@ If[Not@OrderedQ[{version, maxVersion}],
 ]
 
 
-LibraryFunction::noinst = "Managed library expression instance does not exist."
+LibraryFunction::noinst = "Managed library expression instance does not exist.";
 
+LTemplate::info    = "``";
+LTemplate::warning = "``";
+LTemplate::error   = "``";
 
 (***************** SymbolicC extensions *******************)
 
@@ -306,7 +309,7 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
             },
             {excType, excName},
             {
-              (* TODO: report error string *)
+              CCall["mma::message", {CMember[excName, "message"], "mma::ERROR"}],
               CReturn[CMember[excName, "errcode"]]
             }
           ],
@@ -345,9 +348,9 @@ types = Dispatch@{
   Complex -> {"std::complex<double>", "mma::getComplex", "mma::setComplex"},
   "Boolean" -> {"bool", "MArgument_getBoolean", "MArgument_setBoolean"},
   "UTF8String" -> {"char *", "MArgument_getUTF8String", "MArgument_setUTF8String"},
-  {Integer, __} -> {"mma::IntTensor", "mma::getTensor<mma::IntTensor>", "mma:setTensor<mma::IntTensor>"},
-  {Real, __} -> {"mma::RealTensor", "mma::getTensor<mma::RealTensor>", "mma::setTensor<mma::RealTensor>"},
-  {Complex, __} -> {"mma::ComplexTensor", "mma::getTensot<mma::ComplexTensor>", "mma::setTensor<mma::ComplexTensor>"}
+  {Integer, __} -> {"mma::IntTensorRef", "mma::getTensor", "mma:setTensor"},
+  {Real, __} -> {"mma::RealTensorRef", "mma::getTensor", "mma::setTensor"},
+  {Complex, __} -> {"mma::ComplexTensorRef", "mma::getTensor", "mma::setTensor"}
 };
 
 
