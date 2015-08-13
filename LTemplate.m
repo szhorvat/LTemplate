@@ -91,7 +91,8 @@ normalizeTypesRules = Dispatch@{
   Verbatim[_Integer] -> Integer,
   Verbatim[_Real] -> Real,
   Verbatim[_Complex] -> Complex,
-  Verbatim[True|False] -> "Boolean"
+  Verbatim[True|False] -> "Boolean",
+  Verbatim[False|True] -> "Boolean"
 };
 
 normalizeTemplate[c : LClass[name_, funs_]] := normalizeTemplate[LTemplate[name, {c}]]
