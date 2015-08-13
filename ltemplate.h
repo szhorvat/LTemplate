@@ -13,6 +13,9 @@ namespace mma {
 
 extern WolframLibraryData libData;
 
+typedef std::complex<double> complex_t;
+
+
 struct LibraryError {
     const char *message;
     int errcode;
@@ -73,14 +76,24 @@ void print(const char *msg) {
 }
 
 
+template<typename T> T * getData(MTensor t);
+
+template<> mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
+template<> double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
+template<> complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
+
+
+template<typename T>
 class TensorRef {
-    MTensor t; // reminder: MTensor is a pointer type
+    MTensor t; // reminder: MTensor is a pointer type    
     const mint len;
     const std::vector<mint> dims;
+    T *tensor_data;
 
 public:
     TensorRef(const MTensor &mt) :
         t(mt),
+        tensor_data(getData<T>(t)),
         len(libData->MTensor_getFlattenedLength(t)),
         dims(libData->MTensor_getDimensions(t), libData->MTensor_getDimensions(t) + libData->MTensor_getRank(t))
     {
@@ -96,7 +109,6 @@ public:
     void disown() { libData->MTensor_disown(t); }
     void disownAll() { libData->MTensor_disownAll(t); }
 
-
     TensorRef clone() {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
@@ -105,48 +117,49 @@ public:
     }
 
     const std::vector<mint> & dimensions() const { return dims; }
+
+    T *data() { return tensor_data; }
+    T & operator [] (mint i) { return tensor_data[i]; }
+    const T & operator [] (mint i) const { return tensor_data[i]; }
+
+    T *begin() { return data(); }
+    T *end() { return begin() + length(); }
 };
 
 
-class IntTensorRef : public TensorRef {
-    mint *tensor_data;
-
-public:
-    IntTensorRef(const TensorRef &t) :
-        TensorRef(t),
-        tensor_data(libData->MTensor_getIntegerData(tensor()))
-    {
-        // empty
-    }
-
-    mint *data() { return tensor_data; }
-    mint & operator [] (mint i) { return tensor_data[i]; }
-    const mint & operator [] (mint i) const { return tensor_data[i]; }
-
-    mint *begin() { return data(); }
-    mint *end() { return begin() + length(); }
-};
+typedef TensorRef<mint>      IntTensorRef;
+typedef TensorRef<double>    RealTensorRef;
+typedef TensorRef<complex_t> ComplexTensorRef;
 
 
-class IntMatrixRef : public IntTensorRef {
+template<typename T>
+class MatrixRef : public TensorRef<T> {
     mint nrows, ncols;
+
 public:
-    IntMatrixRef(const IntTensorRef &t) : IntTensorRef(t) {
-        if (rank() != 2)
-            throw LibraryError("IntMatrixRef: Matrix expected.");
-        nrows = dimensions()[0];
-        ncols = dimensions()[1];
+    MatrixRef(const TensorRef<T> &tr) : TensorRef<T>(tr)
+    {
+        if (TensorRef<T>::rank() != 2)
+            throw LibraryError("MatrixRef: Matrix expected.");
+        nrows = TensorRef<T>::dimensions()[0];
+        ncols = TensorRef<T>::dimensions()[1];
     }
 
     mint rows() const { return nrows; }
     mint cols() const { return ncols; }
 
-    mint & operator () (mint i, mint j) { return (*this)[nrows*i + j]; }
-    const mint & operator () (mint i, mint j) const { return (*this)[nrows*i + j]; }
+    T & operator () (mint i, mint j) { return (*this)[nrows*i + j]; }
+    const T & operator () (mint i, mint j) const { return (*this)[nrows*i + j]; }
 };
 
 
-IntMatrixRef makeIntMatrix(mint nrow, mint ncol) {
+typedef MatrixRef<mint>      IntMatrixRef;
+typedef MatrixRef<double>    RealMatrixRef;
+typedef MatrixRef<complex_t> ComplexMatrixRef;
+
+
+template<typename T>
+MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     MTensor t = NULL;
     mint dims[2];
     dims[0] = nrow;
@@ -154,65 +167,27 @@ IntMatrixRef makeIntMatrix(mint nrow, mint ncol) {
     int err = libData->MTensor_new(MType_Integer, 2, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
-    return IntTensorRef(t);
+    return TensorRef<T>(t);
 }
-
-
-class RealTensorRef : public TensorRef {
-    double *tensor_data;
-
-public:
-    RealTensorRef(const TensorRef &t) :
-        TensorRef(t),
-        tensor_data(libData->MTensor_getRealData(tensor()))
-    {
-        // empty
-    }
-
-    double *data() { return tensor_data; }
-    double & operator [] (mint i) { return tensor_data[i]; }
-    const double & operator [] (mint i) const { return tensor_data[i]; }
-
-    double *begin() { return data(); }
-    double *end() { return begin() + length(); }
-};
-
-
-class RealMatrixRef : public RealTensorRef {
-    mint nrows, ncols;
-public:
-    RealMatrixRef(const RealTensorRef &t) : RealTensorRef(t) {
-        if (rank() != 2)
-            throw LibraryError("RealMatrixRef: Matrix expected.");
-        nrows = dimensions()[0];
-        ncols = dimensions()[1];
-    }
-
-    mint rows() const { return nrows; }
-    mint cols() const { return ncols; }
-
-    double & operator () (mint i, mint j) { return (*this)[nrows*i + j]; }
-    const double & operator () (mint i, mint j) const { return (*this)[nrows*i + j]; }
-};
-
 
 
 // Functions for getting and setting arguments and return values
 
-TensorRef getTensor(MArgument marg) { return TensorRef(MArgument_getMTensor(marg)); }
+template<typename T>
+TensorRef<T> getTensor(MArgument marg) { return TensorRef<T>(MArgument_getMTensor(marg)); }
 
-void setTensor(MArgument marg, TensorRef &val) { MArgument_setMTensor(marg, val.tensor()); }
+template<typename T>
+void setTensor(MArgument marg, TensorRef<T> &val) { MArgument_setMTensor(marg, val.tensor()); }
 
-std::complex<double> getComplex(MArgument marg) {
+
+complex_t getComplex(MArgument marg) {
     mcomplex c = MArgument_getComplex(marg);
-    return std::complex<double>(c.ri[0], c.ri[1]);
+    return complex_t(c.ri[0], c.ri[1]);
 }
 
-void setComplex(MArgument marg, std::complex<double> val) {
-    mcomplex c;
-    c.ri[0] = val.real();
-    c.ri[1] = val.imag();
-    MArgument_setComplex(marg, c);
+void setComplex(MArgument marg, complex_t val) {
+    mcomplex *c = reinterpret_cast<mcomplex *>(&val);
+    MArgument_setComplex(marg, *c);
 }
 
 
