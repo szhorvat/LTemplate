@@ -78,6 +78,15 @@ GenerateCode[CDeclareAssign[typeArg_, idArg_, rhs_], opts : OptionsPattern[]] :=
 
 GenerateCode[CInlineCode[arg_], opts : OptionsPattern[]] := GenerateCode[arg, opts]
 
+(* CTryCatch[tryCode, catchArg, catchCode] represents try { tryCode } catch (catchArg) { catchCode } *)
+
+GenerateCode[ CTryCatch[try_, arg_, catch_] , opts: OptionsPattern[]] :=
+  Module[{},
+    "try " <> GenerateCode[CBlock[try], opts] <> "\n" <>
+    "catch (" <> SymbolicC`Private`formatArgument[arg, opts] <> ")\n" <>
+    GenerateCode[CBlock[catch], opts]
+  ]
+
 
 (****************** Generic template processing ****************)
 
@@ -173,6 +182,9 @@ TranslateTemplate[tem_] :=
 
 
 libFunArgs = {{"WolframLibraryData", "libData"}, {"mint", "Argc"}, {"MArgument *", "Args"}, {"MArgument", "Res"}};
+
+excType = "const mma::LibraryError &";
+excName = "libErr";
 
 
 varPrefix = "var";
@@ -283,11 +295,20 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
             "if (`1`.find(id) == `1`.end()) { libData->Message(\"noinst\"); return LIBRARY_FUNCTION_ERROR; }"
           ][collectionName[classname]],
           "",
-          transArg /@ args,
-          "",
-          transRet[
-            ret,
-            CPointerMember[CArray[collectionName[classname], "id"], CCall[name, var /@ Range@Length[args]]]
+          CTryCatch[
+            {
+              transArg /@ args,
+              "",
+              transRet[
+                ret,
+                CPointerMember[CArray[collectionName[classname], "id"], CCall[name, var /@ Range@Length[args]]]
+              ]
+            },
+            {excType, excName},
+            {
+              (* TODO: report error string *)
+              CReturn[CMember[excName, "errcode"]]
+            }
           ],
           "",
           CReturn["LIBRARY_NO_ERROR"]
