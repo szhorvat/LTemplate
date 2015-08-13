@@ -75,11 +75,13 @@ void print(const char *msg) {
 
 class TensorRef {
     MTensor t; // reminder: MTensor is a pointer type
+    const mint len;
     const std::vector<mint> dims;
 
 public:
     TensorRef(const MTensor &mt) :
         t(mt),
+        len(libData->MTensor_getFlattenedLength(t)),
         dims(libData->MTensor_getDimensions(t), libData->MTensor_getDimensions(t) + libData->MTensor_getRank(t))
     {
         // empty
@@ -88,7 +90,7 @@ public:
     MTensor tensor() { return t; }
 
     mint rank() const { return libData->MTensor_getRank(t); }
-    mint length() const { return libData->MTensor_getFlattenedLength(t); }
+    mint length() const { return len; }
 
     void free() { libData->MTensor_free(t); }
     void disown() { libData->MTensor_disown(t); }
