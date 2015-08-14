@@ -141,6 +141,8 @@ public:
     void disown() { libData->MTensor_disown(t); }
     void disownAll() { libData->MTensor_disownAll(t); }
 
+    mint shareCount() const { return libData->MTensor_shareCount(t); }
+
     TensorRef clone() {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
