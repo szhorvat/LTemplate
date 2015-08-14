@@ -19,9 +19,13 @@ LClass::usage = "LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class with
 LFun::usage = "LFun[name, {arg1, arg2, \[Ellipsis]}, ret] represents a class member function with the given name, argument types and return type.";
 
 TranslateTemplate::usage = "TranslateTemplate[template] translates the template into C++ code.";
+
 LoadTemplate::usage = "LoadTemplate[template] loads the library defined by the template. The library must already be compiled.";
 UnloadTemplate::usage = "UnloadTemplate[template] attempts to unload the library defined by the template.";
-CompileTemplate::usage = "CompileTemplate[template] compiles the library defined by the template. Required source files must be present in the current directory.";
+
+CompileTemplate::usage =
+    "CompileTemplate[template] compiles the library defined by the template. Required source files must be present in the current directory.\n" <>
+    "CompileTemplate[template, {file1, \[Ellipsis]}] includes additional source files in the compilation."
 
 FormatTemplate::usage = "FormatTemplate[template] formats the template in an easy to read way.";
 
@@ -419,18 +423,17 @@ Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symNa
 
 (********************* Compile template ********************)
 
-(* TODO: Allow for specifying additional .cpp implementation files. *)
-
-CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] :=
+CompileTemplate[tem_, sources_List, opt : OptionsPattern[CreateLibrary]] :=
   With[{t = normalizeTemplate[tem]},
     If[validateTemplate[t],
-      compileTemplate[t, opt],
+      compileTemplate[t, sources, opt],
       $Failed
     ]
   ]
 
+CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] := CompileTemplate[tem, {}, opt]
 
-compileTemplate[tem: LTemplate[libname_String, classes_], opt : OptionsPattern[CreateLibrary]] :=
+compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : OptionsPattern[CreateLibrary]] :=
   Catch[
     Module[{sourcefile, code, includeDirs, classlist, print},
       print[args__] := Apply[Print, Style[#, Darker@Blue]& /@ {args}];
@@ -448,8 +451,8 @@ compileTemplate[tem: LTemplate[libname_String, classes_], opt : OptionsPattern[C
       If[FileExistsQ[sourcefile], print[sourcefile, " already exists and will be overwritten."]];
       Export[sourcefile, code, "String"];
       print["Compiling library code ..."];
-      includeDirs = Append[OptionValue["IncludeDirectories"], $includeDirectory];
-      CreateLibrary[{sourcefile}, libname, "IncludeDirectories" -> includeDirs, Sequence@@FilterRules[{opt}, Except["IncludeDirectories"]]]
+      includeDirs = Flatten[{OptionValue["IncludeDirectories"], $includeDirectory}];
+      CreateLibrary[Flatten[{sourcefile, sources}], libname, "IncludeDirectories" -> includeDirs, Sequence@@FilterRules[{opt}, Except["IncludeDirectories"]]]
     ],
     compileTemplate
   ]
