@@ -1,16 +1,16 @@
 (* Mathematica Package *)
-(* Created by http://wlplugin.halirutan.de/ *)
+(* Created by IntelliJ IDEA and http://wlplugin.halirutan.de/ *)
 
-(* :Title: LTemplate     *)
-(* :Context: LTemplate`  *)
-(* :Author: szhorvat     *)
-(* :Date: 2015-08-03       *)
+(* :Title:   LTemplate    *)
+(* :Context: LTemplate`   *)
+(* :Author:  szhorvat     *)
+(* :Date:    2015-08-0    *)
 
 (* :Package Version: 0.1 *)
-(* :Mathematica Version: *)
+(* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
-(* :Keywords: LibraryLink, C++, Template *)
-(* :Discussion: *)
+(* :Keywords: LibraryLink, C++, Template, Code generation *)
+(* :Discussion: This package simplifies writing LibraryLink code by auto-generating the boilerplate code. *)
 
 BeginPackage["LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
 
@@ -66,6 +66,7 @@ LibraryFunction::noinst = "Managed library expression instance does not exist.";
 LTemplate::info    = "``";
 LTemplate::warning = "``";
 LTemplate::error   = "``";
+
 
 (***************** SymbolicC extensions *******************)
 
@@ -160,6 +161,8 @@ validateFun[LFun[name_, args_List, ret_]] :=
       ]
     ]
 
+(* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
+
 (* must be called within validateTemplate, uses location *)
 validateType[Integer|Real|Complex|"Boolean"|"UTF8String"] := True
 validateType[{Integer|Real|Complex, (_Integer?Positive) | Verbatim[_], PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic}] := True
@@ -209,10 +212,9 @@ setupCollection[classname_String] := {
   StringTemplate["std::map<mint, `` *> ``"][classname, collectionName[classname]],
   "",
   CFunction["DLLEXPORT void", managerName[classname], {"WolframLibraryData libData", "mbool mode", "mint id"},
-CInlineCode@StringTemplate[
+CInlineCode@StringTemplate[ (* TODO: Check if id exists, use assert *)
 "\
 if (mode == 0) { // create
-  // TODO check id doesn't exist
   `collection`[id] = new `class`();
 } else {  // destroy
   if (`collection`.find(id) == `collection`.end()) {
@@ -297,7 +299,7 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
     {
       CFunction["extern \"C\" DLLEXPORT int", funName[classname][name], libFunArgs,
         {
-          (* TODO: check Argc is correct *)
+          (* TODO: check Argc is correct, use assert *)
           "const mint id = MArgument_getInteger(Args[0])",
           CInlineCode@StringTemplate[
             "if (`1`.find(id) == `1`.end()) { libData->Message(\"noinst\"); return LIBRARY_FUNCTION_ERROR; }"
@@ -362,7 +364,8 @@ types = Dispatch@{
 
 (**************** Load library ***************)
 
-(* TODO: Break out loading and compilation for easy distribution *)
+(* TODO: Break out loading and compilation into separate files
+   This is to make it easy to include them in other projects *)
 
 symName[classname_String] := "LTemplate`Classes`" <> classname
 
@@ -416,7 +419,7 @@ Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symNa
 
 (********************* Compile template ********************)
 
-(* TODO: Allow for specifying additional implementation files. *)
+(* TODO: Allow for specifying additional .cpp implementation files. *)
 
 CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] :=
   With[{t = normalizeTemplate[tem]},
