@@ -1,3 +1,7 @@
+/** \file
+ *  Include this header before classes to be used with the LTemplate Mathematica package
+ */
+
 #ifndef LTEMPLATE_H
 #define LTEMPLATE_H
 
@@ -11,11 +15,16 @@
 
 namespace mma {
 
+/// Global WolframLibraryData object for accessing the LibraryLink API.
 extern WolframLibraryData libData;
 
 typedef std::complex<double> complex_t;
 
 
+/** Throwing this returns to Mathematica immediately.
+ *  \param reported in Mathematica as LTemplate::error
+ *  \param used as the LibraryFunction exit code.
+ */
 struct LibraryError {
     const char *message;
     int errcode;
@@ -24,15 +33,21 @@ struct LibraryError {
 };
 
 
+/// Check for and honour user aborts.
 inline void check_abort() {
     if (libData->AbortQ())
         throw LibraryError();
 }
 
 
+/// For use in the message() function.
 enum MessageType { INFO, WARNING, ERROR, ASSERT };
 
 
+/** Issue a Mathematica message
+ * \param msg the text of the message
+ * \param type determines the message tag which will be used
+ */
 inline void message(const char *msg, MessageType type = INFO) {
     if (msg == NULL)
         return;
@@ -67,6 +82,7 @@ inline void message(const char *msg, MessageType type = INFO) {
 }
 
 
+/// Call Mathematica's Print[].
 inline void print(const char *msg) {
     MLINK link = libData->getMathLink(libData);
     MLPutFunction(link, "EvaluatePacket", 1);
@@ -98,6 +114,7 @@ template<> double * getData(MTensor t) { return libData->MTensor_getRealData(t);
 template<> complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
 
 
+/// Wrapper class for MTensor pointers
 template<typename T>
 class TensorRef {
     MTensor t; // reminder: MTensor is a pointer type    
@@ -146,6 +163,7 @@ typedef TensorRef<double>    RealTensorRef;
 typedef TensorRef<complex_t> ComplexTensorRef;
 
 
+/// Wrapper class for MTensor pointers to rank 2 tensors
 template<typename T>
 class MatrixRef : public TensorRef<T> {
     mint nrows, ncols;
@@ -171,6 +189,7 @@ typedef MatrixRef<double>     RealMatrixRef;
 typedef MatrixRef<complex_t>  ComplexMatrixRef;
 
 
+/// Wrapper class for MTensor pointers to rank 2 tensors
 template<typename T>
 class CubeRef : public TensorRef<T> {
     mint nrows, ncols, nslices;
@@ -198,6 +217,7 @@ typedef CubeRef<double>     RealCubeRef;
 typedef CubeRef<complex_t>  ComplexCubeRef;
 
 
+/// Creates a rank 3 tensor of the given dimensions
 template<typename T>
 inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
     MTensor t = NULL;
@@ -212,6 +232,7 @@ inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
 }
 
 
+/// Creates a rank 2 tensor of the given dimensions
 template<typename T>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     MTensor t = NULL;
@@ -225,6 +246,7 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
 }
 
 
+/// Creates a vector (rank 1 tensor) of the given length
 template<typename T>
 inline MatrixRef<T> makeVector(mint len) {
     MTensor t = NULL;
