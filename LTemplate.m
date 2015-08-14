@@ -25,7 +25,7 @@ UnloadTemplate::usage = "UnloadTemplate[template] attempts to unload the library
 
 CompileTemplate::usage =
     "CompileTemplate[template] compiles the library defined by the template. Required source files must be present in the current directory.\n" <>
-    "CompileTemplate[template, {file1, \[Ellipsis]}] includes additional source files in the compilation."
+    "CompileTemplate[template, {file1, \[Ellipsis]}] includes additional source files in the compilation.";
 
 FormatTemplate::usage = "FormatTemplate[template] formats the template in an easy to read way.";
 
@@ -46,7 +46,7 @@ $includeDirectory = $packageDirectory;
 minVersion = {10.0, 0};
 maxVersion = {10.2, 0};
 version    = {$VersionNumber, $ReleaseNumber}
-versionString[{major_, minor_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", minor}]
+versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 
 If[Not@OrderedQ[{minVersion, version}],
   Print["LTemplate requires at least Mathematica version " <> versionString[minVersion] <> ".  Aborting."];
@@ -70,12 +70,14 @@ LibraryFunction::noinst = "Managed library expression instance does not exist.";
 LTemplate::info    = "``";
 LTemplate::warning = "``";
 LTemplate::error   = "``";
-LTemplate::assert  = "Assertion `` failed."
+LTemplate::assert  = "Assertion `` failed.";
 
 
 (***************** SymbolicC extensions *******************)
 
-(* CDeclareAssign[type, var, value] represents   type var = value;   *)
+(* CDeclareAssign[type, var, value] represents
+     type var = value;
+*)
 
 SymbolicC`Private`IsCExpression[ _CDeclareAssign ] := True
 
@@ -92,9 +94,11 @@ GenerateCode[CDeclareAssign[typeArg_, idArg_, rhs_], opts : OptionsPattern[]] :=
 
 GenerateCode[CInlineCode[arg_], opts : OptionsPattern[]] := GenerateCode[arg, opts]
 
-(* CTryCatch[tryCode, catchArg, catchCode] represents try { tryCode } catch (catchArg) { catchCode } *)
+(* CTryCatch[tryCode, catchArg, catchCode] represents
+     try { tryCode } catch (catchArg) { catchCode }
+*)
 
-GenerateCode[ CTryCatch[try_, arg_, catch_] , opts: OptionsPattern[]] :=
+GenerateCode[CTryCatch[try_, arg_, catch_], opts: OptionsPattern[]] :=
   Module[{},
     "try " <> GenerateCode[CBlock[try], opts] <> "\n" <>
     "catch (" <> SymbolicC`Private`formatArgument[arg, opts] <> ")\n" <>
@@ -202,16 +206,15 @@ libFunArgs = {{"WolframLibraryData", "libData"}, {"mint", "Argc"}, {"MArgument *
 excType = "const mma::LibraryError &";
 excName = "libErr";
 
-
 varPrefix = "var";
 var[k_] := varPrefix <> IntegerString[k]
-
 
 includeName[classname_String] := classname <> ".h"
 
 collectionName[classname_String] := classname <> "_collection"
 
 managerName[classname_String] := classname <> "_manager"
+
 
 setupCollection[classname_String] := {
   StringTemplate["std::map<mint, `` *> ``"][classname, collectionName[classname]],
@@ -233,6 +236,7 @@ if (mode == 0) { // create
   ],
   ""
 }
+
 
 registerClassManager[classname_String] :=
     CBlock[{
@@ -372,7 +376,17 @@ types = Dispatch@{
 (* TODO: Break out loading and compilation into separate files
    This is to make it easy to include them in other projects *)
 
+
 symName[classname_String] := "LTemplate`Classes`" <> classname
+
+
+LoadTemplate[tem_] :=
+    With[{t = normalizeTemplate[tem]},
+      If[validateTemplate[t],
+        loadTemplate[t],
+        $Failed
+      ]
+    ]
 
 loadTemplate[tem : LTemplate[libname_String, classes_]] := (
     Quiet@unloadTemplate[tem];
@@ -392,21 +406,6 @@ loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
     ]
   ]
 
-LoadTemplate[tem_] :=
-    With[{t = normalizeTemplate[tem]},
-      If[validateTemplate[t],
-        loadTemplate[t],
-        $Failed
-      ]
-    ]
-
-
-unloadTemplate[LTemplate[libname_String, classes_]] :=
-  Module[{res},
-    res = LibraryUnload[libname];
-    ClearAll /@ symName /@ Cases[classes, LClass[name_, __] :> name];
-    res
-  ]
 
 UnloadTemplate[tem_] :=
     With[{t = normalizeTemplate[tem]},
@@ -415,6 +414,13 @@ UnloadTemplate[tem_] :=
         $Failed
       ]
     ]
+
+unloadTemplate[LTemplate[libname_String, classes_]] :=
+  Module[{res},
+    res = LibraryUnload[libname];
+    ClearAll /@ symName /@ Cases[classes, LClass[name_, __] :> name];
+    res
+  ]
 
 
 Make[class_Symbol] := Make@SymbolName[class]
@@ -469,7 +475,6 @@ FormatTemplate[template_] :=
       ValidTemplateQ[template];
       formatTemplate@normalizeTemplate[template]
     ]
-
 
 formatTemplate[template_] :=
   Block[{LFun, LClass, LTemplate},
