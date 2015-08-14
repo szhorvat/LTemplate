@@ -837,18 +837,34 @@ Complex\t\t\tmma::complex_t  =  std::complex<double>
 Cell["Tensors are mapped as", "Text"],
 
 Cell["\<\
-{Integer, _}\tIntTensorRef     =  TensorRef<mint>
-{Real, _}\t\tRealTensorRef    =  TensorRef<double>
-{Complex, _}\tComplexTensorRef =  TensorRef<mma::complex_t>\
+{Integer, _}\tIntTensorRef      =  TensorRef<mint>
+{Real, _}\t\tRealTensorRef     =  TensorRef<double>
+{Complex, _}\tComplexTensorRef  =  TensorRef<mma::complex_t>\
 \>", "Program"],
 
 Cell[TextData[{
  StyleBox["MatrixRef<T>", "Program"],
- " makes it easier to work with 2D tensors by providing direct indexing \
-though ",
+ " and ",
+ StyleBox["CubeRef<T>", "Program"],
+ " are subclasses of ",
+ StyleBox["TensorRef<T>", "Program"],
+ " and make it easier to work with 2D and 3D tensors by providing direct \
+indexing though ",
  StyleBox["operator (mint i, mint j)", "Program"],
+ ". Any tensor can be treated as a flat vector and indexed using ",
+ StyleBox["operator []", "Program"],
  "."
 }], "Text"],
+
+Cell["\<\
+{Integer, 2}\tIntMatrixRef      =  MatrixRef<mint>
+{Real, 2}\t\tRealMatrixRef     =  MatrixRef<double>
+{Complex, 2}\tComplexMatrixRef  =  MatrixRef<mma::complex_t>
+
+{Integer, 3}\tIntCubeRef      =  CubeRef<mint>
+{Real, 3}\t\tRealCubeRef     =  CubeRef<double>
+{Complex, 3}\tComplexCubeRef  =  CubeRef<mma::complex_t>\
+\>", "Program"],
 
 Cell[TextData[{
  "The tensor types are simple wrappers around ",
@@ -856,9 +872,18 @@ Cell[TextData[{
  ", and act as references, i.e. multiple ",
  StyleBox["TensorRef", "Program"],
  " may point to the same LibraryLink tensor."
-}], "Text"]
+}], "Text"],
+
+Cell["Some useful functions are", "Text"],
+
+Cell["\<\
+void check_abort();
+void message(const char *msg, MessageType type = INFO);
+void print(const char *msg);
+massert(condition)\
+\>", "Program"]
 }, Open  ]]
-}, Closed]]
+}, Open  ]]
 }, Open  ]]
 },
 WindowSize->{1065, 708},
@@ -869,3 +894,4 @@ FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
 2015)",
 StyleDefinitions->"Default.nb"
 ]
+
