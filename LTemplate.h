@@ -30,7 +30,7 @@ void check_abort() {
 }
 
 
-enum MessageType { INFO, WARNING, ERROR };
+enum MessageType { INFO, WARNING, ERROR, ASSERT };
 
 
 void message(const char *msg, MessageType type = INFO) {
@@ -44,6 +44,9 @@ void message(const char *msg, MessageType type = INFO) {
         break;
     case WARNING:
         tag = "warning";
+        break;
+    case ASSERT:
+        tag = "assert";
         break;
     case INFO:
     default:
@@ -73,6 +76,18 @@ void print(const char *msg) {
     int pkt = MLNextPacket(link);
     if (pkt == RETURNPKT)
         MLNewPacket(link);
+}
+
+
+#ifdef NDEBUG
+#define massert(condition) ((void)0)
+#else
+#define massert(condition) (void)((condition) || _massert_impl(#condition), 0)
+#endif
+
+void _massert_impl(const char *cond) {
+    message(cond, ASSERT);
+    throw LibraryError();
 }
 
 
