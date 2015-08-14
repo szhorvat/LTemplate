@@ -24,7 +24,7 @@ struct LibraryError {
 };
 
 
-void check_abort() {
+inline void check_abort() {
     if (libData->AbortQ())
         throw LibraryError();
 }
@@ -33,7 +33,7 @@ void check_abort() {
 enum MessageType { INFO, WARNING, ERROR, ASSERT };
 
 
-void message(const char *msg, MessageType type = INFO) {
+inline void message(const char *msg, MessageType type = INFO) {
     if (msg == NULL)
         return;
 
@@ -67,7 +67,7 @@ void message(const char *msg, MessageType type = INFO) {
 }
 
 
-void print(const char *msg) {
+inline void print(const char *msg) {
     MLINK link = libData->getMathLink(libData);
     MLPutFunction(link, "EvaluatePacket", 1);
         MLPutFunction(link, "Print", 1);
@@ -85,7 +85,7 @@ void print(const char *msg) {
 #define massert(condition) (void)(((condition) || mma::_massert_impl(#condition)), 0)
 #endif
 
-bool _massert_impl(const char *cond) {
+inline bool _massert_impl(const char *cond) {
     message(cond, ASSERT);
     throw LibraryError();
 }
@@ -199,7 +199,7 @@ typedef CubeRef<complex_t>  ComplexCubeRef;
 
 
 template<typename T>
-CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
+inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
     MTensor t = NULL;
     mint dims[3];
     dims[0] = nrow;
@@ -213,7 +213,7 @@ CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
 
 
 template<typename T>
-MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
+inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     MTensor t = NULL;
     mint dims[2];
     dims[0] = nrow;
@@ -226,7 +226,7 @@ MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
 
 
 template<typename T>
-MatrixRef<T> makeVector(mint len) {
+inline MatrixRef<T> makeVector(mint len) {
     MTensor t = NULL;
     mint dims[1];
     dims[0] = len;
@@ -234,26 +234,6 @@ MatrixRef<T> makeVector(mint len) {
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
-}
-
-
-// Functions for getting and setting arguments and return values
-
-template<typename T>
-TensorRef<T> getTensor(MArgument marg) { return TensorRef<T>(MArgument_getMTensor(marg)); }
-
-template<typename T>
-void setTensor(MArgument marg, TensorRef<T> &val) { MArgument_setMTensor(marg, val.tensor()); }
-
-
-complex_t getComplex(MArgument marg) {
-    mcomplex c = MArgument_getComplex(marg);
-    return complex_t(c.ri[0], c.ri[1]);
-}
-
-void setComplex(MArgument marg, complex_t val) {
-    mcomplex *c = reinterpret_cast<mcomplex *>(&val);
-    MArgument_setComplex(marg, *c);
 }
 
 

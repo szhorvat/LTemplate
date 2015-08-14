@@ -258,6 +258,7 @@ transTemplate[LTemplate[libname_String, classes_]] :=
     {
       "",
       CInclude["LTemplate.h"],
+      CInclude["LTemplateHelpers.h"],
       CInclude /@ includeName /@ classlist,
       "","",
 
