@@ -82,10 +82,10 @@ void print(const char *msg) {
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
-#define massert(condition) (void)((condition) || _massert_impl(#condition), 0)
+#define massert(condition) (void)(((condition) || mma::_massert_impl(#condition)), 0)
 #endif
 
-void _massert_impl(const char *cond) {
+bool _massert_impl(const char *cond) {
     message(cond, ASSERT);
     throw LibraryError();
 }

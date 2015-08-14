@@ -70,6 +70,7 @@ LibraryFunction::noinst = "Managed library expression instance does not exist.";
 LTemplate::info    = "``";
 LTemplate::warning = "``";
 LTemplate::error   = "``";
+LTemplate::assert  = "Assertion `` failed."
 
 
 (***************** SymbolicC extensions *******************)
