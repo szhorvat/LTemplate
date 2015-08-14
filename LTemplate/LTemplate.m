@@ -4,7 +4,7 @@
 (* :Title:   LTemplate    *)
 (* :Context: LTemplate`   *)
 (* :Author:  szhorvat     *)
-(* :Date:    2015-08-0    *)
+(* :Date:    2015-08-03   *)
 
 (* :Package Version: 0.1 *)
 (* :Mathematica Version: 10.0 *)
@@ -39,12 +39,12 @@ Begin["`Private`"] (* Begin Private Context *)
 (* Set up package global variables *)
 
 $packageDirectory = DirectoryName[$InputFileName];
-$includeDirectory = $packageDirectory;
+$includeDirectory = FileNameJoin[{$packageDirectory, "IncludeFiles"}];
 
 (* Mathematica version checks *)
 
-minVersion = {10.0, 0};
-maxVersion = {10.2, 0};
+minVersion = {10.0, 0}; (* oldest supported version *)
+maxVersion = {10.2, 0}; (* latest version the package was tested with *)
 version    = {$VersionNumber, $ReleaseNumber}
 versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 
@@ -376,8 +376,9 @@ types = Dispatch@{
 (* TODO: Break out loading and compilation into separate files
    This is to make it easy to include them in other projects *)
 
+$classContext = "LTemplate`Classes`"
 
-symName[classname_String] := "LTemplate`Classes`" <> classname
+symName[classname_String] := $classContext <> classname
 
 
 LoadTemplate[tem_] :=
@@ -491,4 +492,7 @@ End[] (* End Private Context *)
 
 EndPackage[]
 
-If[Not@MemberQ[$ContextPath, "LTemplate`Classes`"],  PrependTo[$ContextPath, "LTemplate`Classes`"]];
+(* Add the class context to $ContextPath *)
+If[Not@MemberQ[$ContextPath, LTemplate`Private`$classContext],
+  PrependTo[$ContextPath, LTemplate`Private`$classContext]
+];
