@@ -141,7 +141,6 @@ public:
     T *end() { return begin() + length(); }
 };
 
-
 typedef TensorRef<mint>      IntTensorRef;
 typedef TensorRef<double>    RealTensorRef;
 typedef TensorRef<complex_t> ComplexTensorRef;
@@ -167,10 +166,50 @@ public:
     const T & operator () (mint i, mint j) const { return (*this)[nrows*i + j]; }
 };
 
+typedef MatrixRef<mint>       IntMatrixRef;
+typedef MatrixRef<double>     RealMatrixRef;
+typedef MatrixRef<complex_t>  ComplexMatrixRef;
 
-typedef MatrixRef<mint>      IntMatrixRef;
-typedef MatrixRef<double>    RealMatrixRef;
-typedef MatrixRef<complex_t> ComplexMatrixRef;
+
+template<typename T>
+class CubeRef : public TensorRef<T> {
+    mint nrows, ncols, nslices;
+
+public:
+    CubeRef(const TensorRef<T> &tr) : TensorRef<T>(tr)
+    {
+        if (TensorRef<T>::rank() != 3)
+            throw LibraryError("CubeRef: Rank-3 tensor expected.");
+        nrows = TensorRef<T>::dimensions()[0];
+        ncols = TensorRef<T>::dimensions()[1];
+        nslices = TensorRef<T>::dimensions()()[2];
+    }
+
+    mint rows() const { return nrows; }
+    mint cols() const { return ncols; }
+    mint slices() const { return nslices; }
+
+    T & operator () (mint i, mint j, mint k) { return (*this)[nrows*ncols*i + ncols*j + k]; }
+    const T & operator () (mint i, mint j, mint k) const { return (*this)[nrows*ncols*i + ncols*j + k]; }
+};
+
+typedef CubeRef<mint>       IntCubeRef;
+typedef CubeRef<double>     RealCubeRef;
+typedef CubeRef<complex_t>  ComplexCubeRef;
+
+
+template<typename T>
+CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
+    MTensor t = NULL;
+    mint dims[3];
+    dims[0] = nrow;
+    dims[1] = ncol;
+    dims[2] = nslice;
+    int err = libData->MTensor_new(MType_Integer, 3, dims, &t);
+    if (err)
+        throw LibraryError("MTensor_new() failed.", err);
+    return TensorRef<T>(t);
+}
 
 
 template<typename T>
@@ -180,6 +219,18 @@ MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     dims[0] = nrow;
     dims[1] = ncol;
     int err = libData->MTensor_new(MType_Integer, 2, dims, &t);
+    if (err)
+        throw LibraryError("MTensor_new() failed.", err);
+    return TensorRef<T>(t);
+}
+
+
+template<typename T>
+MatrixRef<T> makeVector(mint len) {
+    MTensor t = NULL;
+    mint dims[1];
+    dims[0] = len;
+    int err = libData->MTensor_new(MType_Integer, 1, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
