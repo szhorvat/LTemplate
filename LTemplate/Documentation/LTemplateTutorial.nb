@@ -13,17 +13,14 @@ Cell[TextData[{
  "LTemplate is a ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " package that reduces the amount of boilerplate code to write when \
-extending ",
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- " through LibraryLink."
+ " package that simplifies writing LibraryLink code by automatically \
+generating repetitive code based on templates."
 }], "Text"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Introduction through examples", "Section"],
+Cell["An introduction through examples", "Section"],
 
 Cell["Let\[CloseCurlyQuote]s load the package first.", "Text"],
 
@@ -36,32 +33,39 @@ Cell["A basic example", "Subsection"],
 
 Cell["\<\
 LTemplate needs the current directory to contain the user written code.  For \
-this example, we will create these files in the temporary directory.\
+this example, we will create these files in the operating system\
+\[CloseCurlyQuote]s temporary directory.\
 \>", "Text"],
 
 Cell[BoxData[
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
 
-Cell["\<\
-LTemplate uses C++ and requires working with classes instead of top level \
+Cell[TextData[{
+ "LTemplate uses C++ and requires working with classes instead of top level \
 functions.  After compiling and loading a template, classes can be \
-instantiated as managed library expressions.\
-\>", "Text"],
+instantiated as ",
+ ButtonBox["managed library expressions",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:LibraryLink/tutorial/InteractionWithMathematica#353220453"],
+ "."
+}], "Text"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{
   "code", "=", 
-   "\"\<\n#include \\\"LTemplate.h\\\"\n\nclass Demo {\npublic:\n\t// basic \
-example\n\tmint addTwo(mint a, mint b) { return a+b; }\n\n\t// trace of real \
-matrix\n\tdouble trace(mma::RealMatrixRef mat) {\n\t\tif (mat.rows() != \
-mat.cols())\n\t\t\tthrow mma::LibraryError(\\\"trace: Square matrix expected.\
-\\\");\n\t\tdouble sum = 0.0;\n\t\tfor (mint i=0; i < mat.rows(); ++i) {\n\t\t\
-\tsum += mat(i,i);\n\t\t\tmma::check_abort(); // allow for user aborts\n\t\t}\
-\n\t\treturn sum;\n\t}\n\n\t// demo for user abort\n\tvoid hang() { \n\t\t\
+   "\"\<\n#include <LTemplate.h>\n\nclass Demo {\npublic:\n\t// basic example\
+\n\tmint addTwo(mint a, mint b) { return a+b; }\n\n\t// trace of real matrix\n\
+\tdouble trace(mma::RealMatrixRef mat) {\n\t\tif (mat.rows() != mat.cols())\n\
+\t\t\tthrow mma::LibraryError(\\\"trace: Square matrix expected.\\\");\n\t\t\
+double sum = 0.0;\n\t\tfor (mint i=0; i < mat.rows(); ++i) {\n\t\t\tsum += \
+mat(i,i);\n\t\t\tmma::check_abort(); // allow for user aborts\n\t\t}\n\t\t\
+return sum;\n\t}\n\n\t// demo for user abort\n\tvoid hang() { \n\t\t\
 mma::print(\\\"Going into infinite loop ... try aborting now.\\\");\n\t\t\
-while(true) { \n\t\t\tsleep(1); \n\t\t\tmma::check_abort(); \n\t\t} \n\t}\n};\
-\n\>\""}], ";"}]], "Input"],
+while(true) {\n#if defined(_WIN32) || defined (_WIN64)\n\t\t\tSleep(500);\n\
+#else \n\t\t\tsleep(1);\n#endif\n\t\t\tmma::check_abort(); \n\t\t} \n\t}\n};\n\
+\>\""}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
 
@@ -289,7 +293,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"class Demo:\\n    Integer addTwo(Integer, Integer)\\n    Real \
 trace({Real, 2})\\n    Void hang()\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-4c510a9f-f4c9-48fe-94be-07475a238e46"]
+ CellTags->"Info-d518e8bb-2e89-4d14-a83d-d9823f0de6be"]
 }, Open  ]],
 
 Cell["Let\[CloseCurlyQuote]s create an instance of the class ...", "Text"],
@@ -330,7 +334,7 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
 
-Cell[BoxData["2.0657298513779105`"], "Output"]
+Cell[BoxData["3.131546721142006`"], "Output"]
 }, Open  ]],
 
 Cell["\<\
@@ -352,8 +356,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\\"trace: Square matrix expected.\\\"\\)\
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"trace: Square matrix expected.\\\"\\)\
 \[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
@@ -382,7 +387,7 @@ Cell[BoxData["$Aborted"], "Output"]
 
 Cell[CellGroupData[{
 
-Cell["A solution to returning multiple values", "Subsection"],
+Cell["A solution for returning multiple values", "Subsection"],
 
 Cell[TextData[{
  "LibraryLink doesn\[CloseCurlyQuote]t support returning multiple \
@@ -392,8 +397,8 @@ using a ",
   FontSlant->"Italic"],
  " connection.  A workaround is having separate functions for \
 initialization/computation, retrieving each piece of result and finally \
-cleanup.  Doing all this manually is very tedious, but LTemplate makes it \
-quite easy."
+freeing data structures (cleanup).  Doing all this manually is very tedious, \
+but LTemplate makes it quite easy."
 }], "Text"],
 
 Cell["\<\
@@ -433,9 +438,11 @@ Cell[BoxData[
 Cell[BoxData["\<\"MeanVariance.h\"\>"], "Output"]
 }, Open  ]],
 
-Cell["\<\
-If a template contains only a single class, LTemplate can be omitted.\
-\>", "Text"],
+Cell[TextData[{
+ "If a template contains only a single class, ",
+ StyleBox["LTemplate[\[Ellipsis]]", "Program"],
+ " can be omitted."
+}], "Text"],
 
 Cell[BoxData[
  RowBox[{
@@ -567,42 +574,6 @@ Cell[BoxData[
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
- InterpretationBox[
-  RowBox[{
-   StyleBox["\<\"LTemplate-MeanVariance.cpp\"\>",
-    StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
-   StyleBox["\<\" already exists and will be overwritten.\"\>",
-    StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]]}],
-  SequenceForm[
-   Style["LTemplate-MeanVariance.cpp", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" already exists and will be overwritten.", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]]],
-  Editable->False]], "Print"],
-
-Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
   LineColor->RGBColor[0, 0, 
@@ -624,7 +595,7 @@ LibraryResources/MacOSX-x86-64/MeanVariance.dylib\"\>"], "Output"]
 Cell["\<\
 Setting up all of this manually would have taken a lot of time and a lot of \
 boilerplate code.  This class with only three functions required 102 lines of \
-code:\
+boilerplate:\
 \>", "Text"],
 
 Cell[CellGroupData[{
@@ -640,6 +611,8 @@ Cell[BoxData[
 Cell[BoxData["102"], "Output"]
 }, Open  ]],
 
+Cell["Let us load the library and create a wrapper for using it.", "Text"],
+
 Cell[BoxData[
  RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
 
@@ -648,7 +621,7 @@ Cell[TextData[{
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " side, we use Module to create temporary objects that live only until all \
-results are retrieved:"
+results are retrieved."
 }], "Text"],
 
 Cell[BoxData[
@@ -878,12 +851,13 @@ Cell["Some useful functions are", "Text"],
 
 Cell["\<\
 void check_abort();
-void message(const char *msg, MessageType type = INFO);
+void message(const char *msg, MessageType type = M_INFO);
 void print(const char *msg);
-massert(condition)\
+massert(condition) // analogous to C's standard assert macro, but doesn't \
+kill the kernel\
 \>", "Program"]
 }, Open  ]]
-}, Open  ]]
+}, Closed]]
 }, Open  ]]
 },
 WindowSize->{1065, 708},
