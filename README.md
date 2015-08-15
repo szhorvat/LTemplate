@@ -1,7 +1,9 @@
 # LTemplate
 
-This is a package that simplifies extending Mathematica through LibraryLink by automating the generation of boilerplate code.
+This is a package that simplifies extending _Mathematica_ through LibraryLink by automating the generation of boilerplate code.
 
 At present, the package is still in flux and not ready for general use.  However, all constructive criticism is welcome.
 
-See `Tutorial.nb` for a short introduction.
+To install, drop the `LTemplate` directory in the directory opened by `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`.
+
+See `Documentation/LTemplateTutorial.nb` for a short introduction through examples.
