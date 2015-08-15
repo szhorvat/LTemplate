@@ -326,7 +326,7 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
             },
             {excType, excName},
             {
-              CCall["mma::message", {CMember[excName, "message"], "mma::ERROR"}],
+              CCall["mma::message", {CMember[excName, "message"], "mma::M_ERROR"}],
               CReturn[CMember[excName, "errcode"]]
             }
           ],

@@ -41,29 +41,29 @@ inline void check_abort() {
 
 
 /// For use in the message() function.
-enum MessageType { INFO, WARNING, ERROR, ASSERT };
+enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
 
 
 /** Issue a Mathematica message
  * \param msg the text of the message
  * \param type determines the message tag which will be used
  */
-inline void message(const char *msg, MessageType type = INFO) {
+inline void message(const char *msg, MessageType type = M_INFO) {
     if (msg == NULL)
         return;
 
     const char *tag;
     switch (type) {
-    case ERROR:
+    case M_ERROR:
         tag = "error";
         break;
-    case WARNING:
+    case M_WARNING:
         tag = "warning";
         break;
-    case ASSERT:
+    case M_ASSERT:
         tag = "assert";
         break;
-    case INFO:
+    case M_INFO:
     default:
         tag = "info";
     }
@@ -102,7 +102,7 @@ inline void print(const char *msg) {
 #endif
 
 inline bool _massert_impl(const char *cond) {
-    message(cond, ASSERT);
+    message(cond, M_ASSERT);
     throw LibraryError();
 }
 
