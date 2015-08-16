@@ -1,6 +1,9 @@
 #ifndef LTEMPLATE_HELPERS_H
 #define LTEMPLATE_HELPERS_H
 
+#include "LTemplate.h"
+#include <algorithm>
+
 namespace mma {
 
 // Functions for getting and setting arguments and return values
@@ -21,6 +24,20 @@ inline void setComplex(MArgument marg, complex_t val) {
     mcomplex *c = reinterpret_cast<mcomplex *>(&val);
     MArgument_setComplex(marg, *c);
 }
+
+
+template<typename Collection>
+inline IntTensorRef get_collection(const Collection &collection) {
+    IntTensorRef ids = makeVector<mint>(collection.size());
+
+    typename Collection::const_iterator i = collection.begin();
+    mint *j = ids.begin();
+    for (; i != collection.end(); ++i, ++j)
+        *j = i->first;
+
+    return ids;
+}
+
 
 } // namespace mma
 

@@ -213,11 +213,13 @@ includeName[classname_String] := classname <> ".h"
 
 collectionName[classname_String] := classname <> "_collection"
 
+collectionType[classname_String] := "std::map<mint, " <> classname <> " *>"
+
 managerName[classname_String] := classname <> "_manager"
 
 
 setupCollection[classname_String] := {
-  StringTemplate["std::map<mint, `` *> ``"][classname, collectionName[classname]],
+  CDeclare[collectionType[classname], collectionName[classname]],
   "",
   CFunction["DLLEXPORT void", managerName[classname], {"WolframLibraryData libData", "mbool mode", "mint id"},
 CInlineCode@StringTemplate[ (* TODO: Check if id exists, use assert *)
@@ -234,7 +236,18 @@ if (mode == 0) { // create
 }\
 "][<|"collection" -> collectionName[classname], "class" -> classname|>]
   ],
-  ""
+  "",
+  CFunction["extern \"C\" DLLEXPORT int", classname <> "_get_collection", libFunArgs,
+    {
+      (* Attention: make sure stuff called here won't throw LibraryError *)
+      transRet[
+        {Integer, 1},
+        CCall["mma::get_collection", collectionName[classname]]
+      ],
+      CReturn["LIBRARY_NO_ERROR"]
+    }
+  ],
+  "",""
 }
 
 
@@ -288,7 +301,7 @@ transTemplate[LTemplate[libname_String, classes_]] :=
           "return"
         }
       ],
-      "",
+      "","",
       classTranslations
     }
   ]
@@ -316,7 +329,7 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
           ][collectionName[classname]],
           "",
           CTryCatch[
-            {
+            (* try *) {
               transArg /@ args,
               "",
               transRet[
@@ -324,7 +337,7 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
                 CPointerMember[CArray[collectionName[classname], "id"], CCall[name, var /@ Range@Length[args]]]
               ]
             },
-            {excType, excName},
+            (* catch *) {excType, excName},
             {
               CCall["mma::message", {CMember[excName, "message"], "mma::M_ERROR"}],
               CReturn[CMember[excName, "errcode"]]
@@ -365,7 +378,7 @@ types = Dispatch@{
   Complex -> {"std::complex<double>", "mma::getComplex", "mma::setComplex"},
   "Boolean" -> {"bool", "MArgument_getBoolean", "MArgument_setBoolean"},
   "UTF8String" -> {"char *", "MArgument_getUTF8String", "MArgument_setUTF8String"},
-  {Integer, __} -> {"mma::IntTensorRef", "mma::getTensor<mint>", "mma:setTensor<mint>"},
+  {Integer, __} -> {"mma::IntTensorRef", "mma::getTensor<mint>", "mma::setTensor<mint>"},
   {Real, __} -> {"mma::RealTensorRef", "mma::getTensor<double>", "mma::setTensor<double>"},
   {Complex, __} -> {"mma::ComplexTensorRef", "mma::getTensor< mma::complex_t >", "mma::setTensor< mma::complex_t >"}
 };
@@ -398,6 +411,7 @@ loadTemplate[tem : LTemplate[libname_String, classes_]] := (
 loadClass[libname_][tem : LClass[classname_String, funs_]] := (
     ClearAll[#]& @ symName[classname];
     With[{sym = Symbol@symName[classname]}, MessageName[sym, "usage"] = formatTemplate[tem]];
+    loadFun[libname, classname][LFun["get_collection", {}, {Integer, 1}]]; (* TODO: this should not be treated as a member function *)
     loadFun[libname, classname] /@ funs
   )
 

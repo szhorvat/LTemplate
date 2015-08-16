@@ -250,7 +250,7 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
 
 /// Creates a vector (rank 1 tensor) of the given length
 template<typename T>
-inline MatrixRef<T> makeVector(mint len) {
+inline TensorRef<T> makeVector(mint len) {
     MTensor t = NULL;
     mint dims[1];
     dims[0] = len;
