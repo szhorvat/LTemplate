@@ -3,7 +3,7 @@ Notebook[{
 Cell[CellGroupData[{
 Cell["LTemplate Tutorial", "Title"],
 
-Cell["speed up writing LibraryLink code", "Subtitle"],
+Cell["write LibraryLink code with ease", "Subtitle"],
 
 Cell[CellGroupData[{
 
@@ -55,26 +55,22 @@ Cell[BoxData[
  RowBox[{
   RowBox[{
   "code", "=", 
-   "\"\<\n#include <LTemplate.h>\n\nclass Demo {\npublic:\n\t// basic example\
-\n\tmint addTwo(mint a, mint b) { return a+b; }\n\n\t// trace of real matrix\n\
-\tdouble trace(mma::RealMatrixRef mat) {\n\t\tif (mat.rows() != mat.cols())\n\
-\t\t\tthrow mma::LibraryError(\\\"trace: Square matrix expected.\\\");\n\t\t\
-double sum = 0.0;\n\t\tfor (mint i=0; i < mat.rows(); ++i) {\n\t\t\tsum += \
-mat(i,i);\n\t\t\tmma::check_abort(); // allow for user aborts\n\t\t}\n\t\t\
-return sum;\n\t}\n\n\t// demo for user abort\n\tvoid hang() { \n\t\t\
-mma::print(\\\"Going into infinite loop ... try aborting now.\\\");\n\t\t\
-while(true) {\n#if defined(_WIN32) || defined (_WIN64)\n\t\t\tSleep(500);\n\
-#else \n\t\t\tsleep(1);\n#endif\n\t\t\tmma::check_abort(); \n\t\t} \n\t}\n};\n\
-\>\""}], ";"}]], "Input"],
+   "\"\<\n#include <LTemplate.h>\n\nclass Demo1 {\npublic:\n\t// basic \
+example\n\tmint addTwo(mint a, mint b) { return a+b; }\n\n\t// trace of real \
+matrix\n\tdouble trace(mma::RealMatrixRef mat) {\n\t\tif (mat.rows() != \
+mat.cols())\n\t\t\tthrow mma::LibraryError(\\\"trace: Square matrix expected.\
+\\\");\n\t\tdouble sum = 0.0;\n\t\tfor (mint i=0; i < mat.rows(); ++i) {\n\t\t\
+\tsum += mat(i,i);\n\t\t\tmma::check_abort(); // allow for user aborts\n\t\t}\
+\n\t\treturn sum;\n\t}\n};\n\>\""}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"Export", "[", 
-  RowBox[{"\"\<Demo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  RowBox[{"\"\<Demo1.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
   "]"}]], "Input"],
 
-Cell[BoxData["\<\"Demo.h\"\>"], "Output"]
+Cell[BoxData["\<\"Demo1.h\"\>"], "Output"]
 }, Open  ]],
 
 Cell["\<\
@@ -88,7 +84,7 @@ Cell[BoxData[
     RowBox[{"\"\<DemoLib\>\"", ",", "\[IndentingNewLine]", 
      RowBox[{"{", "\[IndentingNewLine]", 
       RowBox[{"LClass", "[", 
-       RowBox[{"\"\<Demo\>\"", ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<Demo1\>\"", ",", "\[IndentingNewLine]", 
         RowBox[{"{", "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"LFun", "[", 
@@ -100,13 +96,9 @@ Cell[BoxData[
            RowBox[{"\"\<trace\>\"", ",", 
             RowBox[{"{", 
              RowBox[{"{", 
-              RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "Real"}], "]"}], 
-          ",", "\[IndentingNewLine]", 
-          RowBox[{"LFun", "[", 
-           RowBox[{"\"\<hang\>\"", ",", 
-            RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}]}], 
-         "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], 
-      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+              RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "Real"}], 
+           "]"}]}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+       "]"}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
   ";"}]], "Input"],
 
 Cell[TextData[{
@@ -126,9 +118,8 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"template", "//", "FormatTemplate"}]], "Input"],
 
-Cell[BoxData["\<\"template DemoLib\\n\\nclass Demo:\\n    Integer \
-addTwo(Integer, Integer)\\n    Real trace({Real, 2})\\n    Void hang()\"\>"], \
-"Output"]
+Cell[BoxData["\<\"template DemoLib\\n\\nclass Demo1:\\n    Integer \
+addTwo(Integer, Integer)\\n    Real trace({Real, 2})\"\>"], "Output"]
 }, Open  ]],
 
 Cell["\<\
@@ -263,10 +254,7 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print"]
-}, Open  ]],
-
-Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/DemoLib.dylib\"\>"], "Output"]
+}, Open  ]]
 }, Open  ]],
 
 Cell["You can inspect the generated code:", "Text"],
@@ -291,9 +279,9 @@ Cell[BoxData[
  RowBox[{"?", "LTemplate`Classes`*"}]], "Input"],
 
 Cell[BoxData[
- StyleBox["\<\"class Demo:\\n    Integer addTwo(Integer, Integer)\\n    Real \
-trace({Real, 2})\\n    Void hang()\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-d518e8bb-2e89-4d14-a83d-d9823f0de6be"]
+ StyleBox["\<\"class Demo1:\\n    Integer addTwo(Integer, Integer)\\n    Real \
+trace({Real, 2})\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-f6c8a5e1-b48b-4d3e-a936-2aeb81156a79"]
 }, Open  ]],
 
 Cell["Let\[CloseCurlyQuote]s create an instance of the class ...", "Text"],
@@ -301,11 +289,11 @@ Cell["Let\[CloseCurlyQuote]s create an instance of the class ...", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo", "=", 
-  RowBox[{"Make", "[", "Demo", "]"}]}]], "Input"],
+ RowBox[{"demo1", "=", 
+  RowBox[{"Make", "[", "\"\<Demo1\>\"", "]"}]}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"Demo", "[", "1", "]"}]], "Output"]
+ RowBox[{"Demo1", "[", "1", "]"}]], "Output"]
 }, Open  ]],
 
 Cell["... and call the defined member functions:", "Text"],
@@ -315,7 +303,7 @@ Cell["Add two numbers:", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo", "@", 
+ RowBox[{"demo1", "@", 
   RowBox[{"\"\<addTwo\>\"", "[", 
    RowBox[{"123", ",", "234"}], "]"}]}]], "Input"],
 
@@ -327,14 +315,14 @@ Cell["Trace of a real matrix:", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo", "@", 
+ RowBox[{"demo1", "@", 
   RowBox[{"\"\<trace\>\"", "[", 
    RowBox[{"RandomReal", "[", 
     RowBox[{"1", ",", 
      RowBox[{"{", 
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
 
-Cell[BoxData["3.131546721142006`"], "Output"]
+Cell[BoxData["2.2277457809468864`"], "Output"]
 }, Open  ]],
 
 Cell["\<\
@@ -346,7 +334,7 @@ mma::print().\
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo", "@", 
+ RowBox[{"demo1", "@", 
   RowBox[{"\"\<trace\>\"", "[", 
    RowBox[{"RandomReal", "[", 
     RowBox[{"1", ",", 
@@ -364,24 +352,6 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
-}, Open  ]],
-
-Cell["\<\
-User aborts are supported too, though mma::check_abort().  This function will \
-never return so you\[CloseCurlyQuote]ll need to use Evaluation \[Rule] Abort \
-Evaluation.\
-\>", "Text"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"demo", "@", 
-  RowBox[{"\"\<hang\>\"", "[", "]"}]}]], "Input"],
-
-Cell[BoxData["\<\"Going into infinite loop ... try aborting now.\"\>"], \
-"Print"],
-
-Cell[BoxData["$Aborted"], "Output"]
 }, Open  ]]
 }, Closed]],
 
@@ -412,8 +382,14 @@ include a constructor and destructor that report when they are called, to \
 demonstrate automatic cleanup.\
 \>", "Text"],
 
+Cell[CellGroupData[{
+
 Cell[BoxData[
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+
+Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
+"], "Output"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -586,15 +562,12 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print"]
-}, Open  ]],
-
-Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/MeanVariance.dylib\"\>"], "Output"]
+}, Open  ]]
 }, Open  ]],
 
 Cell["\<\
 Setting up all of this manually would have taken a lot of time and a lot of \
-boilerplate code.  This class with only three functions required 102 lines of \
+boilerplate code.  This class with only three functions required 111 lines of \
 boilerplate:\
 \>", "Text"],
 
@@ -608,7 +581,7 @@ Cell[BoxData[
      RowBox[{"\"\<LTemplate-MeanVariance.cpp\>\"", ",", "\"\<String\>\""}], 
      "]"}], ",", "\"\<\\n\>\""}], "]"}]}]], "Input"],
 
-Cell[BoxData["102"], "Output"]
+Cell[BoxData["111"], "Output"]
 }, Open  ]],
 
 Cell["Let us load the library and create a wrapper for using it.", "Text"],
@@ -667,8 +640,228 @@ Cell[BoxData["\<\"destructor called\"\>"], "Print"]
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.5080857598031503`", ",", "0.07924119881789504`"}], 
+  RowBox[{"0.5218159748958707`", ",", "0.08889191930199458`"}], 
   "}"}]], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["More advanced examples", "Subsection"],
+
+Cell["\<\
+The following examples demonstrate user aborts and returning tensors.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "code", "=", 
+   "\"\<\nclass Demo2 {\npublic:\n\t// demo for user abort\n\tvoid hang() { \n\
+\t\tmma::print(\\\"Going into infinite loop ... try aborting now.\\\");\n\t\t\
+while(true) {\n#if defined(_WIN32) || defined (_WIN64)\n\t\t\tSleep(500); // \
+sleep 0.5 s on Windows\n#else \n\t\t\tsleep(1);   // sleep 1 s on POSIX\n\
+#endif\n\t\t\tmma::check_abort(); \n\t\t} \n\t}\n\n\t// demo for returning \
+tensors\n\tmma::IntTensorRef range(mint a, mint b) {\n\t\tmma::IntTensorRef \
+vec = mma::makeVector<mint>(b-a+1);\n\t\tfor (int i=0; i <= b-a; ++i)\n\t\t\t\
+vec[i] = a+i;\n\t\treturn vec;\n\t}\n};\n\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<Demo2.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  "]"}]}], "Input"],
+
+Cell[BoxData["\<\"Demo2.h\"\>"], "Output"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<Demo2\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<hang\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<range\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "Integer"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "1"}], "}"}]}], "]"}]}], 
+      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"Demo2\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["Demo2", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"demo2", "=", 
+   RowBox[{"Make", "[", "Demo2", "]"}]}], ";"}]], "Input"],
+
+Cell["\<\
+User aborts are supported though mma::check_abort().  This function will \
+never return so you\[CloseCurlyQuote]ll need to use Evaluation \[Rule] Abort \
+Evaluation.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"demo2", "@", 
+  RowBox[{"\"\<hang\>\"", "[", "]"}]}]], "Input"],
+
+Cell[BoxData["\<\"Going into infinite loop ... try aborting now.\"\>"], \
+"Print"],
+
+Cell[BoxData["$Aborted"], "Output"]
+}, Open  ]],
+
+Cell["This functions returns a vector:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"demo2", "@", 
+  RowBox[{"\"\<range\>\"", "[", 
+   RowBox[{"10", ",", "20"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "10", ",", "11", ",", "12", ",", "13", ",", "14", ",", "15", ",", "16", ",",
+    "17", ",", "18", ",", "19", ",", "20"}], "}"}]], "Output"]
 }, Open  ]]
 }, Closed]]
 }, Open  ]],
@@ -847,7 +1040,26 @@ Cell[TextData[{
  " may point to the same LibraryLink tensor."
 }], "Text"],
 
-Cell["Some useful functions are", "Text"],
+Cell[TextData[{
+ "One, two and three-dimensional tensors can be created using the following, \
+where ",
+ StyleBox["T", "Program"],
+ " must be one of ",
+ StyleBox["mint", "Program"],
+ ", ",
+ StyleBox["double", "Program"],
+ " or ",
+ StyleBox["complex_t", "Program"],
+ "."
+}], "Text"],
+
+Cell["\<\
+makeVector<T>(mint len);
+makeMatrix<T>(mint rows, mint cols);
+makeCube<T>(mint rows, mint cols, mint slices);\
+\>", "Program"],
+
+Cell["Some other useful functions are", "Text"],
 
 Cell["\<\
 void check_abort();
@@ -860,8 +1072,8 @@ kill the kernel\
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{1065, 708},
-WindowMargins->{{44, Automatic}, {39, Automatic}},
+WindowSize->{990, 700},
+WindowMargins->{{44, Automatic}, {47, Automatic}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
 FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
