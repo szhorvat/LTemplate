@@ -202,6 +202,7 @@ TranslateTemplate[tem_] :=
 
 
 libFunArgs = {{"WolframLibraryData", "libData"}, {"mint", "Argc"}, {"MArgument *", "Args"}, {"MArgument", "Res"}};
+libFunRet  = "extern \"C\" DLLEXPORT int";
 
 excType = "const mma::LibraryError &";
 excName = "libErr";
@@ -237,7 +238,7 @@ if (mode == 0) { // create
 "][<|"collection" -> collectionName[classname], "class" -> classname|>]
   ],
   "",
-  CFunction["extern \"C\" DLLEXPORT int", classname <> "_get_collection", libFunArgs,
+  CFunction[libFunRet, classname <> "_get_collection", libFunArgs,
     {
       (* Attention: make sure stuff called here won't throw LibraryError *)
       transRet[
@@ -320,7 +321,7 @@ funName[classname_][name_] := classname <> "_" <> name
 transFun[classname_][LFun[name_String, args_List, ret_]] :=
   Block[{index = 0},
     {
-      CFunction["extern \"C\" DLLEXPORT int", funName[classname][name], libFunArgs,
+      CFunction[libFunRet, funName[classname][name], libFunArgs,
         {
           (* TODO: check Argc is correct, use assert *)
           "const mint id = MArgument_getInteger(Args[0])",
