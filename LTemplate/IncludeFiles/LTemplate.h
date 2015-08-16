@@ -109,9 +109,9 @@ inline bool _massert_impl(const char *cond) {
 
 template<typename T> T * getData(MTensor t);
 
-template<> mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
-template<> double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
-template<> complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
+template<> inline mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
+template<> inline double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
+template<> inline complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
 
 
 /// Wrapper class for MTensor pointers
@@ -219,6 +219,12 @@ typedef CubeRef<double>     RealCubeRef;
 typedef CubeRef<complex_t>  ComplexCubeRef;
 
 
+template<typename T> int libraryType();
+
+template<> inline int libraryType<mint>()      { return MType_Integer; }
+template<> inline int libraryType<double>()    { return MType_Real; }
+template<> inline int libraryType<complex_t>() { return MType_Complex; }
+
 /// Creates a rank 3 tensor of the given dimensions
 template<typename T>
 inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
@@ -227,7 +233,7 @@ inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
     dims[0] = nrow;
     dims[1] = ncol;
     dims[2] = nslice;
-    int err = libData->MTensor_new(MType_Integer, 3, dims, &t);
+    int err = libData->MTensor_new(libraryType<T>(), 3, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
@@ -241,7 +247,7 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     mint dims[2];
     dims[0] = nrow;
     dims[1] = ncol;
-    int err = libData->MTensor_new(MType_Integer, 2, dims, &t);
+    int err = libData->MTensor_new(libraryType<T>(), 2, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
@@ -254,7 +260,7 @@ inline TensorRef<T> makeVector(mint len) {
     MTensor t = NULL;
     mint dims[1];
     dims[0] = len;
-    int err = libData->MTensor_new(MType_Integer, 1, dims, &t);
+    int err = libData->MTensor_new(libraryType<T>(), 1, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
