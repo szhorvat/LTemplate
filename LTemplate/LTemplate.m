@@ -34,6 +34,10 @@ ValidTemplateQ::usage = "ValidTemplateQ[template] returns True if the template s
 Make::usage = "Make[class] creates an instance of class.";
 
 
+LClassContext::usage = "LClassContext[] returns the context where class symbols are created.";
+LClassContext[] = $Context <> "Classes`";
+
+
 Begin["`Private`"] (* Begin Private Context *)
 
 (* Set up package global variables *)
@@ -391,9 +395,7 @@ types = Dispatch@{
 (* TODO: Break out loading and compilation into separate files
    This is to make it easy to include them in other projects *)
 
-$classContext = "LTemplate`Classes`"
-
-symName[classname_String] := $classContext <> classname
+symName[classname_String] := LClassContext[] <> classname
 
 
 LoadTemplate[tem_] :=
@@ -509,6 +511,6 @@ End[] (* End Private Context *)
 EndPackage[]
 
 (* Add the class context to $ContextPath *)
-If[Not@MemberQ[$ContextPath, LTemplate`Private`$classContext],
-  PrependTo[$ContextPath, LTemplate`Private`$classContext]
+If[Not@MemberQ[$ContextPath, LClassContext[]],
+  PrependTo[$ContextPath, LClassContext[]]
 ];
