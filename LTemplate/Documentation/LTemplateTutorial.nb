@@ -267,11 +267,14 @@ Cell["Automatically load the functions defined in the template:", "Text"],
 Cell[BoxData[
  RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
 
-Cell["\<\
-This creates a DemoLib symbol within LTemplate`Classes`, which has associated \
-definitions that allow calling member functions and is also the base symbol \
-for managed library expressions.\
-\>", "Text"],
+Cell[TextData[{
+ "This creates a ",
+ StyleBox["Demo1", "Program"],
+ " symbol within ",
+ StyleBox["LTemplate`Classes`", "Program"],
+ ", which has associated definitions that allow calling member functions and \
+is also the base symbol for managed library expressions."
+}], "Text"],
 
 Cell[CellGroupData[{
 
@@ -279,41 +282,9 @@ Cell[BoxData[
  RowBox[{"?", "LTemplate`Classes`*"}]], "Input"],
 
 Cell[BoxData[
- DynamicModuleBox[{Typeset`open$$ = True}, 
-  PaneSelectorBox[{False->
-   RowBox[{
-    OpenerBox[Dynamic[Typeset`open$$],
-     ImageSize->Small], 
-    StyleBox["LTemplate`Classes`", "InfoHeading"]}], True->GridBox[{
-     {
-      RowBox[{
-       OpenerBox[Dynamic[Typeset`open$$],
-        ImageSize->Small], 
-       StyleBox["LTemplate`Classes`", "InfoHeading"]}]},
-     {GridBox[{
-        {
-         ButtonBox["Demo1",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-d1bca165-5460-408b-b1e9-ae12fdd9dabf", {
-            "Demo1", "LTemplate`Classes`"}},
-          ButtonNote->"LTemplate`Classes`"], 
-         ButtonBox["ReverseString",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-d1bca165-5460-408b-b1e9-ae12fdd9dabf", {
-            "ReverseString", "LTemplate`Classes`"}},
-          ButtonNote->"LTemplate`Classes`"]}
-       },
-       DefaultBaseStyle->"InfoGrid",
-       GridBoxItemSize->{"Columns" -> {{
-            Scaled[0.475]}}}]}
-    },
-    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
-   Dynamic[Typeset`open$$],
-   ImageSize->Automatic]]], "Print", "InfoCell"]
+ StyleBox["\<\"class Demo1:\\n    Integer addTwo(Integer, Integer)\\n    Real \
+trace({Real, 2})\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-4ce197b7-aebe-4fbc-9e34-823c38c24af3"]
 }, Open  ]],
 
 Cell["Let\[CloseCurlyQuote]s create an instance of the class ...", "Text"],
@@ -354,14 +325,18 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
 
-Cell[BoxData["1.9974240176666636`"], "Output"]
+Cell[BoxData["1.7640145014706723`"], "Output"]
 }, Open  ]],
 
-Cell["\<\
-Error checking and reporting is supported through throwing a LibraryError \
-exception.  Messages can otherwise be issued using mma::message() or \
-mma::print().\
-\>", "Text"],
+Cell[TextData[{
+ "Error checking and reporting is supported through throwing an ",
+ StyleBox["mma::LibraryError", "Program"],
+ " exception.  Messages can otherwise be issued using ",
+ StyleBox["mma::message()", "Program"],
+ " or ",
+ StyleBox["mma::print()", "Program"],
+ "."
+}], "Text"],
 
 Cell[CellGroupData[{
 
@@ -376,16 +351,30 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"trace: Square matrix expected.\\\"\\)\
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"trace: Square matrix expected.\\\"\\)\
 \[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+We can list all instances of a class. This is mainly useful for debugging \
+leaks.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LClassInstances", "[", "\"\<Demo1\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"Demo1", "[", "1", "]"}], "}"}]], "Output"]
 }, Open  ]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -666,8 +655,21 @@ Cell[BoxData["\<\"destructor called\"\>"], "Print"]
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.4661917859540947`", ",", "0.07178977124955135`"}], 
+  RowBox[{"0.5588201746839531`", ",", "0.08525263852341286`"}], 
   "}"}]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+We can also verify directly that no more instance of the class exist:\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LClassInstances", "[", "MeanVariance", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output"]
 }, Open  ]]
 }, Closed]],
 
@@ -1143,79 +1145,87 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
             "CompileTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LClass",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
             "LClass", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LFun",
+         ButtonBox["LClassInstances",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
-            "LFun", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["LTemplate",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
-            "LTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["TranslateTemplate",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
-            "TranslateTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["ValidTemplateQ",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
-            "ValidTemplateQ", "LTemplate`"}},
-          ButtonNote->"LTemplate`"]},
-        {
-         ButtonBox["FormatTemplate",
-          BaseStyle->"InformationLink",
-          ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
-            "FormatTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["LClassContext",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
-            "LClassContext", "LTemplate`"}},
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
+            "LClassInstances", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LoadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
             "LoadTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["Make",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
             "Make", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["UnloadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
             "UnloadTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], ""}
+          ButtonNote->"LTemplate`"]},
+        {
+         ButtonBox["FormatTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
+            "FormatTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LClassContext",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
+            "LClassContext", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LFun",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
+            "LFun", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
+            "LTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["TranslateTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
+            "TranslateTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["ValidTemplateQ",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-7194421b-e5e0-437b-8290-00a047c4c8c8", {
+            "ValidTemplateQ", "LTemplate`"}},
+          ButtonNote->"LTemplate`"]}
        },
        DefaultBaseStyle->"InfoGrid",
        GridBoxItemSize->{"Columns" -> {{
@@ -1229,7 +1239,7 @@ Cell[BoxData[
  StyleBox["\<\"LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \
 \[Ellipsis]}] represents a library template.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4"]
+ CellTags->"Info-7194421b-e5e0-437b-8290-00a047c4c8c8"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]],
