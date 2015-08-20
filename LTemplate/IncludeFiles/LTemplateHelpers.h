@@ -26,6 +26,15 @@ inline void setComplex(MArgument marg, complex_t val) {
 }
 
 
+inline const char *getString(MArgument marg) {
+    return const_cast<const char *>(MArgument_getUTF8String(marg));
+}
+
+inline void setString(MArgument marg, const char *val) {
+    MArgument_setUTF8String(marg, const_cast<char *>(val));
+}
+
+
 template<typename Collection>
 inline IntTensorRef get_collection(const Collection &collection) {
     IntTensorRef ids = makeVector<mint>(collection.size());

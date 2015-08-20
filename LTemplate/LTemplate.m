@@ -382,7 +382,7 @@ types = Dispatch@{
   Real -> {"double", "MArgument_getReal", "MArgument_setReal"},
   Complex -> {"std::complex<double>", "mma::getComplex", "mma::setComplex"},
   "Boolean" -> {"bool", "MArgument_getBoolean", "MArgument_setBoolean"},
-  "UTF8String" -> {"char *", "MArgument_getUTF8String", "MArgument_setUTF8String"},
+  "UTF8String" -> {"const char *", "mma::getString", "mma::setString"},
   {Integer, __} -> {"mma::IntTensorRef", "mma::getTensor<mint>", "mma::setTensor<mint>"},
   {Real, __} -> {"mma::RealTensorRef", "mma::getTensor<double>", "mma::setTensor<double>"},
   {Complex, __} -> {"mma::ComplexTensorRef", "mma::getTensor< mma::complex_t >", "mma::setTensor< mma::complex_t >"}

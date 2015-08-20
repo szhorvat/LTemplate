@@ -267,6 +267,12 @@ inline TensorRef<T> makeVector(mint len) {
 }
 
 
+/// Convenience function for disowning const char * strings.
+inline void disownString(const char *str) {
+    libData->UTF8String_disown(const_cast<char *>(str));
+}
+
+
 } // end namespace mma
 
 #endif // LTEMPLATE_H
