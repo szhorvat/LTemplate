@@ -33,6 +33,7 @@ ValidTemplateQ::usage = "ValidTemplateQ[template] returns True if the template s
 
 Make::usage = "Make[class] creates an instance of class.";
 
+LClassInstances::usage = "LClassInstanes[class] returns all existing instances of class.";
 
 LClassContext::usage = "LClassContext[] returns the context where class symbols are created.";
 LClassContext[] = $Context <> "Classes`";
@@ -395,6 +396,8 @@ types = Dispatch@{
 (* TODO: Break out loading and compilation into separate files
    This is to make it easy to include them in other projects *)
 
+getCollection (* underlies LClassInstances, the get_collection library function is associated with it in loadClass *)
+
 symName[classname_String] := LClassContext[] <> classname
 
 
@@ -413,8 +416,10 @@ loadTemplate[tem : LTemplate[libname_String, classes_]] := (
 
 loadClass[libname_][tem : LClass[classname_String, funs_]] := (
     ClearAll[#]& @ symName[classname];
-    With[{sym = Symbol@symName[classname]}, MessageName[sym, "usage"] = formatTemplate[tem]];
-    loadFun[libname, classname][LFun["get_collection", {}, {Integer, 1}]]; (* TODO: this should not be treated as a member function *)
+    With[{sym = Symbol@symName[classname]},
+      MessageName[sym, "usage"] = formatTemplate[tem];
+      getCollection[sym] = LibraryFunctionLoad[libname, funName[classname]["get_collection"], {}, {Integer, 1}];
+    ];
     loadFun[libname, classname] /@ funs
   )
 
@@ -437,14 +442,22 @@ UnloadTemplate[tem_] :=
 unloadTemplate[LTemplate[libname_String, classes_]] :=
   Module[{res},
     res = LibraryUnload[libname];
-    ClearAll /@ symName /@ Cases[classes, LClass[name_, __] :> name];
+    With[{syms = Symbol /@ symName /@ Cases[classes, LClass[name_, __] :> name]},
+      ClearAll /@ syms;
+      Unset[getCollection[#]]& /@ syms;
+    ];
     res
   ]
 
 
+(* TODO: verify class exists for Make and LClassInstances *)
+
 Make[class_Symbol] := Make@SymbolName[class]
 Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symName[classname]]
 
+
+LClassInstances[class_Symbol] := class /@ getCollection[class][]
+LClassInstances[classname_String] := LClassInstances@Symbol@symName[classname]
 
 
 (********************* Compile template ********************)
