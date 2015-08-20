@@ -279,9 +279,41 @@ Cell[BoxData[
  RowBox[{"?", "LTemplate`Classes`*"}]], "Input"],
 
 Cell[BoxData[
- StyleBox["\<\"class Demo1:\\n    Integer addTwo(Integer, Integer)\\n    Real \
-trace({Real, 2})\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-f6c8a5e1-b48b-4d3e-a936-2aeb81156a79"]
+ DynamicModuleBox[{Typeset`open$$ = True}, 
+  PaneSelectorBox[{False->
+   RowBox[{
+    OpenerBox[Dynamic[Typeset`open$$],
+     ImageSize->Small], 
+    StyleBox["LTemplate`Classes`", "InfoHeading"]}], True->GridBox[{
+     {
+      RowBox[{
+       OpenerBox[Dynamic[Typeset`open$$],
+        ImageSize->Small], 
+       StyleBox["LTemplate`Classes`", "InfoHeading"]}]},
+     {GridBox[{
+        {
+         ButtonBox["Demo1",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-d1bca165-5460-408b-b1e9-ae12fdd9dabf", {
+            "Demo1", "LTemplate`Classes`"}},
+          ButtonNote->"LTemplate`Classes`"], 
+         ButtonBox["ReverseString",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-d1bca165-5460-408b-b1e9-ae12fdd9dabf", {
+            "ReverseString", "LTemplate`Classes`"}},
+          ButtonNote->"LTemplate`Classes`"]}
+       },
+       DefaultBaseStyle->"InfoGrid",
+       GridBoxItemSize->{"Columns" -> {{
+            Scaled[0.475]}}}]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
+   Dynamic[Typeset`open$$],
+   ImageSize->Automatic]]], "Print", "InfoCell"]
 }, Open  ]],
 
 Cell["Let\[CloseCurlyQuote]s create an instance of the class ...", "Text"],
@@ -322,7 +354,7 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
 
-Cell[BoxData["2.2277457809468864`"], "Output"]
+Cell[BoxData["1.9974240176666636`"], "Output"]
 }, Open  ]],
 
 Cell["\<\
@@ -382,14 +414,8 @@ include a constructor and destructor that report when they are called, to \
 demonstrate automatic cleanup.\
 \>", "Text"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
-
-Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
-"], "Output"]
-}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -640,17 +666,21 @@ Cell[BoxData["\<\"destructor called\"\>"], "Print"]
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.5218159748958707`", ",", "0.08889191930199458`"}], 
+  RowBox[{"0.4661917859540947`", ",", "0.07178977124955135`"}], 
   "}"}]], "Output"]
 }, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["More advanced examples", "Subsection"],
+Cell["Additional examples", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["User aborts and returning tensors", "Subsubsection"],
 
 Cell["\<\
-The following examples demonstrate user aborts and returning tensors.\
+The following example demonstrate user aborts and returning tensors.\
 \>", "Text"],
 
 Cell[BoxData[
@@ -833,7 +863,7 @@ Cell[BoxData[
 Cell["\<\
 User aborts are supported though mma::check_abort().  This function will \
 never return so you\[CloseCurlyQuote]ll need to use Evaluation \[Rule] Abort \
-Evaluation.\
+Evaluation to stop it.\
 \>", "Text"],
 
 Cell[CellGroupData[{
@@ -848,7 +878,7 @@ Cell[BoxData["\<\"Going into infinite loop ... try aborting now.\"\>"], \
 Cell[BoxData["$Aborted"], "Output"]
 }, Open  ]],
 
-Cell["This functions returns a vector:", "Text"],
+Cell["This functions returns an integer vector:", "Text"],
 
 Cell[CellGroupData[{
 
@@ -862,6 +892,218 @@ Cell[BoxData[
   RowBox[{
   "10", ",", "11", ",", "12", ",", "13", ",", "14", ",", "15", ",", "16", ",",
     "17", ",", "18", ",", "19", ",", "20"}], "}"}]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Working with strings", "Subsubsection"],
+
+Cell[TextData[{
+ "Returning strings from LibraryLink without resorting to ",
+ StyleBox["MathLink",
+  FontSlant->"Italic"],
+ " can be cumbersome when the strings are not stored permanently as constant \
+data in the library.  This is because it is the library\[CloseCurlyQuote]s \
+responsibility to allocate memory for the string and to free it.  Generally, \
+freeing the string must be done in a separate function call from the one \
+returning the string."
+}], "Text"],
+
+Cell["\<\
+Since LTemplate always creates managed library expressions, freeing the \
+string can be made part of releasing the expression.\
+\>", "Text"],
+
+Cell[TextData[{
+ "More information on returning strings from LibraryLink: ",
+ ButtonBox["http://mathematica.stackexchange.com/q/55171/12",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://mathematica.stackexchange.com/q/55171/12"], None},
+  ButtonNote->"http://mathematica.stackexchange.com/q/55171/12"]
+}], "Text"],
+
+Cell["The following example reverses a string:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+  "code", "=", 
+   "\"\<\n#include <string>\n#include <algorithm>\n\nclass ReverseString {\n\t\
+std::string str;\n\npublic:\n\tconst char *reverse(const char *in) {\n\t\tstr \
+= in;\t\t\n\t\tmma::disownString(in); // release the string that Mathematica \
+passes in\n\t\tstd::reverse(str.begin(), str.end());\n\t\treturn str.c_str();\
+\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<ReverseString.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  "]"}]}], "Input"],
+
+Cell[BoxData["\<\"ReverseString.h\"\>"], "Output"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<ReverseString\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"LFun", "[", 
+       RowBox[{"\"\<reverse\>\"", ",", 
+        RowBox[{"{", "\"\<UTF8String\>\"", "}"}], ",", "\"\<UTF8String\>\""}],
+        "]"}], "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"ReverseString\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["ReverseString", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"reverse", "[", "str_String", "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"rs", "=", 
+      RowBox[{"Make", "[", "ReverseString", "]"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"rs", "@", 
+     RowBox[{"\"\<reverse\>\"", "[", "str", "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"reverse", "[", "\"\<Once upon a time.\>\"", "]"}]], "Input"],
+
+Cell[BoxData["\<\".emit a nopu ecnO\"\>"], "Output"]
+}, Open  ]]
 }, Open  ]]
 }, Closed]]
 }, Open  ]],
@@ -901,77 +1143,83 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
             "CompileTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LClass",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
             "LClass", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["LoadTemplate",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
-            "LoadTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["Make",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
-            "Make", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["UnloadTemplate",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
-            "UnloadTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"]},
-        {
-         ButtonBox["FormatTemplate",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
-            "FormatTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LFun",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
             "LFun", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
             "LTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["TranslateTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
             "TranslateTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["ValidTemplateQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f", {
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
             "ValidTemplateQ", "LTemplate`"}},
-          ButtonNote->"LTemplate`"]}
+          ButtonNote->"LTemplate`"]},
+        {
+         ButtonBox["FormatTemplate",
+          BaseStyle->"InformationLink",
+          ButtonData:>{
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+            "FormatTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LClassContext",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+            "LClassContext", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["LoadTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+            "LoadTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["Make",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+            "Make", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["UnloadTemplate",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4", {
+            "UnloadTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], ""}
        },
        DefaultBaseStyle->"InfoGrid",
        GridBoxItemSize->{"Columns" -> {{
-            Scaled[0.19]}}}]}
+            Scaled[0.15833333333333333`]}}}]}
     },
     GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
    Dynamic[Typeset`open$$],
@@ -981,7 +1229,7 @@ Cell[BoxData[
  StyleBox["\<\"LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \
 \[Ellipsis]}] represents a library template.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-63e5441d-f2ac-464c-9389-e41d1e9a7a9f"]
+ CellTags->"Info-8f5c9a0e-0a62-4414-9ed5-5ded269c63e4"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]],
@@ -990,15 +1238,24 @@ Cell[CellGroupData[{
 
 Cell["C++", "Subsection"],
 
+Cell[CellGroupData[{
+
+Cell["Basic types", "Subsubsection"],
+
 Cell["Basic LibraryLink types are mapped to C++ equivalents as", "Text"],
 
 Cell["\<\
 Integer\t\t\tmint
 Real\t\t\tdouble
 Complex\t\t\tmma::complex_t  =  std::complex<double>
-\"UTF8String\"\tchar *
+\"UTF8String\"\tconst char *
 \"Boolean\"\t\tbool\
-\>", "Program"],
+\>", "Program"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Tensor types", "Subsubsection"],
 
 Cell["Tensors are mapped as", "Text"],
 
@@ -1057,7 +1314,41 @@ Cell["\<\
 makeVector<T>(mint len);
 makeMatrix<T>(mint rows, mint cols);
 makeCube<T>(mint rows, mint cols, mint slices);\
-\>", "Program"],
+\>", "Program"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Strings", "Subsubsection"],
+
+Cell[TextData[{
+ "Strings are mapped to ",
+ StyleBox["const char *", "Program"],
+ " and must not be modified, except for freeing the input argument."
+}], "Text"],
+
+Cell[TextData[{
+ "With LibraryLink, freeing strings that ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " passes in is always the library\[CloseCurlyQuote]s responsibility.  A \
+convenience function is provided for this as ",
+ StyleBox["libData->UTF8String_disown()", "Program"],
+ " does not accept a ",
+ StyleBox["const char *", "Program"],
+ " due to the ",
+ StyleBox["const", "Program"],
+ " qualifier."
+}], "Text"],
+
+Cell["\<\
+void disownString(const char *); // wrapper for UTF8String_disown\
+\>", "Program"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Other functions", "Subsubsection"],
 
 Cell["Some other useful functions are", "Text"],
 
@@ -1068,6 +1359,7 @@ void print(const char *msg);
 massert(condition) // analogous to C's standard assert macro, but doesn't \
 kill the kernel\
 \>", "Program"]
+}, Open  ]]
 }, Open  ]]
 }, Closed]]
 }, Open  ]]
