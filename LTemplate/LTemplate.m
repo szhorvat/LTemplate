@@ -77,6 +77,8 @@ LTemplate::warning = "``";
 LTemplate::error   = "``";
 LTemplate::assert  = "Assertion `` failed.";
 
+LTemplate::nofun = "Function `` does not exist.";
+
 
 (***************** SymbolicC extensions *******************)
 
@@ -416,11 +418,12 @@ loadTemplate[tem : LTemplate[libname_String, classes_]] := (
 
 loadClass[libname_][tem : LClass[classname_String, funs_]] := (
     ClearAll[#]& @ symName[classname];
+    loadFun[libname, classname] /@ funs;
     With[{sym = Symbol@symName[classname]},
       MessageName[sym, "usage"] = formatTemplate[tem];
+      sym[id_Integer][(f_String)[___]] /; (Message[LTemplate::nofun, StringTemplate["``::``"][sym, f]]; False) := $Failed;
       getCollection[sym] = LibraryFunctionLoad[libname, funName[classname]["get_collection"], {}, {Integer, 1}];
     ];
-    loadFun[libname, classname] /@ funs
   )
 
 loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
