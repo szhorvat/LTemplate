@@ -406,7 +406,7 @@ symName[classname_String] := LClassContext[] <> classname
 LoadTemplate[tem_] :=
     With[{t = normalizeTemplate[tem]},
       If[validateTemplate[t],
-        loadTemplate[t],
+        Check[loadTemplate[t], $Failed],
         $Failed
       ]
     ]
