@@ -511,7 +511,7 @@ FormatTemplate[template_] :=
 formatTemplate[template_] :=
   Block[{LFun, LClass, LTemplate},
     With[{tem = template /. normalizeTypesRules},
-      LFun[name_, args_, ret_] := StringTemplate["`` ``(``)"][ret, name, StringJoin@Riffle[ToString /@ args, ", "]];
+      LFun[name_, args_, ret_] := StringTemplate["`` ``(``)"][ToString[ret], name, StringJoin@Riffle[ToString /@ args, ", "]];
       LClass[name_, funs_] := StringTemplate["class ``:\n``"][name, StringJoin@Riffle["    " <> ToString[#] & /@ funs, "\n"]];
       LTemplate[name_, classes_] := StringTemplate["template ``\n\n"][name] <> Riffle[ToString /@ classes, "\n\n"];
       tem
