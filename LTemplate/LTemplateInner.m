@@ -287,8 +287,6 @@ transTemplate[LTemplate[libname_String, classes_]] :=
       classTranslations = transClass /@ classes;
       {
         "",
-        CDefine["LTEMPLATE_CONTEXT", "\"" <> LTemplateContext[] <> "\""],
-        "",
         CInclude["LTemplate.h"],
         CInclude["LTemplateHelpers.h"],
         CInclude /@ includeName /@ classlist,
@@ -537,9 +535,11 @@ CompileTemplate[tem_, sources_List, opt : OptionsPattern[CreateLibrary]] :=
 
 CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] := CompileTemplate[tem, {}, opt]
 
+escape[s_String] := StringReplace[s, c:("\""|"`") :> "\\"<>c] (* TODO: Fix for Windows *)
+
 compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : OptionsPattern[CreateLibrary]] :=
     Catch[
-      Module[{sourcefile, code, includeDirs, classlist, print},
+      Module[{sourcefile, code, includeDirs, defines, classlist, print},
         print[args__] := Apply[Print, Style[#, Darker@Blue]& /@ {args}];
 
         print["Current directory is: ", Directory[]];
@@ -556,7 +556,11 @@ compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : Option
         Export[sourcefile, code, "String"];
         print["Compiling library code ..."];
         includeDirs = Flatten[{OptionValue["IncludeDirectories"], $includeDirectory}];
-        CreateLibrary[Flatten[{sourcefile, sources}], libname, "IncludeDirectories" -> includeDirs, Sequence@@FilterRules[{opt}, Except["IncludeDirectories"]]]
+        defines = Flatten[{OptionValue["Defines"], escape["LTEMPLATE_CONTEXT=\"" <> LTemplateContext[] <> "\""]}];
+        CreateLibrary[
+          Flatten[{sourcefile, sources}], libname,
+          "IncludeDirectories" -> includeDirs, "Defines" -> defines,
+          Sequence@@FilterRules[{opt}, Except["IncludeDirectories"|"Defines"]]]
       ],
       compileTemplate
     ]
