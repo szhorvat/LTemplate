@@ -20,7 +20,7 @@ ValidTemplateQ::usage = "ValidTemplateQ[template] returns True if the template s
 
 Make::usage = "Make[class] creates an instance of class.";
 
-LClassInstances::usage = "LClassInstanes[class] returns all existing instances of class.";
+LExpressionList::usage = "LExpressionList[class] returns all existing instances of class.";
 
 LClassContext::usage = "LClassContext[] returns the context where class symbols are created.";
 LClassContext[] = $Context <> "Classes`";
@@ -457,8 +457,8 @@ Make[class_Symbol] := Make@SymbolName[class]
 Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symName[classname]]
 
 
-LClassInstances[class_Symbol] := class /@ getCollection[class][]
-LClassInstances[classname_String] := LClassInstances@Symbol@symName[classname]
+LExpressionList[class_Symbol] := class /@ getCollection[class][]
+LExpressionList[classname_String] := LExpressionList@Symbol@symName[classname]
 
 
 (********************* Compile template ********************)
