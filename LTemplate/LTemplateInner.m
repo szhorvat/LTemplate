@@ -179,7 +179,7 @@ validateReturnType[type : LExpressionID[___]] := (Message[ValidTemplateQ::rettyp
 validateReturnType[type_] := validateType[type]
 
 (* must be called within validateTemplate, uses location *)
-validateName[name_] := Message[ValidTemplateQ::string, location, name]
+validateName[name_] := (Message[ValidTemplateQ::string, location, name]; False)
 validateName[name_String] :=
     If[StringMatchQ[name, RegularExpression["[a-zA-Z][a-zA-Z0-9]*"]],
       True,
