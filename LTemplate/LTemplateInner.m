@@ -1,5 +1,5 @@
 
-(* This file is read directly in LTemplate.m or LTemplatePrivate.m *)
+(* This file is read directly with Get in LTemplate.m or LTemplatePrivate.m *)
 
 LTemplate::usage = "LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \[Ellipsis]}] represents a library template.";
 LClass::usage = "LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class within a template.";
@@ -12,7 +12,7 @@ UnloadTemplate::usage = "UnloadTemplate[template] attempts to unload the library
 
 CompileTemplate::usage =
     "CompileTemplate[template] compiles the library defined by the template. Required source files must be present in the current directory.\n" <>
-        "CompileTemplate[template, {file1, \[Ellipsis]}] includes additional source files in the compilation.";
+    "CompileTemplate[template, {file1, \[Ellipsis]}] includes additional source files in the compilation.";
 
 FormatTemplate::usage = "FormatTemplate[template] formats the template in an easy to read way.";
 
@@ -25,7 +25,7 @@ LExpressionList::usage = "LExpressionList[class] returns all existing instances 
 LClassContext::usage = "LClassContext[] returns the context where class symbols are created.";
 LClassContext[] = $Context <> "Classes`";
 
-LExpressionID::usage = "LExpressionID[name] represents the data type corresponding to LClass[name].";
+LExpressionID::usage = "LExpressionID[name] represents the data type corresponding to LClass[name, \[Ellipsis]] in templates.";
 
 
 Begin["`Private`"] (* Begin Private Context *)
@@ -37,8 +37,8 @@ $includeDirectory = FileNameJoin[{$packageDirectory, "IncludeFiles"}];
 
 (* Mathematica version checks *)
 
-minVersion = {10.0, 0}; (* oldest supported version *)
-maxVersion = {10.2, 0}; (* latest version the package was tested with *)
+minVersion = {10.0, 0}; (* oldest supported Mathematica version *)
+maxVersion = {10.2, 0}; (* latest Mathematica version the package was tested with *)
 version    = {$VersionNumber, $ReleaseNumber}
 versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 
@@ -52,8 +52,8 @@ If[Not@OrderedQ[{version, maxVersion}],
   Print[
     StringTemplate[
       "WARNING: LTemplate has not yet been tested with Mathematica ``.\n" <>
-          "The latest supported Mathematica version is ``.\n" <>
-          "Please report any issues you find."
+      "The latest supported Mathematica version is ``.\n" <>
+      "Please report any issues you find to szhorvat at gmail.com."
     ][versionString[version], versionString[maxVersion]]
   ]
 ]
@@ -429,6 +429,7 @@ loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
       ]
     ]
 
+(* For types that need to be translated to LibraryFunctionLoad compatible forms before loading. *)
 loadingTypes = Dispatch@{ LExpressionID[_] -> Integer };
 
 
