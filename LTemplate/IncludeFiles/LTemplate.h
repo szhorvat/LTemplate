@@ -55,6 +55,9 @@ inline void message(const char *msg, MessageType type = M_INFO) {
     if (msg == NULL)
         return;
 
+    if (libData->AbortQ())
+        return; // trying to use the MathLink connection during an abort appears to break it
+
     const char *tag;
     switch (type) {
     case M_ERROR:
@@ -87,6 +90,9 @@ inline void message(const char *msg, MessageType type = M_INFO) {
 
 /// Call Mathematica's Print[].
 inline void print(const char *msg) {
+    if (libData->AbortQ())
+        return; // trying to use the MathLink connection during an abort appears to break it
+
     MLINK link = libData->getMathLink(libData);
     MLPutFunction(link, "EvaluatePacket", 1);
         MLPutFunction(link, "Print", 1);
