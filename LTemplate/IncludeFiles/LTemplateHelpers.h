@@ -48,6 +48,15 @@ inline IntTensorRef get_collection(const Collection &collection) {
 }
 
 
+template<typename T>
+class getObject {
+    std::map<mint, T *> &collection;
+public:
+    getObject(std::map<mint, T *> &coll) : collection(coll) { }
+    T & operator () (MArgument marg) { return *(collection[MArgument_getInteger(marg)]); }
+};
+
+
 } // namespace mma
 
 #endif // LTEMPLATE_HELPERS_H

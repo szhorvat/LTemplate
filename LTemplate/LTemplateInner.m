@@ -25,6 +25,8 @@ LClassInstances::usage = "LClassInstanes[class] returns all existing instances o
 LClassContext::usage = "LClassContext[] returns the context where class symbols are created.";
 LClassContext[] = $Context <> "Classes`";
 
+LExpressionID::usage = "LExpressionID[name] represents the data type corresponding to LClass[name].";
+
 
 Begin["`Private`"] (* Begin Private Context *)
 
@@ -127,6 +129,7 @@ ValidTemplateQ::fun      = "In ``: `` is not a valid function. Functions must fo
 ValidTemplateQ::string   = "In ``: String expected instead of ``";
 ValidTemplateQ::name     = "In ``: `` is not a valid name. Names must start with a letter and may only contain letters and digits.";
 ValidTemplateQ::type     = "In ``: `` is not a valid type.";
+ValidTemplateQ::rettype  = "In ``: `` is not a valid return type.";
 ValidTemplateQ::dupclass = "In ``: Class `` appears more than once.";
 ValidTemplateQ::dupfun   = "In ``: Function `` appears more than once.";
 
@@ -167,11 +170,12 @@ validateFun[LFun[name_, args_List, ret_]] :=
 (* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
 
 (* must be called within validateTemplate, uses location *)
-validateType[Integer|Real|Complex|"Boolean"|"UTF8String"] := True
+validateType[Integer|Real|Complex|"Boolean"|"UTF8String"|LExpressionID[_String]] := True
 validateType[{Integer|Real|Complex, (_Integer?Positive) | Verbatim[_], PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 validateReturnType["Void"] := True
+validateReturnType[type : LExpressionID[___]] := (Message[ValidTemplateQ::rettype, location, type]; False)
 validateReturnType[type_] := validateType[type]
 
 (* must be called within validateTemplate, uses location *)
@@ -375,7 +379,11 @@ types = Dispatch@{
   "UTF8String" -> {"const char *", "mma::getString", "mma::setString"},
   {Integer, __} -> {"mma::IntTensorRef", "mma::getTensor<mint>", "mma::setTensor<mint>"},
   {Real, __} -> {"mma::RealTensorRef", "mma::getTensor<double>", "mma::setTensor<double>"},
-  {Complex, __} -> {"mma::ComplexTensorRef", "mma::getTensor< mma::complex_t >", "mma::setTensor< mma::complex_t >"}
+  {Complex, __} -> {"mma::ComplexTensorRef", "mma::getTensor< mma::complex_t >", "mma::setTensor< mma::complex_t >"},
+
+  (* This is a special type that translates integer managed expression IDs on the Mathematica side
+     into a class reference on the C++ side. It cannot be returned. *)
+  LExpressionID[classname_String] :> {classname <> " &", "mma::getObject<" <> classname <> ">(" <> collectionName[classname]  <> ")", ""}
 };
 
 
@@ -416,10 +424,12 @@ loadClass[libname_][tem : LClass[classname_String, funs_]] := (
 
 loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
     With[{classsym = Symbol@symName[classname]},
-      With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], Prepend[args, Integer], ret]},
+      With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], Prepend[args /. loadingTypes, Integer], ret]},
         classsym[id_Integer]@name[arguments___] := lfun[id, arguments]
       ]
     ]
+
+loadingTypes = Dispatch@{ LExpressionID[_] -> Integer };
 
 
 UnloadTemplate[tem_] :=
