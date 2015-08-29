@@ -3,7 +3,9 @@
 
 LTemplate::usage = "LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \[Ellipsis]}] represents a library template.";
 LClass::usage = "LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class within a template.";
-LFun::usage = "LFun[name, {arg1, arg2, \[Ellipsis]}, ret] represents a class member function with the given name, argument types and return type.";
+LFun::usage =
+    "LFun[name, {arg1, arg2, \[Ellipsis]}, ret] represents a class member function with the given name, argument types and return type.\n" <>
+    "LFun[name, LinkObject, LinkObject] represents a function that uses MathLink/WSTP based passing. The shorthand LFun[name, LinkObject] can also be used.";
 
 TranslateTemplate::usage = "TranslateTemplate[template] translates the template into C++ code.";
 
@@ -29,6 +31,11 @@ LExpressionID::usage = "LExpressionID[name] represents the data type correspondi
 
 
 Begin["`Private`"] (* Begin Private Context *)
+
+(* Private for now, use LFun[name, LinkObject, LinkObject] instead. *)
+LOFun::usage =
+    "LOFun[name] represents a class member funtion that uses LinkObject for passing and returning arguments.\n" <>
+    "It is equivalent to LFun[name, LinkObject, LinkObject].";
 
 (* Set up package global variables *)
 
@@ -108,6 +115,7 @@ GenerateCode[CTryCatch[try_, arg_, catch_], opts: OptionsPattern[]] :=
  Normalizing a template will:
   - Wrap a bare LClass with LTemplate.  This way a bare LClass can be used as a shorter notation for a single-class template.
   - Convert type names to a canonical form
+  - Convert LFun[name, LinkObject, LinkObject] to LOFun[name]
 *)
 
 normalizeTypesRules = Dispatch@{
@@ -118,8 +126,13 @@ normalizeTypesRules = Dispatch@{
   Verbatim[False|True] -> "Boolean"
 };
 
+normalizeFunctionsRules = Dispatch@{
+  LFun[name_, LinkObject, LinkObject] :> LOFun[name],
+  LFun[name_, LinkObject] :> LOFun[name]
+};
+
 normalizeTemplate[c : LClass[name_, funs_]] := normalizeTemplate[LTemplate[name, {c}]]
-normalizeTemplate[t : LTemplate[name_, classes_]] := t /. normalizeTypesRules
+normalizeTemplate[t : LTemplate[name_, classes_]] := t /. normalizeTypesRules /. normalizeFunctionsRules
 normalizeTemplate[t_] := t
 
 
@@ -166,6 +179,7 @@ validateFun[LFun[name_, args_List, ret_]] :=
         nameValid && (And @@ validateType /@ args) && validateReturnType[ret]
       ]
     ]
+validateFun[LOFun[name_]] := validateName[name]
 
 (* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
 
@@ -200,6 +214,7 @@ TranslateTemplate[tem_] :=
 
 
 libFunArgs = {{"WolframLibraryData", "libData"}, {"mint", "Argc"}, {"MArgument *", "Args"}, {"MArgument", "Res"}};
+linkFunArgs = {{"WolframLibraryData", "libData"}, {"MLINK", "mlp"}};
 libFunRet  = "extern \"C\" DLLEXPORT int";
 
 excType = "const mma::LibraryError &";
@@ -350,6 +365,42 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
       }
     ]
 
+transFun[classname_][LOFun[name_String]] :=
+    {
+      CFunction[libFunRet, funName[classname][name], linkFunArgs,
+        {
+          CTryCatch[
+            (* try *) {
+              CInlineCode@StringTemplate[
+"
+int id;
+int args = 2;
+
+if (! MLTestHeadWithArgCount(mlp, \"List\", &args))
+  return LIBRARY_FUNCTION_ERROR;
+if (! MLGetInteger(mlp, &id))
+  return LIBRARY_FUNCTION_ERROR;
+if (`collection`.find(id) == `collection`.end()) {
+  libData->Message(\"noinst\");
+  return LIBRARY_FUNCTION_ERROR;
+}
+`collection`[id]->`funname`(mlp);
+"
+              ][<| "collection" -> collectionName[classname], "funname" -> name |>]
+            },
+            (* catch *) {excType, excName},
+            {
+              (* TODO: clean up link *)
+              CCall["mma::message", {CMember[excName, "message"], "mma::M_ERROR"}],
+              CReturn[CMember[excName, "errcode"]]
+            }
+          ],
+          "",
+          CReturn["LIBRARY_NO_ERROR"]
+        }
+      ]
+    }
+
 transArg[type_] :=
     Module[{name, cpptype, getfun, setfun},
       index++;
@@ -426,6 +477,13 @@ loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
     With[{classsym = Symbol@symName[classname]},
       With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], Prepend[args /. loadingTypes, Integer], ret]},
         classsym[id_Integer]@name[arguments___] := lfun[id, arguments]
+      ]
+    ]
+
+loadFun[libname_, classname_][LOFun[name_String]] :=
+    With[{classsym = Symbol@symName[classname]},
+      With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], LinkObject, LinkObject]},
+        classsym[id_Integer]@name[arguments___] := lfun[id, {arguments}]
       ]
     ]
 
@@ -510,10 +568,14 @@ FormatTemplate[template_] :=
       formatTemplate@normalizeTemplate[template]
     ]
 
+(* Used in loadClass[] without FormatTemplate wrapper to set usage messages.
+   TODO: fix this redundancy.
+ *)
 formatTemplate[template_] :=
-    Block[{LFun, LClass, LTemplate},
-      With[{tem = template /. normalizeTypesRules},
+    Block[{LFun, LOFun, LClass, LTemplate},
+      With[{tem = template /. normalizeTypesRules /. normalizeFunctionsRules},
         LFun[name_, args_, ret_] := StringTemplate["`` ``(``)"][ToString[ret], name, StringJoin@Riffle[ToString /@ args, ", "]];
+        LOFun[name_] := StringTemplate["LinkObject ``(LinkObject)"][name];
         LClass[name_, funs_] := StringTemplate["class ``:\n``"][name, StringJoin@Riffle["    " <> ToString[#] & /@ funs, "\n"]];
         LTemplate[name_, classes_] := StringTemplate["template ``\n\n"][name] <> Riffle[ToString /@ classes, "\n\n"];
         tem
