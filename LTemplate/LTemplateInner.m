@@ -24,8 +24,11 @@ Make::usage = "Make[class] creates an instance of class.";
 
 LExpressionList::usage = "LExpressionList[class] returns all existing instances of class.";
 
+LTemplateContext::usage = "LTemplateContext[] returns the package context. Meant to be used when the package is privately embedded.";
+LTemplateContext[] = $Context;
+
 LClassContext::usage = "LClassContext[] returns the context where class symbols are created.";
-LClassContext[] = $Context <> "Classes`";
+LClassContext[] = LTemplateContext[] <> "Classes`";
 
 LExpressionID::usage = "LExpressionID[name] represents the data type corresponding to LClass[name, \[Ellipsis]] in templates.";
 
@@ -283,6 +286,8 @@ transTemplate[LTemplate[libname_String, classes_]] :=
     Block[{classlist = {}, classTranslations},
       classTranslations = transClass /@ classes;
       {
+        "",
+        CDefine["LTEMPLATE_CONTEXT", "\"" <> LTemplateContext[] <> "\""],
         "",
         CInclude["LTemplate.h"],
         CInclude["LTemplateHelpers.h"],

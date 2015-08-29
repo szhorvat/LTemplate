@@ -12,6 +12,9 @@
 #include <vector>
 #include <complex>
 
+#ifndef LTEMPLATE_CONTEXT
+#define LTEMPLATE_CONTEXT /* empty */
+#endif
 
 namespace mma {
 
@@ -72,7 +75,7 @@ inline void message(const char *msg, MessageType type = M_INFO) {
     MLPutFunction(link, "EvaluatePacket", 1);
         MLPutFunction(link, "Message", 2);
             MLPutFunction(link, "MessageName", 2);
-                MLPutSymbol(link, "LTemplate");
+                MLPutSymbol(link, LTEMPLATE_CONTEXT "LTemplate");
                 MLPutString(link, tag);
             MLPutString(link, msg);
     libData->processMathLink(link);
