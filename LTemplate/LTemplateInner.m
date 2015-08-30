@@ -40,6 +40,8 @@ LOFun::usage =
     "LOFun[name] represents a class member funtion that uses LinkObject for passing and returning arguments.\n" <>
     "It is equivalent to LFun[name, LinkObject, LinkObject].";
 
+packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
+
 (* Set up package global variables *)
 
 $packageDirectory = DirectoryName[$InputFileName];
@@ -54,7 +56,7 @@ versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {
 
 If[Not@OrderedQ[{minVersion, version}],
   Print["LTemplate requires at least Mathematica version " <> versionString[minVersion] <> ".  Aborting."];
-  Abort[];
+  packageAbort[];
 ]
 
 (* We need to rely on implementation details of SymbolicC, so warn users of yet untested new Mathematica versions. *)
