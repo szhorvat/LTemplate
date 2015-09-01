@@ -16,6 +16,8 @@ BeginPackage["LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}
 
 Get["LTemplate`LTemplateInner`"]
 
+ConfigureLTemplate[] (* use the default configuration *)
+
 EndPackage[]
 
 (* Add the class context to $ContextPath *)

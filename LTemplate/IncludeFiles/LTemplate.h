@@ -33,42 +33,7 @@ enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
  * \param msg the text of the message
  * \param type determines the message tag which will be used
  */
-inline void message(const char *msg, MessageType type = M_INFO) {
-    if (msg == NULL)
-        return;
-
-    if (libData->AbortQ())
-        return; // trying to use the MathLink connection during an abort appears to break it
-
-    const char *tag;
-    switch (type) {
-    case M_ERROR:
-        tag = "error";
-        break;
-    case M_WARNING:
-        tag = "warning";
-        break;
-    case M_ASSERT:
-        tag = "assert";
-        break;
-    case M_INFO:
-    default:
-        tag = "info";
-    }
-
-    MLINK link = libData->getMathLink(libData);
-    MLPutFunction(link, "EvaluatePacket", 1);
-        MLPutFunction(link, "Message", 2);
-            MLPutFunction(link, "MessageName", 2);
-                MLPutSymbol(link, LTEMPLATE_CONTEXT "LTemplate");
-                MLPutString(link, tag);
-            MLPutString(link, msg);
-    libData->processMathLink(link);
-    int pkt = MLNextPacket(link);
-    if (pkt == RETURNPKT)
-        MLNewPacket(link);
-}
-
+void message(const char *msg, MessageType type = M_INFO);
 
 inline void message(std::string msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
 

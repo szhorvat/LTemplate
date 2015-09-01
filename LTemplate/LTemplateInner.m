@@ -24,14 +24,11 @@ Make::usage = "Make[class] creates an instance of class.";
 
 LExpressionList::usage = "LExpressionList[class] returns all existing instances of class.";
 
-LTemplateContext::usage = "LTemplateContext[] returns the package context. Meant to be used when the package is privately embedded.";
-LTemplateContext[] = $Context;
-
 LClassContext::usage = "LClassContext[] returns the context where class symbols are created.";
-LClassContext[] = LTemplateContext[] <> "Classes`";
 
 LExpressionID::usage = "LExpressionID[name] represents the data type corresponding to LClass[name, \[Ellipsis]] in templates.";
 
+ConfigureLTemplate::usage = "ConfigureLTemplate[options] must be called after loading the LTemplate package privately.";
 
 Begin["`Private`"] (* Begin Private Context *)
 
@@ -40,14 +37,9 @@ LOFun::usage =
     "LOFun[name] represents a class member funtion that uses LinkObject for passing and returning arguments.\n" <>
     "It is equivalent to LFun[name, LinkObject, LinkObject].";
 
-packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
-
-(* Set up package global variables *)
-
-$packageDirectory = DirectoryName[$InputFileName];
-$includeDirectory = FileNameJoin[{$packageDirectory, "IncludeFiles"}];
-
 (* Mathematica version checks *)
+
+packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
 
 minVersion = {10.0, 0}; (* oldest supported Mathematica version *)
 maxVersion = {10.2, 0}; (* latest Mathematica version the package was tested with *)
@@ -70,15 +62,33 @@ If[Not@OrderedQ[{version, maxVersion}],
   ]
 ]
 
+(*************** Package configuration ****************)
+
+(* Set up package global variables *)
+
+$packageDirectory = DirectoryName[$InputFileName];
+$includeDirectory = FileNameJoin[{$packageDirectory, "IncludeFiles"}];
+
+$messageSymbol (* set by ConfigureLTemplate[] *)
+
 
 LibraryFunction::noinst = "Managed library expression instance does not exist.";
 
-LTemplate::info    = "``";
-LTemplate::warning = "``";
-LTemplate::error   = "``";
-LTemplate::assert  = "Assertion `` failed.";
-
 LTemplate::nofun = "Function `` does not exist.";
+
+
+Options[ConfigureLTemplate] = { "MessageSymbol" -> LTemplate }
+
+ConfigureLTemplate[opt : OptionsPattern[]] :=
+    With[{sym = OptionValue["MessageSymbol"]},
+      $messageSymbol = sym;
+      sym::info    = "``";
+      sym::warning = "``";
+      sym::error   = "``";
+      sym::assert  = "Assertion `` failed.";
+    ]
+
+LClassContext[] = Context[LTemplate] <> "Classes`";
 
 
 (***************** SymbolicC extensions *******************)
@@ -236,6 +246,8 @@ collectionType[classname_String] := "std::map<mint, " <> classname <> " *>"
 
 managerName[classname_String] := classname <> "_manager"
 
+fullyQualifiedSymbolName[sym_Symbol] := Context[sym] <> SymbolName[sym]
+
 
 setupCollection[classname_String] := {
   CDeclare[collectionType[classname], collectionName[classname]],
@@ -294,7 +306,16 @@ transTemplate[LTemplate[libname_String, classes_]] :=
         CInclude /@ includeName /@ classlist,
         "","",
 
-        CInlineCode@"namespace mma { WolframLibraryData libData; }",
+        CInlineCode@"namespace mma {",
+        "",
+        CDeclare["WolframLibraryData", "libData"],
+        "",
+        CDefine["LTEMPLATE_MESSAGE_SYMBOL", CString[fullyQualifiedSymbolName[$messageSymbol]]],
+        "",
+        CInclude["LTemplate.inc"],
+        "",
+        CInlineCode@"} // namespace mma",
+
         "","",
 
         setupCollection /@ classlist,
@@ -537,11 +558,9 @@ CompileTemplate[tem_, sources_List, opt : OptionsPattern[CreateLibrary]] :=
 
 CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] := CompileTemplate[tem, {}, opt]
 
-escape[s_String] := StringReplace[s, c:("\""|"`") :> "\\"<>c] (* TODO: Fix for Windows *)
-
 compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : OptionsPattern[CreateLibrary]] :=
     Catch[
-      Module[{sourcefile, code, includeDirs, defines, classlist, print},
+      Module[{sourcefile, code, includeDirs, classlist, print},
         print[args__] := Apply[Print, Style[#, Darker@Blue]& /@ {args}];
 
         print["Current directory is: ", Directory[]];
@@ -558,11 +577,10 @@ compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : Option
         Export[sourcefile, code, "String"];
         print["Compiling library code ..."];
         includeDirs = Flatten[{OptionValue["IncludeDirectories"], $includeDirectory}];
-        defines = Flatten[{OptionValue["Defines"], escape["LTEMPLATE_CONTEXT=\"" <> LTemplateContext[] <> "\""]}];
         CreateLibrary[
           Flatten[{sourcefile, sources}], libname,
-          "IncludeDirectories" -> includeDirs, "Defines" -> defines,
-          Sequence@@FilterRules[{opt}, Except["IncludeDirectories"|"Defines"]]]
+          "IncludeDirectories" -> includeDirs,
+          Sequence@@FilterRules[{opt}, Except["IncludeDirectories"]]]
       ],
       compileTemplate
     ]
