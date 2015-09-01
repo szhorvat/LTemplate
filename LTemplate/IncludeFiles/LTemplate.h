@@ -63,12 +63,12 @@ inline void print(std::string msg) { print(msg.c_str()); }
  */
 class LibraryError {
     const std::string msg;
-    bool has_msg;
-    int err_code;
+    const bool has_msg;
+    const int err_code;
 
 public:
-    LibraryError(int err = LIBRARY_FUNCTION_ERROR) : err_code(err), has_msg(false) { }
-    LibraryError(std::string s, int err = LIBRARY_FUNCTION_ERROR) : msg(s), has_msg(true) { }
+    LibraryError(int err = LIBRARY_FUNCTION_ERROR) : has_msg(false), err_code(err) { }
+    LibraryError(std::string s, int err = LIBRARY_FUNCTION_ERROR) : msg(s), has_msg(true), err_code(err) { }
 
     const std::string &message() const { return msg; }
     bool has_message() const { return has_msg; }
