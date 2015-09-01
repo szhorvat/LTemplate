@@ -358,8 +358,8 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
             },
             (* catch *) {excType, excName},
               {
-                CCall["mma::message", {CMember[excName, "message"], "mma::M_ERROR"}],
-                CReturn[CMember[excName, "errcode"]]
+                CMember[excName, "report()"],
+                CReturn[CMember[excName, "error_code()"]]
               }
             ],
             "",
@@ -396,8 +396,8 @@ if (`collection`.find(id) == `collection`.end()) {
             (* catch *) {excType, excName},
             {
               (* TODO: clean up link *)
-              CCall["mma::message", {CMember[excName, "message"], "mma::M_ERROR"}],
-              CReturn[CMember[excName, "errcode"]]
+              CMember[excName, "report()"],
+              CReturn[CMember[excName, "error_code()"]]
             }
           ],
           "",

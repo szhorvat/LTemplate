@@ -10,6 +10,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 #include <complex>
 
 #ifndef LTEMPLATE_CONTEXT
@@ -22,25 +23,6 @@ namespace mma {
 extern WolframLibraryData libData;
 
 typedef std::complex<double> complex_t;
-
-
-/** Throwing this returns to Mathematica immediately.
- *  \param reported in Mathematica as LTemplate::error
- *  \param used as the LibraryFunction exit code.
- */
-struct LibraryError {
-    const char *message;
-    int errcode;
-
-    LibraryError(const char *m = NULL, int err = LIBRARY_FUNCTION_ERROR) : message(m), errcode(err) { }
-};
-
-
-/// Check for and honour user aborts.
-inline void check_abort() {
-    if (libData->AbortQ())
-        throw LibraryError();
-}
 
 
 /// For use in the message() function.
@@ -88,6 +70,9 @@ inline void message(const char *msg, MessageType type = M_INFO) {
 }
 
 
+inline void message(std::string msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
+
+
 /// Call Mathematica's Print[].
 inline void print(const char *msg) {
     if (libData->AbortQ())
@@ -104,6 +89,33 @@ inline void print(const char *msg) {
 }
 
 
+inline void print(std::string msg) { print(msg.c_str()); }
+
+
+/** Throwing this returns to Mathematica immediately.
+ *  \param reported in Mathematica as LTemplate::error
+ *  \param used as the LibraryFunction exit code.
+ */
+class LibraryError {
+    const std::string msg;
+    bool has_msg;
+    int err_code;
+
+public:
+    LibraryError(int err = LIBRARY_FUNCTION_ERROR) : err_code(err), has_msg(false) { }
+    LibraryError(std::string s, int err = LIBRARY_FUNCTION_ERROR) : msg(s), has_msg(true) { }
+
+    const std::string &message() const { return msg; }
+    bool has_message() const { return has_msg; }
+    int error_code() const { return err_code; }
+
+    void report() const {
+        if (has_msg)
+            mma::message(msg, M_ERROR);
+    }
+};
+
+
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
@@ -113,6 +125,13 @@ inline void print(const char *msg) {
 inline bool _massert_impl(const char *cond) {
     message(cond, M_ASSERT);
     throw LibraryError();
+}
+
+
+/// Check for and honour user aborts.
+inline void check_abort() {
+    if (libData->AbortQ())
+        throw LibraryError();
 }
 
 
