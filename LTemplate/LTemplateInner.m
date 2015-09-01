@@ -584,7 +584,7 @@ FormatTemplate[template_] :=
  *)
 formatTemplate[template_] :=
     Block[{LFun, LOFun, LClass, LTemplate},
-      With[{tem = template /. normalizeTypesRules /. normalizeFunctionsRules},
+      With[{tem = template /. normalizeTypesRules /. normalizeFunctionsRules /. {LExpressionID -> "LExpressionID"}},
         LFun[name_, args_, ret_] := StringTemplate["`` ``(``)"][ToString[ret], name, StringJoin@Riffle[ToString /@ args, ", "]];
         LOFun[name_] := StringTemplate["LinkObject ``(LinkObject)"][name];
         LClass[name_, funs_] := StringTemplate["class ``:\n``"][name, StringJoin@Riffle["    " <> ToString[#] & /@ funs, "\n"]];
