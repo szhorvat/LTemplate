@@ -85,7 +85,7 @@ ConfigureLTemplate[opt : OptionsPattern[]] :=
       sym::info    = "``";
       sym::warning = "``";
       sym::error   = "``";
-      sym::assert  = "Assertion `` failed.";
+      sym::assert  = "Assertion failed: ``.";
     ]
 
 LClassContext[] = Context[LTemplate] <> "Classes`";

@@ -11,6 +11,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <complex>
 
 #ifndef LTEMPLATE_CONTEXT
@@ -84,11 +85,13 @@ public:
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
-#define massert(condition) (void)(((condition) || mma::_massert_impl(#condition)), 0)
+#define massert(condition) (void)(((condition) || mma::_massert_impl(#condition, __FILE__, __LINE__)), 0)
 #endif
 
-inline bool _massert_impl(const char *cond) {
-    message(cond, M_ASSERT);
+inline bool _massert_impl(const char *cond, const char *file, int line) {
+    std::ostringstream msg;
+    msg << cond << ", file " << file << ", line " << line;
+    message(msg.str(), M_ASSERT);
     throw LibraryError();
 }
 
