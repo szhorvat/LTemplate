@@ -1,9 +1,12 @@
 (* Mathematica Package *)
 
-(* Load this file with Get["LTemplate`LTemplatePrivate`"] to be used privately by other packages. *)
+(*
+ * To include LTemplate privately in another package, load LTemplatePrivate.m using Get[],
+ * then immediately call ConfigureLTemplate[].
+ *)
 
 BeginPackage["`LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
 
-Get["LTemplate`LTemplateInner`"]
+Get@FileNameJoin[{DirectoryName[$InputFileName], "LTemplateInner.m"}]
 
 EndPackage[]
