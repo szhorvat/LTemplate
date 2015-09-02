@@ -578,7 +578,7 @@ compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : Option
         print["Compiling library code ..."];
         includeDirs = Flatten[{OptionValue["IncludeDirectories"], $includeDirectory}];
         CreateLibrary[
-          Flatten[{sourcefile, sources}], libname,
+          AbsoluteFileName /@ Flatten[{sourcefile, sources}], libname,
           "IncludeDirectories" -> includeDirs,
           Sequence@@FilterRules[{opt}, Except["IncludeDirectories"]]]
       ],
