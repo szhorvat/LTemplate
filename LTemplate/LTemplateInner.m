@@ -52,7 +52,7 @@ If[Not@OrderedQ[{minVersion, version}],
 ]
 
 (* We need to rely on implementation details of SymbolicC, so warn users of yet untested new Mathematica versions. *)
-If[Not@OrderedQ[{version, maxVersion}],
+If[Not@OrderedQ[{version, maxVersion}] && Not[$private],
   Print[
     StringTemplate[
       "WARNING: LTemplate has not yet been tested with Mathematica ``.\n" <>

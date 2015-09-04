@@ -14,6 +14,7 @@
 
 BeginPackage["LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
 
+`Private`$private = False;
 Get["LTemplate`LTemplateInner`"]
 
 ConfigureLTemplate[] (* use the default configuration *)

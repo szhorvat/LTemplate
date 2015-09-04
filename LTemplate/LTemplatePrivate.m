@@ -7,6 +7,7 @@
 
 BeginPackage["`LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
 
+`Private`$private = True;
 Get@FileNameJoin[{DirectoryName[$InputFileName], "LTemplateInner.m"}]
 
 EndPackage[]
