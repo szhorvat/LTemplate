@@ -111,15 +111,13 @@ template<typename T>
 class TensorRef {
     MTensor t; // reminder: MTensor is a pointer type    
     const mint len;
-    const std::vector<mint> dims;
     T *tensor_data;
 
 public:
     TensorRef(const MTensor &mt) :
         t(mt),
         tensor_data(getData<T>(t)),
-        len(libData->MTensor_getFlattenedLength(t)),
-        dims(libData->MTensor_getDimensions(t), libData->MTensor_getDimensions(t) + libData->MTensor_getRank(t))
+        len(libData->MTensor_getFlattenedLength(t))
     {
         // empty
     }
@@ -142,7 +140,7 @@ public:
         return c;
     }
 
-    const std::vector<mint> & dimensions() const { return dims; }
+    const mint *dimensions() const { return libData->MTensor_getDimensions(t); }
 
     T *data() { return tensor_data; }
     T & operator [] (mint i) { return tensor_data[i]; }
@@ -167,8 +165,9 @@ public:
     {
         if (TensorRef<T>::rank() != 2)
             throw LibraryError("MatrixRef: Matrix expected.");
-        nrows = TensorRef<T>::dimensions()[0];
-        ncols = TensorRef<T>::dimensions()[1];
+        const mint *dims = TensorRef<T>::dimensions();
+        nrows = dims[0];
+        ncols = dims[1];
     }
 
     mint rows() const { return nrows; }
@@ -193,9 +192,10 @@ public:
     {
         if (TensorRef<T>::rank() != 3)
             throw LibraryError("CubeRef: Rank-3 tensor expected.");
-        nrows = TensorRef<T>::dimensions()[0];
-        ncols = TensorRef<T>::dimensions()[1];
-        nslices = TensorRef<T>::dimensions()()[2];
+        const mint *dims = TensorRef<T>::dimensions();
+        nrows = dims[0];
+        ncols = dims[1];
+        nslices = dims[2];
     }
 
     mint rows() const { return nrows; }
