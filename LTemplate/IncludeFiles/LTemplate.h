@@ -81,14 +81,16 @@ public:
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
-#define massert(condition) (void)(((condition) || mma::_massert_impl(#condition, __FILE__, __LINE__)), 0)
+#define massert(condition) (void)(((condition) || mma::detail::massert_impl(#condition, __FILE__, __LINE__)), 0)
 #endif
 
-inline bool _massert_impl(const char *cond, const char *file, int line) {
-    std::ostringstream msg;
-    msg << cond << ", file " << file << ", line " << line;
-    message(msg.str(), M_ASSERT);
-    throw LibraryError();
+namespace detail {
+    inline bool massert_impl(const char *cond, const char *file, int line) {
+        std::ostringstream msg;
+        msg << cond << ", file " << file << ", line " << line;
+        message(msg.str(), M_ASSERT);
+        throw LibraryError();
+    }
 }
 
 
@@ -99,11 +101,13 @@ inline void check_abort() {
 }
 
 
-template<typename T> T * getData(MTensor t);
+namespace detail { // private
+    template<typename T> T * getData(MTensor t);
 
-template<> inline mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
-template<> inline double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
-template<> inline complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
+    template<> inline mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
+    template<> inline double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
+    template<> inline complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
+}
 
 
 /// Wrapper class for MTensor pointers
@@ -116,7 +120,7 @@ class TensorRef {
 public:
     TensorRef(const MTensor &mt) :
         t(mt),
-        tensor_data(getData<T>(t)),
+        tensor_data(detail::getData<T>(t)),
         len(libData->MTensor_getFlattenedLength(t))
     {
         // empty
@@ -211,11 +215,13 @@ typedef CubeRef<double>     RealCubeRef;
 typedef CubeRef<complex_t>  ComplexCubeRef;
 
 
-template<typename T> int libraryType();
+namespace detail { // private
+    template<typename T> int libraryType();
 
-template<> inline int libraryType<mint>()      { return MType_Integer; }
-template<> inline int libraryType<double>()    { return MType_Real; }
-template<> inline int libraryType<complex_t>() { return MType_Complex; }
+    template<> inline int libraryType<mint>()      { return MType_Integer; }
+    template<> inline int libraryType<double>()    { return MType_Real; }
+    template<> inline int libraryType<complex_t>() { return MType_Complex; }
+}
 
 /// Creates a rank 3 tensor of the given dimensions
 template<typename T>
@@ -225,7 +231,7 @@ inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
     dims[0] = nrow;
     dims[1] = ncol;
     dims[2] = nslice;
-    int err = libData->MTensor_new(libraryType<T>(), 3, dims, &t);
+    int err = libData->MTensor_new(detail::libraryType<T>(), 3, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
@@ -239,7 +245,7 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     mint dims[2];
     dims[0] = nrow;
     dims[1] = ncol;
-    int err = libData->MTensor_new(libraryType<T>(), 2, dims, &t);
+    int err = libData->MTensor_new(detail::libraryType<T>(), 2, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
@@ -252,7 +258,7 @@ inline TensorRef<T> makeVector(mint len) {
     MTensor t = NULL;
     mint dims[1];
     dims[0] = len;
-    int err = libData->MTensor_new(libraryType<T>(), 1, dims, &t);
+    int err = libData->MTensor_new(detail::libraryType<T>(), 1, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
