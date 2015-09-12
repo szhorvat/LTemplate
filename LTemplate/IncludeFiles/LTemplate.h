@@ -268,16 +268,11 @@ inline TensorRef<T> makeVector(mint len) {
 /// Creates a vector of the given length from a C array
 template<typename T, typename U>
 inline TensorRef<T> makeVector(mint len, const U *data) {
-    MTensor t = NULL;
-    mint dims[1];
-    dims[0] = len;
-    int err = libData->MTensor_new(libraryType<T>(), 1, dims, &t);
-    if (err)
-        throw LibraryError("MTensor_new() failed.", err);
-    TensorRef<T> tr(t);
-    std::copy(data, data+len, tr.begin());
-    return tr;
+    TensorRef<T> t = makeVector<T>(len);
+    std::copy(data, data+len, t.begin());
+    return t;
 }
+
 
 /// Convenience function for disowning const char * strings.
 inline void disownString(const char *str) {
