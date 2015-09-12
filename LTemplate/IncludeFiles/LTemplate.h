@@ -14,10 +14,6 @@
 #include <sstream>
 #include <complex>
 
-#ifndef LTEMPLATE_CONTEXT
-#define LTEMPLATE_CONTEXT /* empty */
-#endif
-
 namespace mma {
 
 /// Global WolframLibraryData object for accessing the LibraryLink API.
@@ -187,7 +183,7 @@ typedef MatrixRef<double>     RealMatrixRef;
 typedef MatrixRef<complex_t>  ComplexMatrixRef;
 
 
-/// Wrapper class for MTensor pointers to rank 2 tensors
+/// Wrapper class for MTensor pointers to rank 3 tensors
 template<typename T>
 class CubeRef : public TensorRef<T> {
     mint nrows, ncols, nslices;
