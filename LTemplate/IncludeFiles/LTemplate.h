@@ -107,6 +107,14 @@ namespace detail { // private
     template<> inline mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
     template<> inline double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
     template<> inline complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
+
+    // copy data from column major format to row major format
+    template<typename T, typename U>
+    inline void transposedCopy(const T *from, U *to, mint nrow, mint ncol) {
+        for (mint i=0; i < ncol; ++i)
+            for (mint j=0; j < nrow; ++j)
+                to[i + j*ncol] = from[j + i*nrow];
+    }
 }
 
 
@@ -238,7 +246,7 @@ inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
 }
 
 
-/// Creates a rank 2 tensor of the given dimensions
+/// Creates a matrix (rank 2 tensor) of the given dimensions
 template<typename T>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     MTensor t = NULL;
@@ -249,6 +257,24 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
+}
+
+
+/// Creates a matrix (rank 2 tensor) of the given dimensions from a row-major storage C array
+template<typename T, typename U>
+inline MatrixRef<T> makeMatrix(mint nrow, mint ncol, const U *data) {
+    TensorRef<T> t = makeMatrix<T>(nrow, ncol);
+    std::copy(data, data + nrow*ncol, t.begin());
+    return t;
+}
+
+
+/// Creates a matrix of the given dimensions from a column-major storage C array
+template<typename T, typename U>
+inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
+    TensorRef<T> t = makeMatrix<T>(nrow, ncol);
+    detail::transposedCopy(data, t.data(), nrow, ncol);
+    return t;
 }
 
 
