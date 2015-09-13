@@ -165,9 +165,11 @@ inline mlStream & operator << (mlStream &ml, const char *s) {
 
 #define MLSTREAM_DEF_TENSOR_PUT(MTYPE, CTYPE) \
     inline mlStream & operator << (mlStream &ml, mma::TensorRef<CTYPE> t) { \
-        int rank = t.rank(); \
+        const int maxrank  = 16; \
+        const int rank = t.rank(); \
         const mint *mdims = t.dimensions(); \
-        int dims[rank]; \
+        int dims[maxrank]; \
+        massert(rank < maxrank); \
         std::copy(mdims, mdims + rank, dims); \
         if (! MLPut ## MTYPE ## Array(ml.link(), t.data(), dims, NULL, rank)) \
             ml.error("Cannot return " #CTYPE " tensor"); \
