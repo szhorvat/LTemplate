@@ -7,6 +7,7 @@
 
 #include "mathlink.h"
 #include "WolframLibrary.h"
+#include "WolframSparseLibrary.h"
 
 #include <map>
 #include <vector>
@@ -298,6 +299,58 @@ inline TensorRef<T> makeVector(mint len, const U *data) {
     std::copy(data, data+len, t.begin());
     return t;
 }
+
+
+/// Wrapper class for MSparseArray pointers
+template<typename T>
+class SparseArrayRef {
+    MSparseArray sa;
+
+public:
+    SparseArrayRef(const MSparseArray &msa) : sa(msa) { /* empty */ }
+
+    MSparseArray sparseArray() { return sa; }
+
+    mint rank() const { return libData->sparseLibraryFunctions->MSparseArray_getRank(sa); }
+
+    void free() { libData->sparseLibraryFunctions->MSparseArray_free(sa); }
+    void disown() { libData->sparseLibraryFunctions->MSparseArray_disown(sa); }
+    void disownAll() { libData->sparseLibraryFunctions->MSparseArray_disownAll(sa); }
+
+    mint shareCount() const { return libData->sparseLibraryFunctions->MSparseArray_shareCount(sa); }
+
+    SparseArrayRef clone() const {
+        MSparseArray c = NULL;
+        int err = libData->sparseLibraryFunctions->MSparseArray_clone(sa, &c);
+        if (err) throw LibraryError("MSparseArray_clone() failed", err);
+        return c;
+    }
+
+    IntTensorRef explicitPositions() const {
+        MTensor mt = NULL;
+        libData->sparseLibraryFunctions->MSparseArray_getExplicitPositions(sa, &mt);
+        return IntTensorRef(mt);
+    }
+
+    bool explicitValuesQ() const {
+        return libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa) != NULL;
+    }
+
+    /// Returns the explicit values in the sparse array as an MTensor
+    /// The result MTensor is part of the MSparseArray data structure and will be destroyed at the same time with it.
+    /// Clone it before returning it to the kernel.
+    TensorRef<T> explicitValues() const {
+        MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa);
+        if (*mt == NULL)
+            throw LibraryError("SparseArrayRef::explicitValues() called on pattern array");
+        return TensorRef<T>(*mt);
+    }
+
+    T implicitValue() const {
+        MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getImplicitValue(sa);
+        return (TensorRef<T>(*mt).data())[0];
+    }
+};
 
 
 /// Convenience function for disowning const char * strings.
