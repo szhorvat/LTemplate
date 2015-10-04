@@ -169,7 +169,7 @@ inline mlStream & operator << (mlStream &ml, const char *s) {
         const int rank = t.rank(); \
         const mint *mdims = t.dimensions(); \
         int dims[maxrank]; \
-        massert(rank < maxrank); \
+        massert(rank <= maxrank); \
         std::copy(mdims, mdims + rank, dims); \
         if (! MLPut ## MTYPE ## Array(ml.link(), t.data(), dims, NULL, rank)) \
             ml.error("Cannot return " #CTYPE " tensor"); \

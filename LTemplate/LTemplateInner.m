@@ -253,7 +253,7 @@ collectionName[classname_String] := classname <> "_collection"
 
 collectionType[classname_String] := "std::map<mint, " <> classname <> " *>"
 
-managerName[classname_String] := classname <> "_manager"
+managerName[classname_String] := classname <> "_manager_fun"
 
 fullyQualifiedSymbolName[sym_Symbol] := Context[sym] <> SymbolName[sym]
 
