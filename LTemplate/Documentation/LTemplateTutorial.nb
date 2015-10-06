@@ -38,8 +38,14 @@ this example, we will create these files in the operating system\
 \[CloseCurlyQuote]s temporary directory.\
 \>", "Text"],
 
+Cell[CellGroupData[{
+
 Cell[BoxData[
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+
+Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
+"], "Output"]
+}, Open  ]],
 
 Cell[TextData[{
  "LTemplate uses C++ and requires working with classes instead of top level \
@@ -258,13 +264,32 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print"]
-}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/DemoLib.dylib\"\>"], "Output"]
 }, Open  ]],
 
 Cell["You can inspect the generated code:", "Text"],
 
 Cell[BoxData[
  RowBox[{"SystemOpen", "[", "\"\<LTemplate-DemoLib.cpp\>\"", "]"}]], "Input"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox["CompileTemplate", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " uses the function ",
+ Cell[BoxData[
+  FormBox["TranslateTemplate", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " to generate the code. ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"TranslateTemplate", "[", "template", "]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " returns the generated code as a string."
+}], "Text"],
 
 Cell["Automatically load the functions defined in the template:", "Text"],
 
@@ -288,7 +313,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"class Demo1:\\n    Integer addTwo(Integer, Integer)\\n    Real \
 trace({Real, 2})\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-6b2635ac-e4fb-49e3-81dd-e7f3f7ee433a"]
+ CellTags->"Info-f2275b95-c81a-4499-ba61-ed2f60a71754"]
 }, Open  ]],
 
 Cell["\<\
@@ -338,7 +363,7 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
 
-Cell[BoxData["2.953192611244902`"], "Output"]
+Cell[BoxData["2.0800151803161127`"], "Output"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -433,8 +458,14 @@ include a constructor and destructor that report when they are called, to \
 demonstrate automatic cleanup.\
 \>", "Text"],
 
+Cell[CellGroupData[{
+
 Cell[BoxData[
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+
+Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
+"], "Output"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -607,7 +638,10 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print"]
-}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/MeanVariance.dylib\"\>"], "Output"]
 }, Open  ]],
 
 Cell["\<\
@@ -701,7 +735,7 @@ Cell[BoxData["\<\"destructor called\"\>"], "Print"]
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.5282199637299895`", ",", "0.10319140101962754`"}], 
+  RowBox[{"0.48769528760926384`", ",", "0.07238465691327894`"}], 
   "}"}]], "Output"]
 }, Open  ]],
 
@@ -1135,7 +1169,10 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print"]
-}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/ReverseString.dylib\"\>"], "Output"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1157,9 +1194,9 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"reverse", "[", "\"\<Once upon a time.\>\"", "]"}]], "Input"],
+ RowBox[{"reverse", "[", "\"\<Dennis sinned.\>\"", "]"}]], "Input"],
 
-Cell[BoxData["\<\".emit a nopu ecnO\"\>"], "Output"]
+Cell[BoxData["\<\".dennis sinneD\"\>"], "Output"]
 }, Open  ]]
 }, Closed]],
 
@@ -1195,6 +1232,8 @@ The corresponding C++ member function takes a single MLINK argument and has \
 void return type.  Here\[CloseCurlyQuote]s a full example:\
 \>", "Text"],
 
+Cell[CellGroupData[{
+
 Cell[BoxData[{
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", 
   "]"}], "\[IndentingNewLine]", 
@@ -1214,6 +1253,10 @@ return result\n\t\tMLNewPacket(link);\n\t\tMLPutInteger32(link, result);\n    \
   RowBox[{"Export", "[", 
    RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
    "]"}], ";"}]}], "Input"],
+
+Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
+"], "Output"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -1346,7 +1389,10 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print"]
-}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/LinkObjDemo.dylib\"\>"], "Output"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1421,14 +1467,16 @@ ML-prefixed names with LTemplate."
 }], "Text"],
 
 Cell[TextData[{
- "There is an auxiliary header, ",
- StyleBox["mlstrean.h", "Program"],
+ "An auxiliary header, ",
+ StyleBox["mlstream.h", "Program"],
  ", is provided to simplify ",
  StyleBox["MathLink",
   FontSlant->"Italic"],
  " based argument passing and return using stream inserter and extractor \
 syntax. Here\[CloseCurlyQuote]s an example:"
 }], "Text"],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", 
@@ -1448,6 +1496,10 @@ elements on the link\n    }\n};\n\>\""}], ";"}], "\[IndentingNewLine]",
   RowBox[{"Export", "[", 
    RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
    "]"}], ";"}]}], "Input"],
+
+Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
+"], "Output"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -1706,6 +1758,281 @@ Cell[BoxData[
 Cell["\<\
 The floating point number 2.3 was automatically rounded to the integer 2.\
 \>", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Accessing other library expressions", "Subsubsection"],
+
+Cell["\<\
+Other library expression can be passed to library functions using the type \
+specification\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}]], "Input",
+ Evaluatable->False],
+
+Cell[TextData[{
+ "In the following we implement a \[OpenCurlyDoubleQuote]vector\
+\[CloseCurlyDoubleQuote] class with a dot product member function. The ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"dot", "(", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " member function will take another instance of the same class as its \
+argument."
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "code", "=", 
+   "\"\<\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\n\
+class VectorDemo {\n\tstd::vector<double> v;\npublic:\n\t// set elements of \
+the vector\n\tvoid set(mma::RealTensorRef t) {\n\t\tv.resize(t.length());\n\t\
+\tstd::copy(t.begin(), t.end(), v.begin());\n\t}\n\n\t// dot product with \
+another vector\n\tdouble dot(const VectorDemo &vec) {\n\t\tif (v.size() != \
+vec.v.size())\n\t\t\tthrow mma::LibraryError(\\\"Incompatible vector \
+sizes\\\");\n\t\treturn std::inner_product(v.begin(), v.end(), vec.v.begin(), \
+0.0);\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Export", "[", 
+   RowBox[{"\"\<VectorDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+   "]"}], ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<VectorDemo\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<set\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "1", ",", "\"\<Constant\>\""}], "}"}], "}"}], 
+         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<dot\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"LExpressionID", "[", "\"\<VectorDemo\>\"", "]"}], "}"}], 
+         ",", "Real"}], "]"}]}], "\[IndentingNewLine]", "}"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"VectorDemo\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["VectorDemo", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/VectorDemo.dylib\"\>"], "Output"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeVector", "[", "arr_", "]"}], ":=", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"v", "=", 
+      RowBox[{"Make", "[", "\"\<VectorDemo\>\"", "]"}]}], "}"}], ",", 
+    RowBox[{
+     RowBox[{"v", "@", 
+      RowBox[{"\"\<set\>\"", "[", "arr", "]"}]}], ";", "v"}]}], 
+   "]"}]}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v1", "=", 
+  RowBox[{"makeVector", "[", 
+   RowBox[{"Range", "[", "10", "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"VectorDemo", "[", "1", "]"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v2", "=", 
+  RowBox[{"makeVector", "[", 
+   RowBox[{"Range", "[", 
+    RowBox[{"10", ",", "1", ",", 
+     RowBox[{"-", "1"}]}], "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"VectorDemo", "[", "2", "]"}]], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+ "When calling ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"dot", "(", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " from ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", we cannot simply pass ",
+ Cell[BoxData[
+  FormBox["v2", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " to it. Instead we must pass its managed library expression ID. The reason \
+for not translating ",
+ Cell[BoxData[
+  FormBox["v2", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " to an expression ID automatically is to maintain runtime performance."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v1", "@", 
+  RowBox[{"\"\<dot\>\"", "[", 
+   RowBox[{"ManagedLibraryExpressionID", "[", "v2", "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData["220.`"], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Range", "[", "10", "]"}], ".", 
+  RowBox[{"Range", "[", 
+   RowBox[{"10", ",", "1", ",", 
+    RowBox[{"-", "1"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData["220"], "Output"]
+}, Open  ]]
 }, Closed]]
 }, Open  ]]
 }, Open  ]],
@@ -1790,8 +2117,8 @@ symbols go here *)\n\nEnd[]\nEndPackage[]\n"
 }], "Program"],
 
 Cell["\<\
-LTemplate functions will now reside in the MyApp`LTemaplate` context, and \
-will not be visible to the users of your package. This also avoids conflicts \
+LTemplate functions will now reside in the MyApp`LTemplate` context, and will \
+not be visible to the users of your package. This also avoids conflicts \
 between multiple applications using various versions of LTemplate.\
 \>", "Text"],
 
@@ -1820,8 +2147,6 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"?", "LTemplate`*"}]], "Input"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  DynamicModuleBox[{Typeset`open$$ = True}, 
   PaneSelectorBox[{False->
@@ -1840,35 +2165,35 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "CompileTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LClass",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LClass", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LExpressionList",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LExpressionList", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["UnloadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "UnloadTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
         {
@@ -1876,35 +2201,34 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "ConfigureLTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LClassContext",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LClassContext", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LFun",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LFun", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["Make",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "Make", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["ValidTemplateQ",
           BaseStyle->"InformationLink",
-          
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "ValidTemplateQ", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
         {
@@ -1912,28 +2236,28 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "FormatTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LExpressionID",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LExpressionID", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LoadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LoadTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["TranslateTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb", {
+           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "TranslateTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], ""}
        },
@@ -1943,16 +2267,214 @@ Cell[BoxData[
     },
     GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
    Dynamic[Typeset`open$$],
-   ImageSize->Automatic]]], "Print", "InfoCell"],
+   ImageSize->Automatic]]], "Print", "InfoCell"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Template elements", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LTemplate"}]], "Input"],
 
 Cell[BoxData[
  StyleBox["\<\"LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \
 \[Ellipsis]}] represents a library template.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-f3195a3a-bc8d-4c11-bc16-2efddcd693bb"]
-}, Open  ]]
-}, Open  ]]
+ CellTags->"Info-47561812-6052-4351-be59-0d1da93bf6e0"]
 }, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LClass"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class \
+within a template.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-57eaf585-6c37-4f1a-9f23-cd04780d63a9"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LFun"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LFun[name, {arg1, arg2, \[Ellipsis]}, ret] represents a class \
+member function with the given name, argument types and return \
+type.\\nLFun[name, LinkObject, LinkObject] represents a function that uses \
+MathLink/WSTP based passing. The shorthand LFun[name, LinkObject] can also be \
+used.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-2270a8bc-e754-4733-a52e-221956b62d2d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LExpressionID"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LExpressionID[name] represents the data type corresponding to \
+LClass[name, \[Ellipsis]] in templates.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-b27e2e89-8e80-452f-9c66-6c7e984d3022"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["FormatTemplate", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "FormatTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"FormatTemplate[template] formats the template in an easy to \
+read way.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-68226ed2-d2da-43e8-85d4-7aed542c528d"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ValidTemplateQ", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "ValidTemplateQ"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"ValidTemplateQ[template] returns True if the template syntax \
+is valid.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-f4dd3ff1-c370-4c52-a58f-69bcbf970267"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["TranslateTemplate", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "TranslateTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"TranslateTemplate[template] translates the template into C++ \
+code.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-5ed1c592-2100-4f81-bf3b-d1bda517b3cd"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["CompileTemplate", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "CompileTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"CompileTemplate[template] compiles the library defined by the \
+template. Required source files must be present in the current \
+directory.\\nCompileTemplate[template, {file1, \[Ellipsis]}] includes \
+additional source files in the compilation.\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-b1082e50-3750-462a-840e-4291b205cf5d"]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"CompileTemplate", "[", "]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " takes the same options as ",
+ Cell[BoxData[
+  FormBox["CreateLibrary", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "."
+}], "Text"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox["CompileTemplate", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " will unload the template before compilation."
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["LoadTemplate & UnloadTemplate", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LoadTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LoadTemplate[template] loads the library defined by the \
+template. The library must already be compiled.\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-c8950299-eebd-4613-b8fd-cd0d86a67f7f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "UnloadTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"UnloadTemplate[template] attempts to unload the library \
+defined by the template.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-0f638c7d-40dd-4a76-baae-525c4afd45b4"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Library expression management", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "Make"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"Make[class] creates an instance of class.\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-e2b499d0-1811-46a2-828c-3d568aad8484"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LExpressionList"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LExpressionList[class] returns all existing instances of \
+class.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-00585026-176c-404a-8007-2d1e6f758a59"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LClassContext"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LClassContext[] returns the context where class symbols are \
+created.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-140d6223-f287-42ab-bd8f-a18a405855ce"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -2047,25 +2569,78 @@ makeMatrix<T>(mint nrow, mint ncol, const U *data); // assumes data uses \
 row-major storage
 makeMatrixTransposed<T>(mint nrow, mint ncol, const U *data); // assumes data \
 uses column-major storage\
-\>", "Program"]
+\>", "Program"],
+
+Cell[TextData[{
+ "Tensor patterns without type specifications, i.e. ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", 
+    RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", are not supported."
+}], "Text"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["LinkObject passing", "Subsubsection"],
+Cell["SparseArray", "Subsubsection"],
 
 Cell["\<\
-The template syntax for LinkObject passing is \
-LFun[\[OpenCurlyDoubleQuote]functionName\[CloseCurlyDoubleQuote], \
-LinkObject].  The C++ equivalent must have the following signature:\
-\>", "Text"],
+LibraryDataType[SparseArray, Integer]\tSparseArrayRef<mint>
+LibraryDataType[SparseArray, Real]\t\tSparseArrayRef<double>
+LibraryDataType[SparseArray, Complex]\tSparseArrayRef<mma::complex_t>\
+\>", "Program"],
 
-Cell["void functionName(MLINK link);", "Program"],
+Cell[TextData[{
+ "Optionally a rank specification can be given, for example ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LibraryDataType", "[", 
+    RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}], 
+   TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "."
+}], "Text"],
 
-Cell["\<\
-The mlstream.h auxiliary header provides a stream inserter/extractor based \
-syntax for reading arguments and returning results.\
-\>", "Text"]
+Cell[TextData[{
+ "Sparse array patterns without type specifications, i.e. ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LibraryDataType", "[", "SparseArray", "]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", are not supported."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["LExpressionID", "Subsubsection"],
+
+Cell["LExpressionID[\"SomeClass\"]\tSomeClass &", "Program"],
+
+Cell[TextData[{
+ "Arguments of type ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " are handled specially. On the ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " side a managed library expression ID is expected, i.e. an integer. This \
+can be obtained from a managed library expression using the function ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"ManagedLibraryExpressionID", "[", "]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". On the C++ side it will be passed as a reference to a class instance, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"SomeClass", " ", "&"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "."
+}], "Text"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2099,6 +2674,24 @@ void disownString(const char *); // wrapper for UTF8String_disown\
 
 Cell[CellGroupData[{
 
+Cell["LinkObject passing", "Subsubsection"],
+
+Cell["\<\
+The template syntax for LinkObject passing is \
+LFun[\[OpenCurlyDoubleQuote]functionName\[CloseCurlyDoubleQuote], \
+LinkObject].  The C++ equivalent must have the following signature:\
+\>", "Text"],
+
+Cell["void functionName(MLINK link);", "Program"],
+
+Cell["\<\
+The mlstream.h auxiliary header provides a stream inserter/extractor based \
+syntax for reading arguments and returning results.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["Other functions", "Subsubsection"],
 
 Cell["Some other useful functions are", "Text"],
@@ -2126,8 +2719,8 @@ LibraryError(int error_code = LIBRARY_FUNCTION_ERROR);
 LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
 \>", "Program"]
 }, Open  ]]
-}, Open  ]]
-}, Open  ]]
+}, Closed]]
+}, Closed]]
 }, Open  ]]
 },
 WindowSize->{990, 700},
@@ -2136,6 +2729,19 @@ PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
 FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
 2015)",
-StyleDefinitions->"Default.nb"
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "Default.nb"]], 
+   Cell[
+    StyleData["Section"], ShowGroupOpener -> True], 
+   Cell[
+    StyleData["Subsection"], ShowGroupOpener -> True], 
+   Cell[
+    StyleData["Subsubsection"], ShowGroupOpener -> True]}, 
+  WindowSize -> {808, 751}, 
+  WindowMargins -> {{300, Automatic}, {28, Automatic}}, Visible -> False, 
+  FrontEndVersion -> 
+  "10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, 2015)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
