@@ -548,7 +548,7 @@ unloadTemplate[LTemplate[libname_String, classes_]] :=
     ]
 
 
-(* TODO: verify class exists for Make and LClassInstances *)
+(* TODO: verify class exists for Make and LExpressionList *)
 
 Make[class_Symbol] := Make@SymbolName[class]
 Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symName[classname]]

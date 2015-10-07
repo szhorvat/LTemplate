@@ -66,7 +66,7 @@ public:
 
 // Special
 
-/// The first item to be extracted from mlStream, checks number of arguments
+/// Must be the first item extracted from mlStream, checks number of arguments.
 struct mlCheckArgs {
     int argc;
 
@@ -89,6 +89,8 @@ inline mlStream & operator >> (mlStream &ml, const mlCheckArgs &ca) {
 }
 
 
+/// Used for inserting a head with the given argument count into mlStream.
+/** Tyically used with the head List when returning multiple results. */
 struct mlHead {
     const char *head;
     int argc;
