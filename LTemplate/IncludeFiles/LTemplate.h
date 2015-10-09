@@ -126,8 +126,8 @@ namespace detail { // private
  */
 template<typename T>
 class TensorRef {
-    MTensor t; // reminder: MTensor is a pointer type    
-    T *tensor_data;
+    const MTensor t; // reminder: MTensor is a pointer type
+    T * const tensor_data;
     const mint len;
 
 public:
@@ -150,7 +150,7 @@ public:
 
     mint shareCount() const { return libData->MTensor_shareCount(t); }
 
-    TensorRef clone() {
+    TensorRef clone() const {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
         if (err) throw LibraryError("MTensor_clone() failed", err);
@@ -308,7 +308,7 @@ inline TensorRef<T> makeVector(mint len, const U *data) {
 /// Wrapper class for `MSparseArray` pointers
 template<typename T>
 class SparseArrayRef {
-    MSparseArray sa;
+    const MSparseArray sa; // reminder: MSparseArray is a pointer type
 
 public:
     SparseArrayRef(const MSparseArray &msa) : sa(msa) { /* empty */ }
