@@ -127,8 +127,8 @@ namespace detail { // private
 template<typename T>
 class TensorRef {
     MTensor t; // reminder: MTensor is a pointer type    
-    const mint len;
     T *tensor_data;
+    const mint len;
 
 public:
     TensorRef(const MTensor &mt) :
