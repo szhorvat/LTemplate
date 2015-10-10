@@ -190,8 +190,8 @@ public:
     mint rows() const { return nrows; }
     mint cols() const { return ncols; }
 
-    T & operator () (mint i, mint j) { return (*this)[nrows*i + j]; }
-    const T & operator () (mint i, mint j) const { return (*this)[nrows*i + j]; }
+    T & operator () (mint i, mint j) { return (*this)[ncols*i + j]; }
+    const T & operator () (mint i, mint j) const { return (*this)[ncols*i + j]; }
 };
 
 typedef MatrixRef<mint>       IntMatrixRef;
@@ -219,8 +219,8 @@ public:
     mint cols() const { return ncols; }
     mint slices() const { return nslices; }
 
-    T & operator () (mint i, mint j, mint k) { return (*this)[nrows*ncols*i + ncols*j + k]; }
-    const T & operator () (mint i, mint j, mint k) const { return (*this)[nrows*ncols*i + ncols*j + k]; }
+    T & operator () (mint i, mint j, mint k) { return (*this)[nslices*ncols*i + nslices*j + k]; }
+    const T & operator () (mint i, mint j, mint k) const { return (*this)[nslices*ncols*i + nslices*j + k]; }
 };
 
 typedef CubeRef<mint>       IntCubeRef;
