@@ -108,6 +108,23 @@ inline mlStream & operator << (mlStream &ml, const mlHead &head) {
 }
 
 
+/// Used for inserting a symbol into mlStream
+struct mlSymbol {
+    const char *symbol;
+
+    mlSymbol(const char *symbol_) : symbol(symbol_) { }
+};
+
+inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
+    if (! MLPutSymbol(ml.link(), symbol.symbol)) {
+        std::ostringstream msg;
+        msg << "Cannot put symbol " << symbol.symbol;
+        ml.error(msg.str());
+    }
+    return ml;
+}
+
+
 // Basic types (integer and floating point)
 
 #define MLSTREAM_DEF_BASIC_GET(MTYPE, CTYPE) \
