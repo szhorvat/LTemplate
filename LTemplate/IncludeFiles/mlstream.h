@@ -112,7 +112,7 @@ inline mlStream & operator << (mlStream &ml, const mlHead &head) {
 struct mlSymbol {
     const char *symbol;
 
-    mlSymbol(const char *symbol_) : symbol(symbol_) { }
+    explicit mlSymbol(const char *symbol_) : symbol(symbol_) { }
 };
 
 inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
@@ -127,7 +127,7 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 
 struct mlDiscard {
     const int count;
-    mlDiscard(int count_ = 1) : count(count_) {}
+    explicit mlDiscard(int count_ = 1) : count(count_) {}
 };
 
 inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
