@@ -1,0 +1,1 @@
+This is a skeleton that can be used to quickly set up a complex multiplatform LTemplate-based package.  See inside SkeletonProject.m for instructions on how to use it as the basis of your own package.
