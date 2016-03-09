@@ -1,13 +1,22 @@
+/*
+ * Copyright (c) 2016 Szabolcs Horvát.
+ *
+ * See the file LICENSE.txt for copying permission.
+ */
+
 #ifndef MLSTREAM_H
 #define MLSTREAM_H
 
 /** \file mlstream.h
- * mlstream.h is an auxiliary header for LTemplate to ease reading arguments and returning values through MathLink.
+ * \brief Auxiliary header for LTemplate to ease reading function arguments and returning values through MathLink.
  *
  * LTemplate itself does not depend on mlstream.h, so if you don't use this header,
  * feel free to remove it from your project.  mlstream.h is not meant as a general
  * MathLink interface.  It is specifically designed for handling arguments and return
- * values in conjunction with LTemplate and LinkObject based functions.
+ * values in conjunction with LTemplate and `LinkObject` based functions.
+ *
+ * On platforms where `int` and `long` are both 32-bit, define `MLSTREAM_32BIT_INT_AND_LONG`
+ * before including this header.
  *
  * Example usage:
  * \code
@@ -39,7 +48,7 @@
 #include <string>
 #include <sstream>
 
-/// Wrapper for MLINK to allow using extractors and inserters
+/// Wrapper for `MLINK` to allow using extractors and inserters
 class mlStream {
     MLINK lp;
     std::string context;
@@ -50,6 +59,7 @@ public:
 
     MLINK link() { return lp; }
 
+    /// Throws a \ref LibraryError with a given message.
     void error(const std::string err) {
         std::ostringstream msg;
         if (! context.empty())
@@ -125,6 +135,7 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 }
 
 
+/// Used for discarding a given number of expressions from an mlStream
 struct mlDiscard {
     const int count;
     explicit mlDiscard(int count_ = 1) : count(count_) {}

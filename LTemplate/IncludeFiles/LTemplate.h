@@ -1,9 +1,26 @@
-/** \file
- *  Include this header before classes to be used with the LTemplate _Mathematica_ package
+/*
+ * Copyright (c) 2016 Szabolcs Horvát.
+ *
+ * See the file LICENSE.txt for copying permission.
+ */
+
+/**
+ * \mainpage
+ *
+ * This is Doxygen-generated documentation for the C++ interface of the LTemplate _Mathematica_ package.
+ *
+ * For the latest version of the package go to https://bitbucket.org/szhorvat/ltemplate
+ *
+ * See `LTemplateTutorial.nb` for an introduction and additional documentation.
  */
 
 #ifndef LTEMPLATE_H
 #define LTEMPLATE_H
+
+/** \file
+ * \brief Include this header before classes to be used with the LTemplate _Mathematica_ package.
+ *
+ */
 
 #include "mathlink.h"
 #include "WolframLibrary.h"
@@ -123,6 +140,9 @@ namespace detail { // private
 
 /** \brief Wrapper class for `MTensor` pointers
  *  \param T must be `mint`, `double` or `mma::complex_t`.
+ *
+ * Note that this class only holds a reference to an `MTensor`.  Multiple \ref TensorRef objects
+ * may point to the same `MTensor`.
  */
 template<typename T>
 class TensorRef {
@@ -139,17 +159,31 @@ public:
         // empty
     }
 
+    /// Returns the referenced \c MTensor
     MTensor tensor() { return t; }
 
+    /// Returns the rank of the tensor, same as \c MTensor_getRank
     mint rank() const { return libData->MTensor_getRank(t); }
+
+    /// Returns the number of elements in the tensor, same as \c MTensor_getFlattenedLength
     mint length() const { return len; }
 
+    /// Returns the number of elements in the tensor, synonym of \ref length()
+    mint size() const { return length(); }
+
+    /// Frees the referenced \c MTensor, same as \c MTensor_free
+    /**
+     * Warning: multiple \ref TensorRef objects may reference the same \c MTensor.
+     * Freeing the \c MTensor invalidates all references to it.
+     */
     void free() { libData->MTensor_free(t); }
-    void disown() { libData->MTensor_disown(t); }
+
+    void disown() { libData->MTensor_disown(t); }   
     void disownAll() { libData->MTensor_disownAll(t); }
 
     mint shareCount() const { return libData->MTensor_shareCount(t); }
 
+    /// Clones the referenced \c MTensor and returns a new \ref TensorRef object pointing to it
     TensorRef clone() const {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
@@ -159,7 +193,9 @@ public:
 
     const mint *dimensions() const { return libData->MTensor_getDimensions(t); }
 
+    /// Returns a pointer to the underlying storage of the corresponding \c MTensor
     T *data() { return tensor_data; }
+
     T & operator [] (mint i) { return tensor_data[i]; }
     const T & operator [] (mint i) const { return tensor_data[i]; }
 
@@ -173,6 +209,9 @@ typedef TensorRef<complex_t> ComplexTensorRef;
 
 
 /// Wrapper class for `MTensor` pointers to rank 2 tensors
+/**
+ * Remember that \c MTensor stores data in row-major order.
+ */
 template<typename T>
 class MatrixRef : public TensorRef<T> {
     mint nrows, ncols;
@@ -187,10 +226,16 @@ public:
         ncols = dims[1];
     }
 
+    /// Number of rows in the matrix
     mint rows() const { return nrows; }
+
+    /// Number of columns in the matrix
     mint cols() const { return ncols; }
 
+    /// Index into a matrix using row and column indices
     T & operator () (mint i, mint j) { return (*this)[ncols*i + j]; }
+
+    /// Index into a constant matrix using row and column indices
     const T & operator () (mint i, mint j) const { return (*this)[ncols*i + j]; }
 };
 
@@ -215,11 +260,19 @@ public:
         nslices = dims[2];
     }
 
+    /// Number of rows in the cube
     mint rows() const { return nrows; }
+
+    /// Number of columns in the cube
     mint cols() const { return ncols; }
+
+    /// Number of slices in the cube
     mint slices() const { return nslices; }
 
+    /// Index into a cube using row, column and slice indices
     T & operator () (mint i, mint j, mint k) { return (*this)[nslices*ncols*i + nslices*j + k]; }
+
+    /// Index into a constant cube using row, column and slice indices
     const T & operator () (mint i, mint j, mint k) const { return (*this)[nslices*ncols*i + nslices*j + k]; }
 };
 
@@ -330,12 +383,16 @@ public:
         return c;
     }
 
+    /// Returns the indices of non-default (i.e. explicit) values in the sparse array.
+    /// The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
+    /// Clone it before returning it to the kernel.
     IntTensorRef explicitPositions() const {
         MTensor mt = NULL;
         libData->sparseLibraryFunctions->MSparseArray_getExplicitPositions(sa, &mt);
         return IntTensorRef(mt);
     }
 
+    /// True if the sparse array has explicit values.  Pattern arrays do not have explicit values.
     bool explicitValuesQ() const {
         return libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa) != NULL;
     }

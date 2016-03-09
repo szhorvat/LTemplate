@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016 Szabolcs Horvát.
+ *
+ * See the file LICENSE.txt for copying permission.
+ */
 
 void message(const char *msg, MessageType type) {
     if (msg == NULL)

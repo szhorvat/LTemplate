@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2016 Szabolcs Horvát.
+ *
+ * See the file LICENSE.txt for copying permission.
+ */
+
 #ifndef LTEMPLATE_HELPERS_H
 #define LTEMPLATE_HELPERS_H
 
