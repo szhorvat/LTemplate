@@ -16,6 +16,15 @@ Cell[TextData[{
  " package that simplifies writing LibraryLink code by automatically \
 generating repetitive code based on \[OpenCurlyDoubleQuote]templates\
 \[CloseCurlyDoubleQuote] describing a class interface."
+}], "Text"],
+
+Cell[TextData[{
+ "The latest version is always available from ",
+ ButtonBox["https://bitbucket.org/szhorvat/ltemplate",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://bitbucket.org/szhorvat/ltemplate"], None},
+  ButtonNote->"https://bitbucket.org/szhorvat/ltemplate"]
 }], "Text"]
 }, Open  ]],
 
@@ -61,7 +70,7 @@ instantiated as ",
 Cell[BoxData[
  RowBox[{
   RowBox[{
-  "code", "=", 
+  "code", "=",
    "\"\<\n#include <LTemplate.h>\n\nclass Demo1 {\npublic:\n\t// basic \
 example\n\tmint addTwo(mint a, mint b) { return a+b; }\n\n\t// trace of real \
 matrix\n\tdouble trace(mma::RealMatrixRef mat) {\n\t\tif (mat.rows() != \
@@ -73,8 +82,8 @@ mat.cols())\n\t\t\tthrow mma::LibraryError(\\\"trace: Square matrix expected.\
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"Export", "[", 
-  RowBox[{"\"\<Demo1.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+ RowBox[{"Export", "[",
+  RowBox[{"\"\<Demo1.h\>\"", ",", "code", ",", "\"\<String\>\""}],
   "]"}]], "Input"],
 
 Cell[BoxData["\<\"Demo1.h\"\>"], "Output"]
@@ -86,26 +95,26 @@ Let us now define a template which mirrors the structure of this class:\
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", "\[IndentingNewLine]", 
-   RowBox[{"LTemplate", "[", 
-    RowBox[{"\"\<DemoLib\>\"", ",", "\[IndentingNewLine]", 
-     RowBox[{"{", "\[IndentingNewLine]", 
-      RowBox[{"LClass", "[", 
-       RowBox[{"\"\<Demo1\>\"", ",", "\[IndentingNewLine]", 
-        RowBox[{"{", "\[IndentingNewLine]", 
+  RowBox[{"template", "=", "\[IndentingNewLine]",
+   RowBox[{"LTemplate", "[",
+    RowBox[{"\"\<DemoLib\>\"", ",", "\[IndentingNewLine]",
+     RowBox[{"{", "\[IndentingNewLine]",
+      RowBox[{"LClass", "[",
+       RowBox[{"\"\<Demo1\>\"", ",", "\[IndentingNewLine]",
+        RowBox[{"{", "\[IndentingNewLine]",
          RowBox[{
-          RowBox[{"LFun", "[", 
-           RowBox[{"\"\<addTwo\>\"", ",", 
-            RowBox[{"{", 
-             RowBox[{"Integer", ",", "Integer"}], "}"}], ",", "Integer"}], 
-           "]"}], ",", "\[IndentingNewLine]", 
-          RowBox[{"LFun", "[", 
-           RowBox[{"\"\<trace\>\"", ",", 
-            RowBox[{"{", 
-             RowBox[{"{", 
-              RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "Real"}], 
-           "]"}]}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
-       "]"}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+          RowBox[{"LFun", "[",
+           RowBox[{"\"\<addTwo\>\"", ",",
+            RowBox[{"{",
+             RowBox[{"Integer", ",", "Integer"}], "}"}], ",", "Integer"}],
+           "]"}], ",", "\[IndentingNewLine]",
+          RowBox[{"LFun", "[",
+           RowBox[{"\"\<trace\>\"", ",",
+            RowBox[{"{",
+             RowBox[{"{",
+              RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "Real"}],
+           "]"}]}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]",
+       "]"}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}],
   ";"}]], "Input"],
 
 Cell[TextData[{
@@ -116,7 +125,7 @@ Cell[TextData[{
  ", except for tensors with arbitrary element types (",
  Cell[BoxData[
   FormBox[
-   RowBox[{"{", 
+   RowBox[{"{",
     RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]]],
  "), which are disallowed."
 }], "Text"],
@@ -140,12 +149,12 @@ CompileTemplate takes the same options as CreateLibrary.\
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "\[IndentingNewLine]", 
-  RowBox[{"(*", 
-   RowBox[{",", " ", 
-    RowBox[{"\"\<ShellCommandFunction\>\"", " ", "\[Rule]", " ", "Print"}], 
-    ",", " ", 
-    RowBox[{"\"\<ShellOutputFunction\>\"", "\[Rule]", "Print"}]}], "*)"}], 
+ RowBox[{"CompileTemplate", "[", "template", "\[IndentingNewLine]",
+  RowBox[{"(*",
+   RowBox[{",", " ",
+    RowBox[{"\"\<ShellCommandFunction\>\"", " ", "\[Rule]", " ", "Print"}],
+    ",", " ",
+    RowBox[{"\"\<ShellOutputFunction\>\"", "\[Rule]", "Print"}]}], "*)"}],
   "\[IndentingNewLine]", "]"}]], "Input"],
 
 Cell[CellGroupData[{
@@ -155,34 +164,34 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Current directory is: \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Current directory is: ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
-    RGBColor[0, 0, 
+   Style["Current directory is: ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
@@ -191,78 +200,78 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Unloading library \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"DemoLib\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" ...\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Unloading library ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["DemoLib", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" ...", 
-    RGBColor[0, 0, 
+   Style["Unloading library ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["DemoLib",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" ...",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"]
 }, Open  ]],
 
@@ -277,17 +286,14 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["CompileTemplate", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["CompileTemplate", TraditionalForm]]],
  " uses the function ",
  Cell[BoxData[
-  FormBox["TranslateTemplate", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["TranslateTemplate", TraditionalForm]]],
  " to generate the code. ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"TranslateTemplate", "[", "template", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"TranslateTemplate", "[", "template", "]"}], TraditionalForm]]],
  " returns the generated code as a string."
 }], "Text"],
 
@@ -330,7 +336,7 @@ Cell["Now we are ready to create an instance of the class ...", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo1", "=", 
+ RowBox[{"demo1", "=",
   RowBox[{"Make", "[", "\"\<Demo1\>\"", "]"}]}]], "Input"],
 
 Cell[BoxData[
@@ -344,8 +350,8 @@ Cell["Add two numbers:", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo1", "@", 
-  RowBox[{"\"\<addTwo\>\"", "[", 
+ RowBox[{"demo1", "@",
+  RowBox[{"\"\<addTwo\>\"", "[",
    RowBox[{"123", ",", "234"}], "]"}]}]], "Input"],
 
 Cell[BoxData["357"], "Output"]
@@ -356,11 +362,11 @@ Cell["Trace of a real matrix:", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo1", "@", 
-  RowBox[{"\"\<trace\>\"", "[", 
-   RowBox[{"RandomReal", "[", 
-    RowBox[{"1", ",", 
-     RowBox[{"{", 
+ RowBox[{"demo1", "@",
+  RowBox[{"\"\<trace\>\"", "[",
+   RowBox[{"RandomReal", "[",
+    RowBox[{"1", ",",
+     RowBox[{"{",
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
 
 Cell[BoxData["2.0800151803161127`"], "Output"]
@@ -379,23 +385,22 @@ Cell[TextData[{
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo1", "@", 
-  RowBox[{"\"\<trace\>\"", "[", 
-   RowBox[{"RandomReal", "[", 
-    RowBox[{"1", ",", 
-     RowBox[{"{", 
+ RowBox[{"demo1", "@",
+  RowBox[{"\"\<trace\>\"", "[",
+   RowBox[{"RandomReal", "[",
+    RowBox[{"1", ",",
+     RowBox[{"{",
       RowBox[{"5", ",", "6"}], "}"}]}], "]"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"trace: Square matrix expected.\\\"\\)\
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":",
+  " ", "\<\"\[NoBreak]\\!\\(\\\"trace: Square matrix expected.\\\"\\)\
 \[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
- RowBox[{"LibraryFunctionError", "[", 
+ RowBox[{"LibraryFunctionError", "[",
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
 }, Open  ]],
 
@@ -410,7 +415,7 @@ Cell[BoxData[
  RowBox[{"LExpressionList", "[", "\"\<Demo1\>\"", "]"}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"{", 
+ RowBox[{"{",
   RowBox[{"Demo1", "[", "1", "]"}], "}"}]], "Output"]
 }, Open  ]],
 
@@ -470,7 +475,7 @@ Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
 Cell[BoxData[
  RowBox[{
   RowBox[{
-  "code", "=", 
+  "code", "=",
    "\"\<\nclass MeanVariance {\n\tdouble m, v;\n\npublic:\n\tMeanVariance() { \
 mma::print(\\\"constructor called\\\"); }\n\t~MeanVariance() { \
 mma::print(\\\"destructor called\\\"); }\n\n\tvoid compute(mma::RealTensorRef \
@@ -483,8 +488,8 @@ vec.length(); ++i) {\n\t\t\tsum  += vec[i];\n\t\t\tsum2 += vec[i]*vec[i];\n\t\
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"Export", "[", 
-  RowBox[{"\"\<MeanVariance.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+ RowBox[{"Export", "[",
+  RowBox[{"\"\<MeanVariance.h\>\"", ",", "code", ",", "\"\<String\>\""}],
   "]"}]], "Input"],
 
 Cell[BoxData["\<\"MeanVariance.h\"\>"], "Output"]
@@ -498,23 +503,23 @@ Cell[TextData[{
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", "\[IndentingNewLine]", 
-   RowBox[{"LClass", "[", 
-    RowBox[{"\"\<MeanVariance\>\"", ",", "\[IndentingNewLine]", 
-     RowBox[{"{", "\[IndentingNewLine]", 
+  RowBox[{"template", "=", "\[IndentingNewLine]",
+   RowBox[{"LClass", "[",
+    RowBox[{"\"\<MeanVariance\>\"", ",", "\[IndentingNewLine]",
+     RowBox[{"{", "\[IndentingNewLine]",
       RowBox[{
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<compute\>\"", ",", 
-         RowBox[{"{", 
-          RowBox[{"{", 
-           RowBox[{"Real", ",", "_", ",", "\"\<Constant\>\""}], "}"}], "}"}], 
-         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<mean\>\"", ",", 
-         RowBox[{"{", "}"}], ",", "Real"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<variance\>\"", ",", 
-         RowBox[{"{", "}"}], ",", "Real"}], "]"}]}], "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[",
+        RowBox[{"\"\<compute\>\"", ",",
+         RowBox[{"{",
+          RowBox[{"{",
+           RowBox[{"Real", ",", "_", ",", "\"\<Constant\>\""}], "}"}], "}"}],
+         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]",
+       RowBox[{"LFun", "[",
+        RowBox[{"\"\<mean\>\"", ",",
+         RowBox[{"{", "}"}], ",", "Real"}], "]"}], ",", "\[IndentingNewLine]",
+       RowBox[{"LFun", "[",
+        RowBox[{"\"\<variance\>\"", ",",
+         RowBox[{"{", "}"}], ",", "Real"}], "]"}]}], "\[IndentingNewLine]",
       "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
@@ -529,34 +534,34 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Current directory is: \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Current directory is: ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
-    RGBColor[0, 0, 
+   Style["Current directory is: ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
@@ -565,78 +570,78 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Unloading library \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"MeanVariance\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" ...\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Unloading library ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["MeanVariance", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" ...", 
-    RGBColor[0, 0, 
+   Style["Unloading library ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["MeanVariance",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" ...",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"]
 }, Open  ]],
 
@@ -653,11 +658,11 @@ boilerplate:\
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"Length", "@", 
-  RowBox[{"StringSplit", "[", 
+ RowBox[{"Length", "@",
+  RowBox[{"StringSplit", "[",
    RowBox[{
-    RowBox[{"Import", "[", 
-     RowBox[{"\"\<LTemplate-MeanVariance.cpp\>\"", ",", "\"\<String\>\""}], 
+    RowBox[{"Import", "[",
+     RowBox[{"\"\<LTemplate-MeanVariance.cpp\>\"", ",", "\"\<String\>\""}],
      "]"}], ",", "\"\<\\n\>\""}], "]"}]}]], "Input"],
 
 Cell[BoxData["119"], "Output"]
@@ -679,23 +684,23 @@ Cell[TextData[{
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"meanVariance", "[", "arr_", "]"}], ":=", "\[IndentingNewLine]", 
-  RowBox[{"Block", "[", 
+  RowBox[{"meanVariance", "[", "arr_", "]"}], ":=", "\[IndentingNewLine]",
+  RowBox[{"Block", "[",
    RowBox[{
-    RowBox[{"{", 
-     RowBox[{"obj", "=", 
-      RowBox[{"Make", "[", "MeanVariance", "]"}]}], "}"}], ",", 
-    "\[IndentingNewLine]", 
+    RowBox[{"{",
+     RowBox[{"obj", "=",
+      RowBox[{"Make", "[", "MeanVariance", "]"}]}], "}"}], ",",
+    "\[IndentingNewLine]",
     RowBox[{
-     RowBox[{"obj", "@", 
-      RowBox[{"\"\<compute\>\"", "[", "arr", "]"}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{"{", 
+     RowBox[{"obj", "@",
+      RowBox[{"\"\<compute\>\"", "[", "arr", "]"}]}], ";",
+     "\[IndentingNewLine]",
+     RowBox[{"{",
       RowBox[{
-       RowBox[{"obj", "@", 
-        RowBox[{"\"\<mean\>\"", "[", "]"}]}], ",", 
-       RowBox[{"obj", "@", 
-        RowBox[{"\"\<variance\>\"", "[", "]"}]}]}], "}"}]}]}], 
+       RowBox[{"obj", "@",
+        RowBox[{"\"\<mean\>\"", "[", "]"}]}], ",",
+       RowBox[{"obj", "@",
+        RowBox[{"\"\<variance\>\"", "[", "]"}]}]}], "}"}]}]}],
    "\[IndentingNewLine]", "]"}]}]], "Input"],
 
 Cell[TextData[{
@@ -717,8 +722,8 @@ Cell["Let\[CloseCurlyQuote]s test it:", "Text"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"list", "=", 
-   RowBox[{"RandomReal", "[", 
+  RowBox[{"list", "=",
+   RowBox[{"RandomReal", "[",
     RowBox[{"1", ",", "100"}], "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
@@ -734,8 +739,8 @@ Cell[BoxData["\<\"destructor called\"\>"], "Print"]
 }, Open  ]],
 
 Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"0.48769528760926384`", ",", "0.07238465691327894`"}], 
+ RowBox[{"{",
+  RowBox[{"0.48769528760926384`", ",", "0.07238465691327894`"}],
   "}"}]], "Output"]
 }, Open  ]],
 
@@ -779,7 +784,7 @@ Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-  "code", "=", 
+  "code", "=",
    "\"\<\nclass Demo2 {\npublic:\n\t// demo for user abort\n\tvoid hang() { \n\
 \t\tmma::print(\\\"Going into infinite loop ... try aborting now.\\\");\n\t\t\
 while(true) {\n#if defined(_WIN32) || defined (_WIN64)\n\t\t\tSleep(100); // \
@@ -787,10 +792,10 @@ sleep 0.1 s on Windows\n#else \n\t\t\tusleep(100000);   // sleep 0.1 s on \
 POSIX\n#endif\n\t\t\tmma::check_abort(); \n\t\t} \n\t}\n\n\t// demo for \
 returning tensors\n\tmma::IntTensorRef range(mint a, mint b) {\n\t\t\
 mma::IntTensorRef vec = mma::makeVector<mint>(b-a+1);\n\t\tfor (int i=0; i <= \
-b-a; ++i)\n\t\t\tvec[i] = a+i;\n\t\treturn vec;\n\t}\n};\n\>\""}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"Export", "[", 
-  RowBox[{"\"\<Demo2.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+b-a; ++i)\n\t\t\tvec[i] = a+i;\n\t\treturn vec;\n\t}\n};\n\>\""}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{"Export", "[",
+  RowBox[{"\"\<Demo2.h\>\"", ",", "code", ",", "\"\<String\>\""}],
   "]"}]}], "Input"],
 
 Cell[BoxData["\<\"Demo2.h\"\>"], "Output"]
@@ -798,22 +803,22 @@ Cell[BoxData["\<\"Demo2.h\"\>"], "Output"]
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", "\[IndentingNewLine]", 
-   RowBox[{"LClass", "[", 
-    RowBox[{"\"\<Demo2\>\"", ",", "\[IndentingNewLine]", 
-     RowBox[{"{", "\[IndentingNewLine]", 
+  RowBox[{"template", "=", "\[IndentingNewLine]",
+   RowBox[{"LClass", "[",
+    RowBox[{"\"\<Demo2\>\"", ",", "\[IndentingNewLine]",
+     RowBox[{"{", "\[IndentingNewLine]",
       RowBox[{
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<hang\>\"", ",", 
-         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<range\>\"", ",", 
-         RowBox[{"{", 
-          RowBox[{"Integer", ",", "Integer"}], "}"}], ",", 
-         RowBox[{"{", 
-          RowBox[{"Integer", ",", "1"}], "}"}]}], "]"}]}], 
-      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+       RowBox[{"LFun", "[",
+        RowBox[{"\"\<hang\>\"", ",",
+         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}], ",",
+       "\[IndentingNewLine]",
+       RowBox[{"LFun", "[",
+        RowBox[{"\"\<range\>\"", ",",
+         RowBox[{"{",
+          RowBox[{"Integer", ",", "Integer"}], "}"}], ",",
+         RowBox[{"{",
+          RowBox[{"Integer", ",", "1"}], "}"}]}], "]"}]}],
+      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}],
   ";"}]], "Input"],
 
 Cell[CellGroupData[{
@@ -828,34 +833,34 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Current directory is: \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Current directory is: ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
-    RGBColor[0, 0, 
+   Style["Current directory is: ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
@@ -864,78 +869,78 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Unloading library \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"Demo2\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" ...\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Unloading library ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["Demo2", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" ...", 
-    RGBColor[0, 0, 
+   Style["Unloading library ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["Demo2",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" ...",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"]
 }, Open  ]],
 
@@ -948,7 +953,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"demo2", "=", 
+  RowBox[{"demo2", "=",
    RowBox[{"Make", "[", "Demo2", "]"}]}], ";"}]], "Input"],
 
 Cell["\<\
@@ -960,7 +965,7 @@ Evaluation to stop it.\
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo2", "@", 
+ RowBox[{"demo2", "@",
   RowBox[{"\"\<hang\>\"", "[", "]"}]}]], "Input"],
 
 Cell[BoxData["\<\"Going into infinite loop ... try aborting now.\"\>"], \
@@ -974,12 +979,12 @@ Cell["This functions returns an integer vector:", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"demo2", "@", 
-  RowBox[{"\"\<range\>\"", "[", 
+ RowBox[{"demo2", "@",
+  RowBox[{"\"\<range\>\"", "[",
    RowBox[{"10", ",", "20"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"{", 
+ RowBox[{"{",
   RowBox[{
   "10", ",", "11", ",", "12", ",", "13", ",", "14", ",", "15", ",", "16", ",",
     "17", ",", "18", ",", "19", ",", "20"}], "}"}]], "Output"]
@@ -1021,17 +1026,17 @@ Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], ";"}], "\n", 
+  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], ";"}], "\n",
  RowBox[{
   RowBox[{
-  "code", "=", 
+  "code", "=",
    "\"\<\n#include <string>\n#include <algorithm>\n\nclass ReverseString {\n\t\
 std::string str;\n\npublic:\n\tconst char *reverse(const char *in) {\n\t\tstr \
 = in;\t\t\n\t\tmma::disownString(in); // release the string that Mathematica \
 passes in\n\t\tstd::reverse(str.begin(), str.end());\n\t\treturn str.c_str();\
-\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
- RowBox[{"Export", "[", 
-  RowBox[{"\"\<ReverseString.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]",
+ RowBox[{"Export", "[",
+  RowBox[{"\"\<ReverseString.h\>\"", ",", "code", ",", "\"\<String\>\""}],
   "]"}]}], "Input"],
 
 Cell[BoxData["\<\"ReverseString.h\"\>"], "Output"]
@@ -1039,12 +1044,12 @@ Cell[BoxData["\<\"ReverseString.h\"\>"], "Output"]
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", 
-   RowBox[{"LClass", "[", 
-    RowBox[{"\"\<ReverseString\>\"", ",", "\[IndentingNewLine]", 
-     RowBox[{"{", 
-      RowBox[{"LFun", "[", 
-       RowBox[{"\"\<reverse\>\"", ",", 
+  RowBox[{"template", "=",
+   RowBox[{"LClass", "[",
+    RowBox[{"\"\<ReverseString\>\"", ",", "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{"LFun", "[",
+       RowBox[{"\"\<reverse\>\"", ",",
         RowBox[{"{", "\"\<UTF8String\>\"", "}"}], ",", "\"\<UTF8String\>\""}],
         "]"}], "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
 
@@ -1060,34 +1065,34 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Current directory is: \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Current directory is: ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
-    RGBColor[0, 0, 
+   Style["Current directory is: ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
@@ -1096,78 +1101,78 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Unloading library \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"ReverseString\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" ...\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Unloading library ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["ReverseString", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" ...", 
-    RGBColor[0, 0, 
+   Style["Unloading library ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["ReverseString",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" ...",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"]
 }, Open  ]],
 
@@ -1180,15 +1185,15 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"reverse", "[", "str_String", "]"}], ":=", "\[IndentingNewLine]", 
-  RowBox[{"Module", "[", 
+  RowBox[{"reverse", "[", "str_String", "]"}], ":=", "\[IndentingNewLine]",
+  RowBox[{"Module", "[",
    RowBox[{
-    RowBox[{"{", 
-     RowBox[{"rs", "=", 
-      RowBox[{"Make", "[", "ReverseString", "]"}]}], "}"}], ",", 
-    "\[IndentingNewLine]", 
-    RowBox[{"rs", "@", 
-     RowBox[{"\"\<reverse\>\"", "[", "str", "]"}]}]}], "\[IndentingNewLine]", 
+    RowBox[{"{",
+     RowBox[{"rs", "=",
+      RowBox[{"Make", "[", "ReverseString", "]"}]}], "}"}], ",",
+    "\[IndentingNewLine]",
+    RowBox[{"rs", "@",
+     RowBox[{"\"\<reverse\>\"", "[", "str", "]"}]}]}], "\[IndentingNewLine]",
    "]"}]}]], "Input"],
 
 Cell[CellGroupData[{
@@ -1215,15 +1220,15 @@ in LFun follows the LibraryLink convention again:"
 }], "Text"],
 
 Cell[BoxData[
- RowBox[{"LFun", "[", 
-  RowBox[{"\"\<functionName\>\"", ",", "LinkObject", ",", "LinkObject"}], 
+ RowBox[{"LFun", "[",
+  RowBox[{"\"\<functionName\>\"", ",", "LinkObject", ",", "LinkObject"}],
   "]"}]], "Input",
  Evaluatable->False],
 
 Cell["This can be shortened for convenience:", "Text"],
 
 Cell[BoxData[
- RowBox[{"LFun", "[", 
+ RowBox[{"LFun", "[",
   RowBox[{"\"\<functionName\>\"", ",", "LinkObject"}], "]"}]], "Input",
  Evaluatable->False],
 
@@ -1235,11 +1240,11 @@ void return type.  Here\[CloseCurlyQuote]s a full example:\
 Cell[CellGroupData[{
 
 Cell[BoxData[{
- RowBox[{"SetDirectory", "[", "$TemporaryDirectory", 
-  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory",
+  "]"}], "\[IndentingNewLine]",
  RowBox[{
   RowBox[{
-  "code", "=", 
+  "code", "=",
    "\"\<\nclass LinkObjDemo {\npublic:\n\tvoid addTwo(MLINK link) {\n\t\t// \
 get arguments\n\t\tint argc = 2; // two arguments expected\n\t\tif (! \
 MLTestHeadWithArgCount(link, \\\"List\\\", &argc))\n\t\t\tthrow \
@@ -1248,10 +1253,10 @@ mma::LibraryError(\\\"addTwo: two arguments expected.\\\");\n\t\tint a, b;\n\t\
 okay)\n\t\t\tthrow mma::LibraryError(\\\"addTwo: integer arguments \
 expected.\\\");\n\t\t\n\t\t// compute result\n\t\tint result = a+b;\n\n\t\t// \
 return result\n\t\tMLNewPacket(link);\n\t\tMLPutInteger32(link, result);\n    \
-}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
+}\n};\n\>\""}], ";"}], "\[IndentingNewLine]",
  RowBox[{
-  RowBox[{"Export", "[", 
-   RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  RowBox[{"Export", "[",
+   RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}],
    "]"}], ";"}]}], "Input"],
 
 Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
@@ -1260,12 +1265,12 @@ Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", 
-   RowBox[{"LClass", "[", 
-    RowBox[{"\"\<LinkObjDemo\>\"", ",", "\[IndentingNewLine]", 
-     RowBox[{"{", 
-      RowBox[{"LFun", "[", 
-       RowBox[{"\"\<addTwo\>\"", ",", "LinkObject"}], "]"}], "}"}]}], 
+  RowBox[{"template", "=",
+   RowBox[{"LClass", "[",
+    RowBox[{"\"\<LinkObjDemo\>\"", ",", "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{"LFun", "[",
+       RowBox[{"\"\<addTwo\>\"", ",", "LinkObject"}], "]"}], "}"}]}],
     "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
@@ -1280,34 +1285,34 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Current directory is: \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Current directory is: ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
-    RGBColor[0, 0, 
+   Style["Current directory is: ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
@@ -1316,78 +1321,78 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Unloading library \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"LinkObjDemo\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" ...\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Unloading library ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["LinkObjDemo", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" ...", 
-    RGBColor[0, 0, 
+   Style["Unloading library ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["LinkObjDemo",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" ...",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"]
 }, Open  ]],
 
@@ -1400,14 +1405,14 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"obj", "=", 
+  RowBox[{"obj", "=",
    RowBox[{"Make", "[", "LinkObjDemo", "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"obj", "@", 
-  RowBox[{"\"\<addTwo\>\"", "[", 
+ RowBox[{"obj", "@",
+  RowBox[{"\"\<addTwo\>\"", "[",
    RowBox[{"5", ",", "7"}], "]"}]}]], "Input"],
 
 Cell[BoxData["12"], "Output"]
@@ -1416,39 +1421,37 @@ Cell[BoxData["12"], "Output"]
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"obj", "@", 
+ RowBox[{"obj", "@",
   RowBox[{"\"\<addTwo\>\"", "[", "1", "]"}]}]], "Input"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"addTwo: two arguments expected.\\\"\\)\
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":",
+  " ", "\<\"\[NoBreak]\\!\\(\\\"addTwo: two arguments expected.\\\"\\)\
 \[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
- RowBox[{"LibraryFunctionError", "[", 
+ RowBox[{"LibraryFunctionError", "[",
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"obj", "@", 
-  RowBox[{"\"\<addTwo\>\"", "[", 
+ RowBox[{"obj", "@",
+  RowBox[{"\"\<addTwo\>\"", "[",
    RowBox[{"a", ",", "2"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"addTwo: integer arguments \
-expected.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":",
+  " ", "\<\"\[NoBreak]\\!\\(\\\"addTwo: integer arguments expected.\\\"\\)\
+\[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
- RowBox[{"LibraryFunctionError", "[", 
+ RowBox[{"LibraryFunctionError", "[",
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
 }, Open  ]],
 
@@ -1479,11 +1482,11 @@ syntax. Here\[CloseCurlyQuote]s an example:"
 Cell[CellGroupData[{
 
 Cell[BoxData[{
- RowBox[{"SetDirectory", "[", "$TemporaryDirectory", 
-  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory",
+  "]"}], "\[IndentingNewLine]",
  RowBox[{
   RowBox[{
-  "code", "=", 
+  "code", "=",
    "\"\<\n#include <mlstream.h>\n\nclass LinkObjDemo {\npublic:\n\tvoid \
 addMultTwo(MLINK link) {\n\t\tmlStream ml(link, \\\"addMultTwo\\\"); // \
 optionally provide a name, here addMultTwo, used in error reporting\n\t\tint \
@@ -1491,10 +1494,10 @@ a, b;\n\t\tml >> mlCheckArgs(2) // two arguments expected\n\t\t   >> a >> b;\n\
 \t\t\n\t\t// compute result\n\t\tint sum = a+b;\n\t\tint prod = a*b;\n\n\t\t\
 // return result\n\t\tml.newPacket();\n\t\tml << mlHead(\\\"List\\\", 2) // \
 return a list of two elements\n           << sum << prod; // put the two \
-elements on the link\n    }\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
+elements on the link\n    }\n};\n\>\""}], ";"}], "\[IndentingNewLine]",
  RowBox[{
-  RowBox[{"Export", "[", 
-   RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  RowBox[{"Export", "[",
+   RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}],
    "]"}], ";"}]}], "Input"],
 
 Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
@@ -1503,12 +1506,12 @@ Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", 
-   RowBox[{"LClass", "[", 
-    RowBox[{"\"\<LinkObjDemo\>\"", ",", "\[IndentingNewLine]", 
-     RowBox[{"{", 
-      RowBox[{"LFun", "[", 
-       RowBox[{"\"\<addMultTwo\>\"", ",", "LinkObject"}], "]"}], "}"}]}], 
+  RowBox[{"template", "=",
+   RowBox[{"LClass", "[",
+    RowBox[{"\"\<LinkObjDemo\>\"", ",", "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{"LFun", "[",
+       RowBox[{"\"\<addMultTwo\>\"", ",", "LinkObject"}], "]"}], "}"}]}],
     "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
@@ -1523,34 +1526,34 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Current directory is: \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Current directory is: ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
-    RGBColor[0, 0, 
+   Style["Current directory is: ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
@@ -1559,64 +1562,64 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Unloading library \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"LinkObjDemo\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" ...\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Unloading library ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["LinkObjDemo", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" ...", 
-    RGBColor[0, 0, 
+   Style["Unloading library ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["LinkObjDemo",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" ...",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
@@ -1624,49 +1627,49 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"LTemplate-LinkObjDemo.cpp\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" already exists and will be overwritten.\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["LTemplate-LinkObjDemo.cpp", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" already exists and will be overwritten.", 
-    RGBColor[0, 0, 
+   Style["LTemplate-LinkObjDemo.cpp",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" already exists and will be overwritten.",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"]
 }, Open  ]],
 
@@ -1679,18 +1682,18 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"obj", "=", 
+  RowBox[{"obj", "=",
    RowBox[{"Make", "[", "LinkObjDemo", "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"obj", "@", 
-  RowBox[{"\"\<addMultTwo\>\"", "[", 
+ RowBox[{"obj", "@",
+  RowBox[{"\"\<addMultTwo\>\"", "[",
    RowBox[{"2", ",", "3"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"{", 
+ RowBox[{"{",
   RowBox[{"5", ",", "6"}], "}"}]], "Output"]
 }, Open  ]],
 
@@ -1699,40 +1702,38 @@ Cell["mlstream provides some basic error checking:", "Text"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"obj", "@", 
-  RowBox[{"\"\<addMultTwo\>\"", "[", 
+ RowBox[{"obj", "@",
+  RowBox[{"\"\<addMultTwo\>\"", "[",
    RowBox[{"2", ",", "3", ",", "4"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"addMultTwo: 2 arguments expected, 3 \
-received.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":",
+  " ", "\<\"\[NoBreak]\\!\\(\\\"addMultTwo: 2 arguments expected, 3 received.\
+\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
- RowBox[{"LibraryFunctionError", "[", 
+ RowBox[{"LibraryFunctionError", "[",
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"obj", "@", 
-  RowBox[{"\"\<addMultTwo\>\"", "[", 
+ RowBox[{"obj", "@",
+  RowBox[{"\"\<addMultTwo\>\"", "[",
    RowBox[{"\"\<a\>\"", ",", "2"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"addMultTwo: Integer32 expected.\\\"\\)\
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":",
+  " ", "\<\"\[NoBreak]\\!\\(\\\"addMultTwo: Integer32 expected.\\\"\\)\
 \[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
- RowBox[{"LibraryFunctionError", "[", 
+ RowBox[{"LibraryFunctionError", "[",
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
 }, Open  ]],
 
@@ -1746,12 +1747,12 @@ Cell[TextData[{
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"obj", "@", 
-  RowBox[{"\"\<addMultTwo\>\"", "[", 
+ RowBox[{"obj", "@",
+  RowBox[{"\"\<addMultTwo\>\"", "[",
    RowBox[{"2.3", ",", "3"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"{", 
+ RowBox[{"{",
   RowBox[{"5", ",", "6"}], "}"}]], "Output"]
 }, Open  ]],
 
@@ -1778,19 +1779,18 @@ Cell[TextData[{
 \[CloseCurlyDoubleQuote] class with a dot product member function. The ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"dot", "(", ")"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"dot", "(", ")"}], TraditionalForm]]],
  " member function will take another instance of the same class as its \
 argument."
 }], "Text"],
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}],
+  ";"}], "\[IndentingNewLine]",
  RowBox[{
   RowBox[{
-  "code", "=", 
+  "code", "=",
    "\"\<\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\n\
 class VectorDemo {\n\tstd::vector<double> v;\npublic:\n\t// set elements of \
 the vector\n\tvoid set(mma::RealTensorRef t) {\n\t\tv.resize(t.length());\n\t\
@@ -1798,30 +1798,30 @@ the vector\n\tvoid set(mma::RealTensorRef t) {\n\t\tv.resize(t.length());\n\t\
 another vector\n\tdouble dot(const VectorDemo &vec) {\n\t\tif (v.size() != \
 vec.v.size())\n\t\t\tthrow mma::LibraryError(\\\"Incompatible vector \
 sizes\\\");\n\t\treturn std::inner_product(v.begin(), v.end(), vec.v.begin(), \
-0.0);\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
+0.0);\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]",
  RowBox[{
-  RowBox[{"Export", "[", 
-   RowBox[{"\"\<VectorDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
+  RowBox[{"Export", "[",
+   RowBox[{"\"\<VectorDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}],
    "]"}], ";"}]}], "Input"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", "\[IndentingNewLine]", 
-   RowBox[{"LClass", "[", 
-    RowBox[{"\"\<VectorDemo\>\"", ",", "\[IndentingNewLine]", 
-     RowBox[{"{", "\[IndentingNewLine]", 
+  RowBox[{"template", "=", "\[IndentingNewLine]",
+   RowBox[{"LClass", "[",
+    RowBox[{"\"\<VectorDemo\>\"", ",", "\[IndentingNewLine]",
+     RowBox[{"{", "\[IndentingNewLine]",
       RowBox[{
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<set\>\"", ",", 
-         RowBox[{"{", 
-          RowBox[{"{", 
-           RowBox[{"Real", ",", "1", ",", "\"\<Constant\>\""}], "}"}], "}"}], 
-         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<dot\>\"", ",", 
-         RowBox[{"{", 
-          RowBox[{"LExpressionID", "[", "\"\<VectorDemo\>\"", "]"}], "}"}], 
-         ",", "Real"}], "]"}]}], "\[IndentingNewLine]", "}"}]}], 
+       RowBox[{"LFun", "[",
+        RowBox[{"\"\<set\>\"", ",",
+         RowBox[{"{",
+          RowBox[{"{",
+           RowBox[{"Real", ",", "1", ",", "\"\<Constant\>\""}], "}"}], "}"}],
+         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]",
+       RowBox[{"LFun", "[",
+        RowBox[{"\"\<dot\>\"", ",",
+         RowBox[{"{",
+          RowBox[{"LExpressionID", "[", "\"\<VectorDemo\>\"", "]"}], "}"}],
+         ",", "Real"}], "]"}]}], "\[IndentingNewLine]", "}"}]}],
     "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
@@ -1836,34 +1836,34 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Current directory is: \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Current directory is: ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
-    RGBColor[0, 0, 
+   Style["Current directory is: ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
@@ -1872,78 +1872,78 @@ Cell[BoxData[
   RowBox[{
    StyleBox["\<\"Unloading library \"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\"VectorDemo\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
+    FontColor->RGBColor[0, 0,
+      Rational[2, 3]]], "\[InvisibleSpace]",
    StyleBox["\<\" ...\"\>",
     StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
+    LineColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
+    FrontFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
+    BackFaceColor->RGBColor[0, 0,
       Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
+    GraphicsColor->RGBColor[0, 0,
       Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
+    FontColor->RGBColor[0, 0,
       Rational[2, 3]]]}],
   SequenceForm[
-   Style["Unloading library ", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style["VectorDemo", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" ...", 
-    RGBColor[0, 0, 
+   Style["Unloading library ",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style["VectorDemo",
+    RGBColor[0, 0,
+     Rational[2, 3]]],
+   Style[" ...",
+    RGBColor[0, 0,
      Rational[2, 3]]]],
   Editable->False]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
   StripOnInput->False,
-  LineColor->RGBColor[0, 0, 
+  LineColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FrontFaceColor->RGBColor[0, 0, 
+  FrontFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  BackFaceColor->RGBColor[0, 0, 
+  BackFaceColor->RGBColor[0, 0,
     Rational[2, 3]],
-  GraphicsColor->RGBColor[0, 0, 
+  GraphicsColor->RGBColor[0, 0,
     Rational[2, 3]],
-  FontColor->RGBColor[0, 0, 
+  FontColor->RGBColor[0, 0,
     Rational[2, 3]]]], "Print"]
 }, Open  ]],
 
@@ -1956,22 +1956,22 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"makeVector", "[", "arr_", "]"}], ":=", 
-  RowBox[{"Block", "[", 
+  RowBox[{"makeVector", "[", "arr_", "]"}], ":=",
+  RowBox[{"Block", "[",
    RowBox[{
-    RowBox[{"{", 
-     RowBox[{"v", "=", 
-      RowBox[{"Make", "[", "\"\<VectorDemo\>\"", "]"}]}], "}"}], ",", 
+    RowBox[{"{",
+     RowBox[{"v", "=",
+      RowBox[{"Make", "[", "\"\<VectorDemo\>\"", "]"}]}], "}"}], ",",
     RowBox[{
-     RowBox[{"v", "@", 
-      RowBox[{"\"\<set\>\"", "[", "arr", "]"}]}], ";", "v"}]}], 
+     RowBox[{"v", "@",
+      RowBox[{"\"\<set\>\"", "[", "arr", "]"}]}], ";", "v"}]}],
    "]"}]}]], "Input"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"v1", "=", 
-  RowBox[{"makeVector", "[", 
+ RowBox[{"v1", "=",
+  RowBox[{"makeVector", "[",
    RowBox[{"Range", "[", "10", "]"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
@@ -1981,10 +1981,10 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"v2", "=", 
-  RowBox[{"makeVector", "[", 
-   RowBox[{"Range", "[", 
-    RowBox[{"10", ",", "1", ",", 
+ RowBox[{"v2", "=",
+  RowBox[{"makeVector", "[",
+   RowBox[{"Range", "[",
+    RowBox[{"10", ",", "1", ",",
      RowBox[{"-", "1"}]}], "]"}], "]"}]}]], "Input"],
 
 Cell[BoxData[
@@ -1995,28 +1995,25 @@ Cell[TextData[{
  "When calling ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"dot", "(", ")"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"dot", "(", ")"}], TraditionalForm]]],
  " from ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  ", we cannot simply pass ",
  Cell[BoxData[
-  FormBox["v2", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["v2", TraditionalForm]]],
  " to it. Instead we must pass its managed library expression ID. The reason \
 for not translating ",
  Cell[BoxData[
-  FormBox["v2", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["v2", TraditionalForm]]],
  " to an expression ID automatically is to maintain runtime performance."
 }], "Text"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"v1", "@", 
-  RowBox[{"\"\<dot\>\"", "[", 
+ RowBox[{"v1", "@",
+  RowBox[{"\"\<dot\>\"", "[",
    RowBox[{"ManagedLibraryExpressionID", "[", "v2", "]"}], "]"}]}]], "Input"],
 
 Cell[BoxData["220.`"], "Output"]
@@ -2026,9 +2023,9 @@ Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"Range", "[", "10", "]"}], ".", 
-  RowBox[{"Range", "[", 
-   RowBox[{"10", ",", "1", ",", 
+  RowBox[{"Range", "[", "10", "]"}], ".",
+  RowBox[{"Range", "[",
+   RowBox[{"10", ",", "1", ",",
     RowBox[{"-", "1"}]}], "]"}]}]], "Input"],
 
 Cell[BoxData["220"], "Output"]
@@ -2122,6 +2119,12 @@ not be visible to the users of your package. This also avoids conflicts \
 between multiple applications using various versions of LTemplate.\
 \>", "Text"],
 
+Cell["\<\
+The LTemplate repository contains a skeleton-project directory with an \
+example package that can be used as the basis of a complex multiplatform \
+LTemplate-based Mathematica application.\
+\>", "Text"],
+
 Cell[TextData[{
  "For an example of a project that uses LTemplate see IGraph/M at ",
  ButtonBox["https://github.com/szhorvat/IGraphM",
@@ -2148,50 +2151,50 @@ Cell[BoxData[
  RowBox[{"?", "LTemplate`*"}]], "Input"],
 
 Cell[BoxData[
- DynamicModuleBox[{Typeset`open$$ = True}, 
+ DynamicModuleBox[{Typeset`open$$ = True},
   PaneSelectorBox[{False->
    RowBox[{
     OpenerBox[Dynamic[Typeset`open$$],
-     ImageSize->Small], 
+     ImageSize->Small],
     StyleBox["LTemplate`", "InfoHeading"]}], True->GridBox[{
      {
       RowBox[{
        OpenerBox[Dynamic[Typeset`open$$],
-        ImageSize->Small], 
+        ImageSize->Small],
        StyleBox["LTemplate`", "InfoHeading"]}]},
      {GridBox[{
         {
          ButtonBox["CompileTemplate",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "CompileTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["LClass",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LClass", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["LExpressionList",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LExpressionList", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["LTemplate",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["UnloadTemplate",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "UnloadTemplate", "LTemplate`"}},
@@ -2199,34 +2202,35 @@ Cell[BoxData[
         {
          ButtonBox["ConfigureLTemplate",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "ConfigureLTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["LClassContext",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LClassContext", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["LFun",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LFun", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["Make",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "Make", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["ValidTemplateQ",
           BaseStyle->"InformationLink",
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "ValidTemplateQ", "LTemplate`"}},
@@ -2234,28 +2238,28 @@ Cell[BoxData[
         {
          ButtonBox["FormatTemplate",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "FormatTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["LExpressionID",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LExpressionID", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["LoadTemplate",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "LoadTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
+          ButtonNote->"LTemplate`"],
          ButtonBox["TranslateTemplate",
           BaseStyle->"InformationLink",
-          
+
           ButtonData:>{
            "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
             "TranslateTemplate", "LTemplate`"}},
@@ -2265,7 +2269,7 @@ Cell[BoxData[
        GridBoxItemSize->{"Columns" -> {{
             Scaled[0.19]}}}]}
     },
-    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]},
    Dynamic[Typeset`open$$],
    ImageSize->Automatic]]], "Print", "InfoCell"]
 }, Open  ]],
@@ -2281,7 +2285,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  StyleBox["\<\"LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \
-\[Ellipsis]}] represents a library template.\"\>", 
+\[Ellipsis]}] represents a library template.\"\>",
   "MSG"]], "Print", "PrintUsage",
  CellTags->"Info-47561812-6052-4351-be59-0d1da93bf6e0"]
 }, Open  ]],
@@ -2384,7 +2388,7 @@ Cell[BoxData[
  StyleBox["\<\"CompileTemplate[template] compiles the library defined by the \
 template. Required source files must be present in the current \
 directory.\\nCompileTemplate[template, {file1, \[Ellipsis]}] includes \
-additional source files in the compilation.\"\>", 
+additional source files in the compilation.\"\>",
   "MSG"]], "Print", "PrintUsage",
  CellTags->"Info-b1082e50-3750-462a-840e-4291b205cf5d"]
 }, Open  ]],
@@ -2392,19 +2396,16 @@ additional source files in the compilation.\"\>",
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"CompileTemplate", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"CompileTemplate", "[", "]"}], TraditionalForm]]],
  " takes the same options as ",
  Cell[BoxData[
-  FormBox["CreateLibrary", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["CreateLibrary", TraditionalForm]]],
  "."
 }], "Text"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["CompileTemplate", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["CompileTemplate", TraditionalForm]]],
  " will unload the template before compilation."
 }], "Text"]
 }, Closed]],
@@ -2420,7 +2421,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  StyleBox["\<\"LoadTemplate[template] loads the library defined by the \
-template. The library must already be compiled.\"\>", 
+template. The library must already be compiled.\"\>",
   "MSG"]], "Print", "PrintUsage",
  CellTags->"Info-c8950299-eebd-4613-b8fd-cd0d86a67f7f"]
 }, Open  ]],
@@ -2447,7 +2448,7 @@ Cell[BoxData[
  RowBox[{"?", "Make"}]], "Input"],
 
 Cell[BoxData[
- StyleBox["\<\"Make[class] creates an instance of class.\"\>", 
+ StyleBox["\<\"Make[class] creates an instance of class.\"\>",
   "MSG"]], "Print", "PrintUsage",
  CellTags->"Info-e2b499d0-1811-46a2-828c-3d568aad8484"]
 }, Open  ]],
@@ -2575,9 +2576,8 @@ Cell[TextData[{
  "Tensor patterns without type specifications, i.e. ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"{", 
-    RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"{",
+    RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]]],
  ", are not supported."
 }], "Text"]
 }, Open  ]],
@@ -2596,10 +2596,9 @@ Cell[TextData[{
  "Optionally a rank specification can be given, for example ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"LibraryDataType", "[", 
-    RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}], 
-   TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"LibraryDataType", "[",
+    RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}],
+   TraditionalForm]]],
  "."
 }], "Text"],
 
@@ -2607,8 +2606,7 @@ Cell[TextData[{
  "Sparse array patterns without type specifications, i.e. ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"LibraryDataType", "[", "SparseArray", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"LibraryDataType", "[", "SparseArray", "]"}], TraditionalForm]]],
  ", are not supported."
 }], "Text"]
 }, Open  ]],
@@ -2623,8 +2621,8 @@ Cell[TextData[{
  "Arguments of type ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}],
+   TraditionalForm]]],
  " are handled specially. On the ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
@@ -2632,13 +2630,11 @@ Cell[TextData[{
 can be obtained from a managed library expression using the function ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"ManagedLibraryExpressionID", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"ManagedLibraryExpressionID", "[", "]"}], TraditionalForm]]],
  ". On the C++ side it will be passed as a reference to a class instance, ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"SomeClass", " ", "&"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"SomeClass", " ", "&"}], TraditionalForm]]],
  "."
 }], "Text"]
 }, Open  ]],
@@ -2724,24 +2720,16 @@ LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
 }, Open  ]]
 },
 WindowSize->{990, 700},
-WindowMargins->{{138, Automatic}, {Automatic, 7}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
-2015)",
 StyleDefinitions->Notebook[{
    Cell[
-    StyleData[StyleDefinitions -> "Default.nb"]], 
+    StyleData[StyleDefinitions -> "Default.nb"]],
    Cell[
-    StyleData["Section"], ShowGroupOpener -> True], 
+    StyleData["Section"], ShowGroupOpener -> True],
    Cell[
-    StyleData["Subsection"], ShowGroupOpener -> True], 
+    StyleData["Subsection"], ShowGroupOpener -> True],
    Cell[
-    StyleData["Subsubsection"], ShowGroupOpener -> True]}, 
-  WindowSize -> {808, 751}, 
-  WindowMargins -> {{300, Automatic}, {28, Automatic}}, Visible -> False, 
-  FrontEndVersion -> 
-  "10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, 2015)", 
+    StyleData["Subsubsection"], ShowGroupOpener -> True]}, Visible -> False,
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
-
