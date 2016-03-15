@@ -258,7 +258,8 @@ inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
 
 #define MLSTREAM_DEF_VEC_PUT(MTYPE, CTYPE) \
     inline mlStream & operator << (mlStream &ml, const std::vector<CTYPE> &vec) { \
-        if (! MLPut ## MTYPE ## List(ml.link(), &vec[0], vec.size())) \
+        const CTYPE *data = vec.size() == 0 ? NULL : &vec[0]; \
+        if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
             ml.error("Cannot return vector of " #MTYPE); \
         return ml; \
     }
