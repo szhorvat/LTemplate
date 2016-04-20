@@ -6,7 +6,7 @@
 (* :Author:  szhorvat     *)
 (* :Date:    2015-08-03   *)
 
-(* :Package Version: 0.3 *)
+(* :Package Version: 0.4dev *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2016 Szabolcs Horvát *)
 (* :License: MIT license, see LICENSE.txt *)
