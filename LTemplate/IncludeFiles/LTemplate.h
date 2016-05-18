@@ -26,6 +26,8 @@
 #include "WolframLibrary.h"
 #include "WolframSparseLibrary.h"
 
+#undef P
+
 #include <map>
 #include <vector>
 #include <string>
