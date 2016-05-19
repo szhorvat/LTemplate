@@ -198,7 +198,13 @@ validateFun[LFun[name_, args_List, ret_]] :=
         nameValid && (And @@ validateType /@ args) && validateReturnType[ret]
       ]
     ]
-validateFun[LOFun[name_]] := validateName[name]
+validateFun[LOFun[name_]] :=
+    Block[{nameValid},
+      nameValid = validateName[name];
+      If[MemberQ[funlist, name], Message[ValidTemplateQ::dupfun, location, name]; Return[False]];
+      AppendTo[funlist, name];
+      nameValid
+    ]
 
 (* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
 
