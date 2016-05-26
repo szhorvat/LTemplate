@@ -370,21 +370,31 @@ funName[classname_][name_] := classname <> "_" <> name
 
 
 catchExceptions[classname_, funname_] :=
-    {
-      CCatch[{excType, excName},
-        {
-          CMember[excName, "report()"],
-          CReturn[CMember[excName, "error_code()"]]
-        }]
-      ,
-      CCatch[
-        {"const std::exception &", "exc"},
-        {
-          CCall["mma::detail::handleUnknownException", {"exc", "\"" <> classname <> "::" <> funname <> "\""}],
-          CReturn["LIBRARY_FUNCTION_ERROR"]
-        }
-      ]
-    }
+    Module[{membername = "\"" <> classname <> "::" <> funname <> "()\""},
+      {
+        CCatch[{excType, excName},
+          {
+            CMember[excName, "report()"],
+            CReturn[CMember[excName, "error_code()"]]
+          }
+        ]
+        ,
+        CCatch[
+          {"const std::exception &", "exc"},
+          {
+            CCall["mma::detail::handleUnknownException", {"exc.what()", membername}],
+            CReturn["LIBRARY_FUNCTION_ERROR"]
+          }
+        ]
+        ,
+        CCatch["...",
+          {
+            CCall["mma::detail::handleUnknownException", {"NULL", membername}],
+            CReturn["LIBRARY_FUNCTION_ERROR"]
+          }
+        ]
+      }
+    ]
 
 
 transFun[classname_][LFun[name_String, args_List, ret_]] :=

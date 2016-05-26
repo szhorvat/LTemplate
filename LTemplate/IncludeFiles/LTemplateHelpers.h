@@ -76,14 +76,13 @@ struct MOutFlushGuard {
 
 
 // Handles unknown exceptions in top-level functions.
-void handleUnknownException(const std::exception &exc, const char *funname) {
+void handleUnknownException(const char *what, const char *funname) {
     std::ostringstream msg;
-    const char *what = exc.what();
     msg << "Unknown exception caught in "
         << funname
-        << "The library may be in an inconsistent state. It is recommended that you restart the kernel now to avoid instability.\n";
+        << ". The library may be in an inconsistent state. It is recommended that you restart the kernel now to avoid instability.";
     if (what)
-        msg << what;
+        msg << '\n' << what;
     message(msg.str(), M_ERROR);
 }
 
