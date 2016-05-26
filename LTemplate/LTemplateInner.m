@@ -321,15 +321,9 @@ transTemplate[LTemplate[libname_String, classes_]] :=
         CInclude /@ includeName /@ classlist,
         "","",
 
-        CInlineCode@"namespace mma {",
-        "",
-        CDeclare["WolframLibraryData", "libData"],
-        "",
         CDefine["LTEMPLATE_MESSAGE_SYMBOL", CString[fullyQualifiedSymbolName[$messageSymbol]]],
         "",
         CInclude["LTemplate.inc"],
-        "",
-        CInlineCode@"} // namespace mma",
 
         "","",
 

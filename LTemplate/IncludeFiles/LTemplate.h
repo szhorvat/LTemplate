@@ -31,6 +31,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <ostream>
 #include <sstream>
 #include <complex>
 
@@ -73,6 +74,29 @@ inline void print(const char *msg) {
 
 /// Call _Mathematica_'s `Print[]`, `std::string` argument version.
 inline void print(std::string msg) { print(msg.c_str()); }
+
+
+namespace detail {
+    class MBuffer : public std::streambuf {
+        std::vector<char_type> buf;
+
+    public:
+        MBuffer(std::size_t buf_size = 4096) : buf(buf_size + 1) {
+            setp(&buf.front(), &buf.back());
+        }
+
+    protected:
+        int sync();
+        int_type overflow(int_type ch);
+
+    private:
+        MBuffer(const MBuffer &);
+        MBuffer & operator = (const MBuffer &);
+    };
+}
+
+/// Can be used to output with _Mathematica_'s `Print[]` in a manner similar to `std::cout`. The stream _must_ be flushed (`std::endl` or `std::flush`) to trigger printing.
+extern std::ostream mout;
 
 
 /** \brief Throwing this type returns to _Mathematica_ immediately.
