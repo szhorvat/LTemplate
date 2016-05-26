@@ -7,7 +7,7 @@
 // This #include and #define are redundant. They are only for the IDE.
 #include "LTemplate.h"
 #ifndef LTEMPLATE_MESSAGE_SYMBOL
-#define LTEMPLATE_MESSAGE_SYMBOL "LTemplate"
+#define LTEMPLATE_MESSAGE_SYMBOL "LTemplate`LTemplate"
 #endif
 
 namespace mma {
