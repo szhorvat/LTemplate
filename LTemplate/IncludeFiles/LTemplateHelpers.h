@@ -69,6 +69,25 @@ public:
 };
 
 
+// Used with RAII to ensure that mma::mout is flushed before the exit of any top-level function.
+struct MOutFlushGuard {
+    ~MOutFlushGuard() { mout.flush(); }
+};
+
+
+// Handles unknown exceptions in top-level functions.
+void handleUnknownException(const std::exception &exc, const char *funname) {
+    std::ostringstream msg;
+    const char *what = exc.what();
+    msg << "Unknown exception caught in "
+        << funname
+        << "The library may be in an inconsistent state. It is recommended that you restart the kernel now to avoid instability.\n";
+    if (what)
+        msg << what;
+    message(msg.str(), M_ERROR);
+}
+
+
 } // namespace detail
 } // namespace mma
 

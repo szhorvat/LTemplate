@@ -62,8 +62,9 @@ int MBuffer::sync() {
         pbump(-1);
 
     *pptr() = '\0';
-    mma::print(buf.data());
     std::ptrdiff_t n = pptr() - pbase();
+    if (n > 0)
+        mma::print(&buf.front());
     pbump(-n);
     return 0;
 }

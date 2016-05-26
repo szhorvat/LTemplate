@@ -120,13 +120,15 @@ GenerateCode[CInlineCode[arg_], opts : OptionsPattern[]] := GenerateCode[arg, op
      try { tryCode } catch (catchArg) { catchCode }
 *)
 
-GenerateCode[CTryCatch[try_, arg_, catch_], opts: OptionsPattern[]] :=
-    Module[{},
-      "try " <> GenerateCode[CBlock[try], opts] <> "\n" <>
-          "catch (" <> SymbolicC`Private`formatArgument[arg, opts] <> ")\n" <>
-          GenerateCode[CBlock[catch], opts]
-    ]
+GenerateCode[CTryCatch[try_, arg_, catch_], opts : OptionsPattern[]] :=
+    GenerateCode[CTry[try], opts] <> "\n" <> GenerateCode[CCatch[arg, catch], opts]
 
+GenerateCode[CTry[try_], opts : OptionsPattern[]] :=
+    "try\n" <> GenerateCode[CBlock[try], opts]
+
+GenerateCode[CCatch[arg_, catch_], opts : OptionsPattern[]] :=
+    "catch (" <> SymbolicC`Private`formatArgument[arg, opts] <> ")\n" <>
+        GenerateCode[CBlock[catch], opts]
 
 (****************** Generic template processing ****************)
 
@@ -366,18 +368,38 @@ transClass[LClass[classname_String, funs_]] :=
 
 funName[classname_][name_] := classname <> "_" <> name
 
+
+catchExceptions[classname_, funname_] :=
+    {
+      CCatch[{excType, excName},
+        {
+          CMember[excName, "report()"],
+          CReturn[CMember[excName, "error_code()"]]
+        }]
+      ,
+      CCatch[
+        {"const std::exception &", "exc"},
+        {
+          CCall["mma::detail::handleUnknownException", {"exc", "\"" <> classname <> "::" <> funname <> "\""}],
+          CReturn["LIBRARY_FUNCTION_ERROR"]
+        }
+      ]
+    }
+
+
 transFun[classname_][LFun[name_String, args_List, ret_]] :=
     Block[{index = 0},
       {
         CFunction[libFunRet, funName[classname][name], libFunArgs,
           {
-          (* TODO: check Argc is correct, use assert *)
+            CDeclare["mma::detail::MOutFlushGuard", "flushguard"],
+            (* TODO: check Argc is correct, use assert *)
             "const mint id = MArgument_getInteger(Args[0])",
             CInlineCode@StringTemplate[
               "if (`1`.find(id) == `1`.end()) { libData->Message(\"noinst\"); return LIBRARY_FUNCTION_ERROR; }"
             ][collectionName[classname]],
             "",
-            CTryCatch[
+            CTry[
             (* try *) {
               transArg /@ args,
               "",
@@ -385,13 +407,9 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
                 ret,
                 CPointerMember[CArray[collectionName[classname], "id"], CCall[name, var /@ Range@Length[args]]]
               ]
-            },
-            (* catch *) {excType, excName},
-              {
-                CMember[excName, "report()"],
-                CReturn[CMember[excName, "error_code()"]]
-              }
-            ],
+            }],
+            (* catch *)
+            catchExceptions[classname, name],
             "",
             CReturn["LIBRARY_NO_ERROR"]
           }
@@ -404,7 +422,8 @@ transFun[classname_][LOFun[name_String]] :=
     {
       CFunction[libFunRet, funName[classname][name], linkFunArgs,
         {
-          CTryCatch[
+          CDeclare["mma::detail::MOutFlushGuard", "flushguard"],
+          CTry[
             (* try *) {
               CInlineCode@StringTemplate[
 "
@@ -422,14 +441,10 @@ if (`collection`.find(id) == `collection`.end()) {
 `collection`[id]->`funname`(mlp);
 "
               ][<| "collection" -> collectionName[classname], "funname" -> name |>]
-            },
-            (* catch *) {excType, excName},
-            {
-              (* TODO: clean up link *)
-              CMember[excName, "report()"],
-              CReturn[CMember[excName, "error_code()"]]
             }
           ],
+          (* catch *)
+          catchExceptions[classname, name],
           "",
           CReturn["LIBRARY_NO_ERROR"]
         }
