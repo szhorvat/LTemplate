@@ -76,25 +76,6 @@ inline void print(const char *msg) {
 inline void print(std::string msg) { print(msg.c_str()); }
 
 
-namespace detail {
-    class MBuffer : public std::streambuf {
-        std::vector<char_type> buf;
-
-    public:
-        MBuffer(std::size_t buf_size = 4096) : buf(buf_size + 1) {
-            setp(&buf.front(), &buf.back());
-        }
-
-    protected:
-        int sync();
-        int_type overflow(int_type ch);
-
-    private:
-        MBuffer(const MBuffer &);
-        MBuffer & operator = (const MBuffer &);
-    };
-}
-
 /// Can be used to output with _Mathematica_'s `Print[]` in a manner similar to `std::cout`. The stream _must_ be flushed (`std::endl` or `std::flush`) to trigger printing.
 extern std::ostream mout;
 
@@ -130,14 +111,14 @@ public:
 #define massert(condition) (void)(((condition) || mma::detail::massert_impl(#condition, __FILE__, __LINE__)), 0)
 #endif
 
-namespace detail {
+namespace detail { // private
     inline bool massert_impl(const char *cond, const char *file, int line) {
         std::ostringstream msg;
         msg << cond << ", file " << file << ", line " << line;
         message(msg.str(), M_ASSERT);
         throw LibraryError();
     }
-}
+} // end namespace detail
 
 
 /// Check for and honour user aborts.
@@ -161,7 +142,7 @@ namespace detail { // private
             for (mint j=0; j < nrow; ++j)
                 to[i + j*ncol] = from[j + i*nrow];
     }
-}
+} // end namespace detail
 
 
 /** \brief Wrapper class for `MTensor` pointers
@@ -313,7 +294,7 @@ namespace detail { // private
     template<> inline int libraryType<mint>()      { return MType_Integer; }
     template<> inline int libraryType<double>()    { return MType_Real; }
     template<> inline int libraryType<complex_t>() { return MType_Complex; }
-}
+} // end namespace detail
 
 /// Creates a rank 3 tensor of the given dimensions
 template<typename T>
