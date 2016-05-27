@@ -1,5 +1,5 @@
 (* Mathematica Package *)
-(* Based on LTemplate, https://bitbucket.org/szhorvat/ltemplate *)
+(* Based on LTemplate, https://github.com/szhorvat/LTemplate *)
 
 (**************************************************************************************
 

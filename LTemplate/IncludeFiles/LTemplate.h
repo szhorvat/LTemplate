@@ -9,7 +9,7 @@
  *
  * This is Doxygen-generated documentation for the C++ interface of the LTemplate _Mathematica_ package.
  *
- * For the latest version of the package go to https://bitbucket.org/szhorvat/ltemplate
+ * For the latest version of the package go to https://github.com/szhorvat/LTemplate
  *
  * See `LTemplateTutorial.nb` for an introduction and additional documentation.
  */
