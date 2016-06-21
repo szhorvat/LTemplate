@@ -73,7 +73,12 @@ If[Not@OrderedQ[{version, maxVersion}] && Not[$private],
 $packageDirectory = DirectoryName[$InputFileName];
 $includeDirectory = FileNameJoin[{$packageDirectory, "IncludeFiles"}];
 
-$messageSymbol (* set by ConfigureLTemplate[] *)
+(* The following symbols are set by ConfigureLTemplate[] *)
+$messageSymbol := warnConfig
+$lazyLoading := warnConfig
+
+(* Show error and abort when ConfigureLTemplate[] was not called. *)
+warnConfig := (Print["FATAL ERROR: Must call ConfigureLTemplate[] when embedding LTemplate into another package. Aborting ..."]; Abort[])
 
 
 LibraryFunction::noinst = "Managed library expression instance does not exist.";
@@ -81,7 +86,7 @@ LibraryFunction::noinst = "Managed library expression instance does not exist.";
 LTemplate::nofun = "Function `` does not exist.";
 
 
-Options[ConfigureLTemplate] = { "MessageSymbol" -> LTemplate }
+Options[ConfigureLTemplate] = { "MessageSymbol" -> LTemplate, "LazyLoading" -> False };
 
 ConfigureLTemplate[opt : OptionsPattern[]] :=
     With[{sym = OptionValue["MessageSymbol"]},
@@ -90,6 +95,8 @@ ConfigureLTemplate[opt : OptionsPattern[]] :=
       sym::warning = "``";
       sym::error   = "``";
       sym::assert  = "Assertion failed: ``.";
+
+      $lazyLoading = OptionValue["LazyLoading"];
     ]
 
 LClassContext[] = Context[LTemplate] <> "Classes`";
@@ -542,19 +549,37 @@ loadClass[libname_][tem : LClass[classname_String, funs_]] := (
   ];
 )
 
+
 loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
-    With[{classsym = Symbol@symName[classname]},
-      With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], Prepend[args /. loadingTypes, Integer], ret]},
-        classsym[id_Integer]@name[arguments___] := lfun[id, arguments]
+    With[{classsym = Symbol@symName[classname], funname = funName[classname][name], loadargs = Prepend[args /. loadingTypes, Integer]},
+      If[$lazyLoading,
+        classsym[idx_Integer]@name[argumentsx___] :=
+            With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, ret]},
+              classsym[id_Integer]@name[arguments___] := lfun[id, arguments];
+              classsym[idx]@name[argumentsx]
+            ]
+        ,
+        With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, ret]},
+          classsym[id_Integer]@name[arguments___] := lfun[id, arguments];
+        ]
+      ]
+    ];
+
+loadFun[libname_, classname_][LOFun[name_String]] :=
+    With[{classsym = Symbol@symName[classname], funname = funName[classname][name]},
+      If[$lazyLoading,
+        classsym[idx_Integer]@name[argumentsx___] :=
+          With[{lfun = LibraryFunctionLoad[libname, funname, LinkObject, LinkObject]},
+            classsym[id_Integer]@name[arguments___] := lfun[id, {arguments}];
+            classsym[idx]@name[argumentsx]
+          ]
+        ,
+        With[{lfun = LibraryFunctionLoad[libname, funname, LinkObject, LinkObject]},
+          classsym[id_Integer]@name[arguments___] := lfun[id, {arguments}];
+        ]
       ]
     ]
 
-loadFun[libname_, classname_][LOFun[name_String]] :=
-    With[{classsym = Symbol@symName[classname]},
-      With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], LinkObject, LinkObject]},
-        classsym[id_Integer]@name[arguments___] := lfun[id, {arguments}]
-      ]
-    ]
 
 (* For types that need to be translated to LibraryFunctionLoad compatible forms before loading. *)
 loadingTypes = Dispatch@{ LExpressionID[_] -> Integer };
