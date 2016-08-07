@@ -69,6 +69,43 @@ public:
 };
 
 
+// Underlying stream buffer for mma::mout
+class MBuffer : public std::streambuf {
+    std::vector<char_type> buf;
+
+public:
+    MBuffer(std::size_t buf_size = 4096) : buf(buf_size + 1) {
+        setp(&buf.front(), &buf.back());
+    }
+
+protected:
+    int sync();
+    int_type overflow(int_type ch);
+
+private:
+    MBuffer(const MBuffer &);
+    MBuffer & operator = (const MBuffer &);
+};
+
+
+// Used with RAII to ensure that mma::mout is flushed before the exit of any top-level function.
+struct MOutFlushGuard {
+    ~MOutFlushGuard() { mout.flush(); }
+};
+
+
+// Handles unknown exceptions in top-level functions.
+void handleUnknownException(const char *what, const char *funname) {
+    std::ostringstream msg;
+    msg << "Unknown exception caught in "
+        << funname
+        << ". The library may be in an inconsistent state. It is recommended that you restart the kernel now to avoid instability.";
+    if (what)
+        msg << '\n' << what;
+    message(msg.str(), M_ERROR);
+}
+
+
 } // namespace detail
 } // namespace mma
 

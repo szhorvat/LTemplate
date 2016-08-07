@@ -4,16 +4,55 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-// This #include and #define are redundant. They are only for the IDE.
+// These #includes are redundant. They are only for the IDE.
 #include "LTemplate.h"
-#ifndef LTEMPLATE_MESSAGE_SYMBOL
-#define LTEMPLATE_MESSAGE_SYMBOL "LTemplate"
-#endif
+#include "LTemplateHelpers.h"
+
 
 namespace mma {
 
 
 WolframLibraryData libData;
+
+
+namespace detail { // private
+
+    int MBuffer::sync() {
+        // If the last character is a newline, remove it.
+        // This makes it convenient to flush with std::endl
+        if (pptr() > pbase() && pptr()[-1] == '\n')
+            pbump(-1);
+
+        *pptr() = '\0';
+        std::ptrdiff_t n = pptr() - pbase();
+        if (n > 0)
+            mma::print(&buf.front());
+        pbump(-n);
+        return 0;
+    }
+
+    std::streambuf::int_type MBuffer::overflow(std::streambuf::int_type ch) {
+        if (ch != traits_type::eof()) {
+            massert(pptr() == epptr()); // overflow should only be called if the buffer is out of space
+
+            *pptr() = traits_type::to_char_type(ch);
+
+            std::size_t offset = pptr() - pbase();
+            std::size_t old_buf_size = buf.size() - 1;
+            buf.resize( 2*old_buf_size + 1 );
+
+            setp( &buf.front(), &buf.back() );
+            pbump( offset + 1 );
+        }
+        return ch;
+    }
+
+    static MBuffer mbuf;
+
+} // end namespace detail
+
+
+std::ostream mout(&detail::mbuf);
 
 
 void message(const char *msg, MessageType type) {
@@ -51,45 +90,6 @@ void message(const char *msg, MessageType type) {
     if (pkt == RETURNPKT)
         MLNewPacket(link);
 }
-
-
-namespace detail {
-
-int MBuffer::sync() {
-    // If the last character is a newline, remove it.
-    // This makes it convenient to flush with std::endl
-    if (pptr() > pbase() && pptr()[-1] == '\n')
-        pbump(-1);
-
-    *pptr() = '\0';
-    mma::print(buf.data());
-    std::ptrdiff_t n = pptr() - pbase();
-    pbump(-n);
-    return 0;
-}
-
-std::streambuf::int_type MBuffer::overflow(std::streambuf::int_type ch) {
-    if (ch != traits_type::eof()) {
-        massert(pptr() == epptr()); // overflow should only be called if the buffer is out of space
-
-        *pptr() = traits_type::to_char_type(ch);
-
-        std::size_t offset = pptr() - pbase();
-        std::size_t old_buf_size = buf.size() - 1;
-        buf.resize( 2*old_buf_size + 1 );
-
-        setp( &buf.front(), &buf.back() );
-        pbump( offset + 1 );
-    }
-    return ch;
-}
-
-static MBuffer mbuf;
-
-} // end namespace detail
-
-
-std::ostream mout(&detail::mbuf);
 
 
 } // end namespace mma

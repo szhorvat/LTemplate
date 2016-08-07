@@ -46,7 +46,7 @@ LOFun::usage =
 packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
 
 minVersion = {10.0, 0}; (* oldest supported Mathematica version *)
-maxVersion = {10.4, 1}; (* latest Mathematica version the package was tested with *)
+maxVersion = {11.0, 0}; (* latest Mathematica version the package was tested with *)
 version    = {$VersionNumber, $ReleaseNumber}
 versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 
@@ -73,7 +73,12 @@ If[Not@OrderedQ[{version, maxVersion}] && Not[$private],
 $packageDirectory = DirectoryName[$InputFileName];
 $includeDirectory = FileNameJoin[{$packageDirectory, "IncludeFiles"}];
 
-$messageSymbol (* set by ConfigureLTemplate[] *)
+(* The following symbols are set by ConfigureLTemplate[] *)
+$messageSymbol := warnConfig
+$lazyLoading := warnConfig
+
+(* Show error and abort when ConfigureLTemplate[] was not called. *)
+warnConfig := (Print["FATAL ERROR: Must call ConfigureLTemplate[] when embedding LTemplate into another package. Aborting ..."]; Abort[])
 
 
 LibraryFunction::noinst = "Managed library expression instance does not exist.";
@@ -81,7 +86,7 @@ LibraryFunction::noinst = "Managed library expression instance does not exist.";
 LTemplate::nofun = "Function `` does not exist.";
 
 
-Options[ConfigureLTemplate] = { "MessageSymbol" -> LTemplate }
+Options[ConfigureLTemplate] = { "MessageSymbol" -> LTemplate, "LazyLoading" -> False };
 
 ConfigureLTemplate[opt : OptionsPattern[]] :=
     With[{sym = OptionValue["MessageSymbol"]},
@@ -90,6 +95,8 @@ ConfigureLTemplate[opt : OptionsPattern[]] :=
       sym::warning = "``";
       sym::error   = "``";
       sym::assert  = "Assertion failed: ``.";
+
+      $lazyLoading = OptionValue["LazyLoading"];
     ]
 
 LClassContext[] = Context[LTemplate] <> "Classes`";
@@ -120,13 +127,15 @@ GenerateCode[CInlineCode[arg_], opts : OptionsPattern[]] := GenerateCode[arg, op
      try { tryCode } catch (catchArg) { catchCode }
 *)
 
-GenerateCode[CTryCatch[try_, arg_, catch_], opts: OptionsPattern[]] :=
-    Module[{},
-      "try " <> GenerateCode[CBlock[try], opts] <> "\n" <>
-          "catch (" <> SymbolicC`Private`formatArgument[arg, opts] <> ")\n" <>
-          GenerateCode[CBlock[catch], opts]
-    ]
+GenerateCode[CTryCatch[try_, arg_, catch_], opts : OptionsPattern[]] :=
+    GenerateCode[CTry[try], opts] <> "\n" <> GenerateCode[CCatch[arg, catch], opts]
 
+GenerateCode[CTry[try_], opts : OptionsPattern[]] :=
+    "try\n" <> GenerateCode[CBlock[try], opts]
+
+GenerateCode[CCatch[arg_, catch_], opts : OptionsPattern[]] :=
+    "catch (" <> SymbolicC`Private`formatArgument[arg, opts] <> ")\n" <>
+        GenerateCode[CBlock[catch], opts]
 
 (****************** Generic template processing ****************)
 
@@ -366,18 +375,48 @@ transClass[LClass[classname_String, funs_]] :=
 
 funName[classname_][name_] := classname <> "_" <> name
 
+
+catchExceptions[classname_, funname_] :=
+    Module[{membername = "\"" <> classname <> "::" <> funname <> "()\""},
+      {
+        CCatch[{excType, excName},
+          {
+            CMember[excName, "report()"],
+            CReturn[CMember[excName, "error_code()"]]
+          }
+        ]
+        ,
+        CCatch[
+          {"const std::exception &", "exc"},
+          {
+            CCall["mma::detail::handleUnknownException", {"exc.what()", membername}],
+            CReturn["LIBRARY_FUNCTION_ERROR"]
+          }
+        ]
+        ,
+        CCatch["...",
+          {
+            CCall["mma::detail::handleUnknownException", {"NULL", membername}],
+            CReturn["LIBRARY_FUNCTION_ERROR"]
+          }
+        ]
+      }
+    ]
+
+
 transFun[classname_][LFun[name_String, args_List, ret_]] :=
     Block[{index = 0},
       {
         CFunction[libFunRet, funName[classname][name], libFunArgs,
           {
-          (* TODO: check Argc is correct, use assert *)
+            CDeclare["mma::detail::MOutFlushGuard", "flushguard"],
+            (* TODO: check Argc is correct, use assert *)
             "const mint id = MArgument_getInteger(Args[0])",
             CInlineCode@StringTemplate[
               "if (`1`.find(id) == `1`.end()) { libData->Message(\"noinst\"); return LIBRARY_FUNCTION_ERROR; }"
             ][collectionName[classname]],
             "",
-            CTryCatch[
+            CTry[
             (* try *) {
               transArg /@ args,
               "",
@@ -385,13 +424,9 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
                 ret,
                 CPointerMember[CArray[collectionName[classname], "id"], CCall[name, var /@ Range@Length[args]]]
               ]
-            },
-            (* catch *) {excType, excName},
-              {
-                CMember[excName, "report()"],
-                CReturn[CMember[excName, "error_code()"]]
-              }
-            ],
+            }],
+            (* catch *)
+            catchExceptions[classname, name],
             "",
             CReturn["LIBRARY_NO_ERROR"]
           }
@@ -404,7 +439,8 @@ transFun[classname_][LOFun[name_String]] :=
     {
       CFunction[libFunRet, funName[classname][name], linkFunArgs,
         {
-          CTryCatch[
+          CDeclare["mma::detail::MOutFlushGuard", "flushguard"],
+          CTry[
             (* try *) {
               CInlineCode@StringTemplate[
 "
@@ -422,14 +458,10 @@ if (`collection`.find(id) == `collection`.end()) {
 `collection`[id]->`funname`(mlp);
 "
               ][<| "collection" -> collectionName[classname], "funname" -> name |>]
-            },
-            (* catch *) {excType, excName},
-            {
-              (* TODO: clean up link *)
-              CMember[excName, "report()"],
-              CReturn[CMember[excName, "error_code()"]]
             }
           ],
+          (* catch *)
+          catchExceptions[classname, name],
           "",
           CReturn["LIBRARY_NO_ERROR"]
         }
@@ -517,19 +549,37 @@ loadClass[libname_][tem : LClass[classname_String, funs_]] := (
   ];
 )
 
+
 loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
-    With[{classsym = Symbol@symName[classname]},
-      With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], Prepend[args /. loadingTypes, Integer], ret]},
-        classsym[id_Integer]@name[arguments___] := lfun[id, arguments]
+    With[{classsym = Symbol@symName[classname], funname = funName[classname][name], loadargs = Prepend[args /. loadingTypes, Integer]},
+      If[$lazyLoading,
+        classsym[idx_Integer]@name[argumentsx___] :=
+            With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, ret]},
+              classsym[id_Integer]@name[arguments___] := lfun[id, arguments];
+              classsym[idx]@name[argumentsx]
+            ]
+        ,
+        With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, ret]},
+          classsym[id_Integer]@name[arguments___] := lfun[id, arguments];
+        ]
+      ]
+    ];
+
+loadFun[libname_, classname_][LOFun[name_String]] :=
+    With[{classsym = Symbol@symName[classname], funname = funName[classname][name]},
+      If[$lazyLoading,
+        classsym[idx_Integer]@name[argumentsx___] :=
+          With[{lfun = LibraryFunctionLoad[libname, funname, LinkObject, LinkObject]},
+            classsym[id_Integer]@name[arguments___] := lfun[id, {arguments}];
+            classsym[idx]@name[argumentsx]
+          ]
+        ,
+        With[{lfun = LibraryFunctionLoad[libname, funname, LinkObject, LinkObject]},
+          classsym[id_Integer]@name[arguments___] := lfun[id, {arguments}];
+        ]
       ]
     ]
 
-loadFun[libname_, classname_][LOFun[name_String]] :=
-    With[{classsym = Symbol@symName[classname]},
-      With[{lfun = LibraryFunctionLoad[libname, funName[classname][name], LinkObject, LinkObject]},
-        classsym[id_Integer]@name[arguments___] := lfun[id, {arguments}]
-      ]
-    ]
 
 (* For types that need to be translated to LibraryFunctionLoad compatible forms before loading. *)
 loadingTypes = Dispatch@{ LExpressionID[_] -> Integer };
