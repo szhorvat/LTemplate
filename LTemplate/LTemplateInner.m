@@ -218,7 +218,7 @@ validateFun[LOFun[name_]] :=
 (* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
 
 numericPattern = Integer|Real|Complex;
-sparseArrayPattern = LibraryDataType[SparseArray, numericPattern, PatternSequence[] | _Integer?Positive]; (* disallow SparseArray without explicit element type specification *)
+sparseArrayPattern = LibraryDataType[SparseArray, numericPattern, PatternSequence[] | _Integer?Positive | Verbatim[_]]; (* disallow SparseArray without explicit element type specification *)
 passingMethodPattern = PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic;
 
 (* must be called within validateTemplate, uses location *)
