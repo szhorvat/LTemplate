@@ -165,7 +165,7 @@ normalizeTemplate[t_] := t
 
 
 ValidTemplateQ::template = "`` is not a valid template. Templates must follow the syntax LTemplate[name, {class1, class2, \[Ellipsis]}].";
-ValidTemplateQ::class    = "In ``: `` is not a valid class. Classes must follow the syntax LClass[name, {fun1, fun2, \[Ellipsis]}.";
+ValidTemplateQ::class    = "In ``: `` is not a valid class. Classes must follow the syntax LClass[name, {fun1, fun2, \[Ellipsis]}].";
 ValidTemplateQ::fun      = "In ``: `` is not a valid function. Functions must follow the syntax LFun[name, {arg1, arg2, \[Ellipsis]}, ret].";
 ValidTemplateQ::string   = "In ``: String expected instead of ``";
 ValidTemplateQ::name     = "In ``: `` is not a valid name. Names must start with a letter and may only contain letters and digits.";
