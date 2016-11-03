@@ -228,7 +228,7 @@ validateType[{sparseArrayPattern, passingMethodPattern}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 validateReturnType["Void"] := True
-validateReturnType[type : LExpressionID[___]] := (Message[ValidTemplateQ::rettype, location, type]; False)
+validateReturnType[type : LExpressionID[___] | {___, "Manual"|"Constant"}] := (Message[ValidTemplateQ::rettype, location, type]; False)
 validateReturnType[type_] := validateType[type]
 
 (* must be called within validateTemplate, uses location *)
