@@ -5,6 +5,9 @@
 
 (* This file is read directly with Get in LTemplate.m or LTemplatePrivate.m *)
 
+(* Unprotect package symbols in case of double loading *)
+Unprotect /@ Names[$Context <> "*"]
+
 LTemplate::usage = "LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \[Ellipsis]}] represents a library template.";
 LClass::usage = "LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class within a template.";
 LFun::usage =
@@ -681,3 +684,6 @@ formatTemplate[template_] :=
 
 
 End[] (* End Private Context *)
+
+(* Protect all package symbols *)
+With[{syms = Names[$Context <> "*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
