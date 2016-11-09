@@ -9,6 +9,8 @@
 
 #include "LTemplate.h"
 #include <algorithm>
+#include <vector>
+#include <map>
 
 namespace mma {
 namespace detail {
