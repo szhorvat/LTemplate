@@ -11,6 +11,8 @@
 
 BeginPackage["`LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
 
+(* Note: Do not Protect symbols when LTemplate is loaded privately. *)
+
 `Private`$private = True;
 Quiet[
   Get@FileNameJoin[{DirectoryName[$InputFileName], "LTemplateInner.m"}],

@@ -15,12 +15,16 @@
 
 BeginPackage["LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
 
+Unprotect["LTemplate`*"];
+
 `Private`$private = False;
 Get["LTemplate`LTemplateInner`"]
 
 ConfigureLTemplate[] (* use the default configuration *)
 
 EndPackage[]
+
+With[{syms = Names["LTemplate`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
 
 (* Add the class context to $ContextPath *)
 If[Not@MemberQ[$ContextPath, LClassContext[]],
