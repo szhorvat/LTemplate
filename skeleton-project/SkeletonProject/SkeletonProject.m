@@ -33,7 +33,7 @@ To use it as the basis of your own project:
 
 (* :Package Version: 0.1 *)
 (* :Mathematica Version: 10.0 *)
-(* :Copyright: (c) 2016 YourName *)
+(* :Copyright: (c) 2017 YourName *)
 (* :Keywords: *)
 (* :Discussion: *)
 
