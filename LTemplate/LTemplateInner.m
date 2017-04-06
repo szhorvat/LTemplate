@@ -5,6 +5,9 @@
 
 (* This file is read directly with Get in LTemplate.m or LTemplatePrivate.m *)
 
+(* Unprotect package symbols in case of double loading *)
+Unprotect /@ Names[$Context <> "*"]
+
 LTemplate::usage = "LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \[Ellipsis]}] represents a library template.";
 LClass::usage = "LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class within a template.";
 LFun::usage =
@@ -46,7 +49,7 @@ LOFun::usage =
 packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
 
 minVersion = {10.0, 0}; (* oldest supported Mathematica version *)
-maxVersion = {11.0, 0}; (* latest Mathematica version the package was tested with *)
+maxVersion = {11.0, 1}; (* latest Mathematica version the package was tested with *)
 version    = {$VersionNumber, $ReleaseNumber}
 versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 
@@ -165,7 +168,7 @@ normalizeTemplate[t_] := t
 
 
 ValidTemplateQ::template = "`` is not a valid template. Templates must follow the syntax LTemplate[name, {class1, class2, \[Ellipsis]}].";
-ValidTemplateQ::class    = "In ``: `` is not a valid class. Classes must follow the syntax LClass[name, {fun1, fun2, \[Ellipsis]}.";
+ValidTemplateQ::class    = "In ``: `` is not a valid class. Classes must follow the syntax LClass[name, {fun1, fun2, \[Ellipsis]}].";
 ValidTemplateQ::fun      = "In ``: `` is not a valid function. Functions must follow the syntax LFun[name, {arg1, arg2, \[Ellipsis]}, ret].";
 ValidTemplateQ::string   = "In ``: String expected instead of ``";
 ValidTemplateQ::name     = "In ``: `` is not a valid name. Names must start with a letter and may only contain letters and digits.";
@@ -218,7 +221,7 @@ validateFun[LOFun[name_]] :=
 (* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
 
 numericPattern = Integer|Real|Complex;
-sparseArrayPattern = LibraryDataType[SparseArray, numericPattern, PatternSequence[] | _Integer?Positive]; (* disallow SparseArray without explicit element type specification *)
+sparseArrayPattern = LibraryDataType[SparseArray, numericPattern, PatternSequence[] | _Integer?Positive | Verbatim[_]]; (* disallow SparseArray without explicit element type specification *)
 passingMethodPattern = PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic;
 
 (* must be called within validateTemplate, uses location *)
@@ -228,7 +231,7 @@ validateType[{sparseArrayPattern, passingMethodPattern}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 validateReturnType["Void"] := True
-validateReturnType[type : LExpressionID[___]] := (Message[ValidTemplateQ::rettype, location, type]; False)
+validateReturnType[type : LExpressionID[___] | {___, "Manual"|"Constant"}] := (Message[ValidTemplateQ::rettype, location, type]; False)
 validateReturnType[type_] := validateType[type]
 
 (* must be called within validateTemplate, uses location *)
@@ -681,3 +684,6 @@ formatTemplate[template_] :=
 
 
 End[] (* End Private Context *)
+
+(* Protect all package symbols *)
+With[{syms = Names[$Context <> "*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
