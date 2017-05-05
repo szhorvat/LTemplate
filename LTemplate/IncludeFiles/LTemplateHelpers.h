@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Szabolcs Horvát.
+ * Copyright (c) 2017 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */
@@ -9,6 +9,8 @@
 
 #include "LTemplate.h"
 #include <algorithm>
+#include <vector>
+#include <map>
 
 namespace mma {
 namespace detail {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Szabolcs Horvát.
+ * Copyright (c) 2017 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */
@@ -26,10 +26,10 @@
 #include "WolframLibrary.h"
 #include "WolframSparseLibrary.h"
 
+// mathlink.h defines P. It has a high potential for conflict, so we undefine it.
+// It is normally only used with .tm files and it is not needed for LTemplate.
 #undef P
 
-#include <map>
-#include <vector>
 #include <string>
 #include <ostream>
 #include <sstream>
@@ -81,7 +81,7 @@ extern std::ostream mout;
 
 
 /** \brief Throwing this type returns to _Mathematica_ immediately.
- *  \param s reported in _Mathematica_ as `LTemplate::error`.
+ *  \param s reported in _Mathematica_ as `LTemplate::error`; gets copied.
  *  \param err used as the LibraryFunction exit code.
  */
 class LibraryError {

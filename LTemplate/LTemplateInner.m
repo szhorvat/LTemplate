@@ -1,12 +1,10 @@
 (* Mathematica Package *)
 
-(* :Copyright: (c) 2016 Szabolcs Horvát *)
+(* :Copyright: (c) 2017 Szabolcs Horvát *)
 (* :License: MIT license, see LICENSE.txt *)
 
 (* This file is read directly with Get in LTemplate.m or LTemplatePrivate.m *)
 
-(* Unprotect package symbols in case of double loading *)
-Unprotect /@ Names[$Context <> "*"]
 
 LTemplate::usage = "LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \[Ellipsis]}] represents a library template.";
 LClass::usage = "LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class within a template.";
@@ -49,7 +47,7 @@ LOFun::usage =
 packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
 
 minVersion = {10.0, 0}; (* oldest supported Mathematica version *)
-maxVersion = {11.0, 1}; (* latest Mathematica version the package was tested with *)
+maxVersion = {11.1, 1}; (* latest Mathematica version the package was tested with *)
 version    = {$VersionNumber, $ReleaseNumber}
 versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 
@@ -684,6 +682,3 @@ formatTemplate[template_] :=
 
 
 End[] (* End Private Context *)
-
-(* Protect all package symbols *)
-With[{syms = Names[$Context <> "*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
