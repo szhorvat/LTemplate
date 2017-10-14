@@ -18,7 +18,7 @@ namespace detail {
 // Functions for getting and setting arguments and return values
 
 template<typename T>
-inline TensorRef<T> getTensor(MArgument marg) { return TensorRef<T>(MArgument_getMTensor(marg)); }
+inline TensorRef<T> getTensor(MArgument marg) { return MArgument_getMTensor(marg); }
 
 template<typename T>
 inline void setTensor(MArgument marg, TensorRef<T> &val) { MArgument_setMTensor(marg, val.tensor()); }
@@ -28,6 +28,32 @@ inline SparseArrayRef<T> getSparseArray(MArgument marg) { return MArgument_getMS
 
 template<typename T>
 inline void setSparseArray(MArgument marg, SparseArrayRef<T> &val) { MArgument_setMSparseArray(marg, val.sparseArray()); }
+
+template<typename T>
+inline ImageRef<T> getImage(MArgument marg) { return MArgument_getMImage(marg); }
+
+template<typename T>
+inline Image3DRef<T> getImage3D(MArgument marg) { return MArgument_getMImage(marg); }
+
+inline GenericImageRef getGenericImage(MArgument marg) { return MArgument_getMImage(marg); }
+
+template<typename T>
+inline void setImage(MArgument marg, ImageRef<T> &val) { MArgument_setMImage(marg, val.image()); }
+
+template<typename T>
+inline void setImage3D(MArgument marg, Image3DRef<T> &val) { MArgument_setMImage(marg, val.image()); }
+
+inline void setGenericImage(MArgument marg, GenericImageRef &val) { MArgument_setMImage(marg, val.image()); }
+
+#ifdef LTEMPLATE_RAWARRAY
+template<typename T>
+inline RawArrayRef<T> getRawArray(MArgument marg) { return MArgument_getMRawArray(marg); }
+inline GenericRawArray getGenericRawArray(MArgument marg) { return MArgument_getMRawArray(marg); }
+
+template<typename T>
+inline void setRawArray(MArgument marg, RawArrayRef<T> &val) { MArgument_setMRawArray(marg, val.rawArray()); }
+inline void setGenericRawArray(MArgument marg, GenericRawArray &val) { MArgument_setMRawArray(marg, val.rawArray()); }
+#endif // LTEMPLATE_RAWARRAY
 
 inline complex_t getComplex(MArgument marg) {
     mcomplex c = MArgument_getComplex(marg);

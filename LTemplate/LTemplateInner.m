@@ -12,6 +12,11 @@ LFun::usage =
     "LFun[name, {arg1, arg2, \[Ellipsis]}, ret] represents a class member function with the given name, argument types and return type.\n" <>
     "LFun[name, LinkObject, LinkObject] represents a function that uses MathLink/WSTP based passing. The shorthand LFun[name, LinkObject] can also be used.";
 
+LType::usage =
+     "LType[head] represents an array library type corresponding to head.\n" <>
+     "LType[head, etype] represents an array library corresponding to head, with element type etype.\n" <>
+     "LType[head, etype, d] represents an array library corresponding to head, with element type etype and depth d.";
+
 TranslateTemplate::usage = "TranslateTemplate[template] translates the template into C++ code.";
 
 LoadTemplate::usage = "LoadTemplate[template] loads the library defined by the template. The library must already be compiled.";
@@ -22,6 +27,8 @@ CompileTemplate::usage =
     "CompileTemplate[template, {file1, \[Ellipsis]}] includes additional source files in the compilation.";
 
 FormatTemplate::usage = "FormatTemplate[template] formats the template in an easy to read way.";
+
+NormalizeTemplate::usage = "NormalizeTemplate[template] brings the template and the type specifications within to the canonical form used internally by other LTemplate functions.";
 
 ValidTemplateQ::usage = "ValidTemplateQ[template] returns True if the template syntax is valid.";
 
@@ -39,7 +46,7 @@ Begin["`Private`"] (* Begin Private Context *)
 
 (* Private for now, use LFun[name, LinkObject, LinkObject] instead. *)
 LOFun::usage =
-    "LOFun[name] represents a class member funtion that uses LinkObject for passing and returning arguments.\n" <>
+    "LOFun[name] represents a class member function that uses LinkObject for passing and returning arguments. " <>
     "It is equivalent to LFun[name, LinkObject, LinkObject].";
 
 (* Mathematica version checks *)
@@ -47,7 +54,7 @@ LOFun::usage =
 packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
 
 minVersion = {10.0, 0}; (* oldest supported Mathematica version *)
-maxVersion = {11.1, 1}; (* latest Mathematica version the package was tested with *)
+maxVersion = {11.2, 0}; (* latest Mathematica version the package was tested with *)
 version    = {$VersionNumber, $ReleaseNumber}
 versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 
@@ -140,29 +147,71 @@ GenerateCode[CCatch[arg_, catch_], opts : OptionsPattern[]] :=
 
 (****************** Generic template processing ****************)
 
+numericTypePattern = Integer|Real|Complex;
+rawTypePattern     = "Integer8"|"UnsignedInteger8"|"Integer16"|"UnsignedInteger16"|"Integer32"|"UnsignedInteger32"|
+                     "Integer64"|"UnsignedInteger64"|"Real32"|"Real64"|"Complex64"|"Complex128";
+imageTypePattern   = "Bit"|"Byte"|"Bit16"|"Real32"|"Real";
+
+passingMethodPattern = PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic;
+
+depthPattern = _Integer?Positive | Verbatim[_];
+depthNullPattern = PatternSequence[] | depthPattern; (* like depthPattern, but allow empty value*)
+
+arrayPattern = LType[List, numericTypePattern, depthNullPattern]; (* disallow MTensor without explicit element type specification *)
+sparseArrayPattern = LType[SparseArray, numericTypePattern, depthNullPattern]; (* disallow SparseArray without explicit element type specification *)
+rawArrayPattern = LType[RawArray, rawTypePattern, depthNullPattern] | LType[RawArray];
+imagePattern = LType[Image|Image3D, imageTypePattern] | LType[Image|Image3D];
+
 (*
- Normalizing a template will:
+  Normalizing a template will:
   - Wrap a bare LClass with LTemplate.  This way a bare LClass can be used as a shorter notation for a single-class template.
   - Convert type names to a canonical form
   - Convert LFun[name, LinkObject, LinkObject] to LOFun[name]
 *)
 
 normalizeTypesRules = Dispatch@{
+  (* convert pattern-like type specifications to type names *)
   Verbatim[_Integer] -> Integer,
   Verbatim[_Real] -> Real,
   Verbatim[_Complex] -> Complex,
   Verbatim[True|False] -> "Boolean",
-  Verbatim[False|True] -> "Boolean"
+  Verbatim[False|True] -> "Boolean",
+
+  (* convert string heads to symbols *)
+  (* must only be used on type lists as an LTemplate expression may contain other strings *)
+  head : "List"|"SparseArray"|"Image"|"Image3D"|"RawArray" :> Symbol[head],
+
+  (* convert LibraryDataType to the more general LType *)
+  LibraryDataType[args__] :> LType[args]
 };
 
-normalizeFunctionsRules = Dispatch@{
+(* These heads are allowed to appear on their own, without being wrapped in LType/LibraryDataType.
+   This is for consistency with plain LibraryLink. *)
+nakedHeads = RawArray|Image|Image3D;
+wrapNakedHeadsRules = Dispatch@{
+  expr : LType[nakedHeads, rest___] :> expr, (* do not wrap if already wrapped *)
+  type : nakedHeads :> LType[type]
+};
+
+normalizeFunsRules = Dispatch@{
+  LFun[name_, LinkObject] :> LOFun[name],
   LFun[name_, LinkObject, LinkObject] :> LOFun[name],
-  LFun[name_, LinkObject] :> LOFun[name]
+  LFun[name_, args_List, ret_] :> LFun[name, normalizeTypes[args, 1], normalizeTypes[ret]]
 };
 
-normalizeTemplate[c : LClass[name_, funs_]] := normalizeTemplate[LTemplate[name, {c}]]
-normalizeTemplate[t : LTemplate[name_, classes_]] := t /. normalizeTypesRules /. normalizeFunctionsRules
-normalizeTemplate[t_] := t
+(* These rules must only be applied to entire type specifications, not their parts. Use Replace, not ReplaceAll. *)
+typeRules = Dispatch@{
+  (* allowed forms of tensor specifications include {type}, {type, depth}, {type, depth, passing}, but NOT {type, passing} *)
+  {type : numericTypePattern, depth : depthPattern, pass : passingMethodPattern} :> {LType[List, type, depth], pass},
+  {type : numericTypePattern, pass : passingMethodPattern} :> {LType[List, type], pass},
+  type : LType[__] :> {type}
+};
+
+normalizeTypes[types_, level_ : 0] := Replace[types /. normalizeTypesRules /. wrapNakedHeadsRules, typeRules, {level}]
+
+NormalizeTemplate[c : LClass[name_, funs_]] := NormalizeTemplate[LTemplate[name, {c}]]
+NormalizeTemplate[t : LTemplate[name_, classes_]] := t /. normalizeFunsRules
+NormalizeTemplate[t_] := t
 
 
 ValidTemplateQ::template = "`` is not a valid template. Templates must follow the syntax LTemplate[name, {class1, class2, \[Ellipsis]}].";
@@ -175,7 +224,7 @@ ValidTemplateQ::rettype  = "In ``: `` is not a valid return type.";
 ValidTemplateQ::dupclass = "In ``: Class `` appears more than once.";
 ValidTemplateQ::dupfun   = "In ``: Function `` appears more than once.";
 
-ValidTemplateQ[tem_] := validateTemplate@normalizeTemplate[tem]
+ValidTemplateQ[tem_] := validateTemplate@NormalizeTemplate[tem]
 
 
 validateTemplate[tem_] := (Message[ValidTemplateQ::template, tem]; False)
@@ -216,18 +265,13 @@ validateFun[LOFun[name_]] :=
       nameValid
     ]
 
-(* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
-
-numericPattern = Integer|Real|Complex;
-sparseArrayPattern = LibraryDataType[SparseArray, numericPattern, PatternSequence[] | _Integer?Positive | Verbatim[_]]; (* disallow SparseArray without explicit element type specification *)
-passingMethodPattern = PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic;
-
 (* must be called within validateTemplate, uses location *)
-validateType[numericPattern|"Boolean"|"UTF8String"|sparseArrayPattern|LExpressionID[_String]] := True
-validateType[{numericPattern, (_Integer?Positive) | Verbatim[_], passingMethodPattern}] := True
-validateType[{sparseArrayPattern, passingMethodPattern}] := True
+validateType[numericTypePattern|"Boolean"|"UTF8String"|LExpressionID[_String]] := True
+validateType[{arrayPattern|sparseArrayPattern|rawArrayPattern|imagePattern, passingMethodPattern}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
+(* must be called within validateTemplate, uses location *)
+(* Only "Shared" and Automatic passing allowed in return types. LExpressionID is forbidden. *)
 validateReturnType["Void"] := True
 validateReturnType[type : LExpressionID[___] | {___, "Manual"|"Constant"}] := (Message[ValidTemplateQ::rettype, location, type]; False)
 validateReturnType[type_] := validateType[type]
@@ -245,7 +289,7 @@ validateName[name_String] :=
 (***********  Translate template to library code  **********)
 
 TranslateTemplate[tem_] :=
-    With[{t = normalizeTemplate[tem]},
+    With[{t = NormalizeTemplate[tem]},
       If[validateTemplate[t],
         ToCCodeString[transTemplate[t], "Indent" -> 1],
         $Failed
@@ -297,7 +341,7 @@ if (mode == 0) { // create
     {
     (* Attention: make sure stuff called here won't throw LibraryError *)
       transRet[
-        {Integer, 1},
+        {LType[List, Integer, 1]},
         CCall["mma::detail::get_collection", collectionName[classname]]
       ],
       CReturn["LIBRARY_NO_ERROR"]
@@ -326,6 +370,8 @@ transTemplate[LTemplate[libname_String, classes_]] :=
       classTranslations = transClass /@ classes;
       {
         "",
+        CDefine["LTEMPLATE_MMA_VERSION", ToString@Round[100 $VersionNumber + $ReleaseNumber]],
+        "",
         CInclude["LTemplate.h"],
         CInclude["LTemplateHelpers.h"],
         CInclude /@ includeName /@ classlist,
@@ -341,7 +387,7 @@ transTemplate[LTemplate[libname_String, classes_]] :=
 
         CFunction["extern \"C\" DLLEXPORT mint",
           "WolframLibrary_getVersion", {},
-          "return WolframLibraryVersion"
+          "return 3"
         ],
         "",
         CFunction["extern \"C\" DLLEXPORT int",
@@ -473,7 +519,7 @@ transArg[type_] :=
     Module[{name, cpptype, getfun, setfun},
       index++;
       name = var[index];
-      {cpptype, getfun, setfun} = type /. types;
+      {cpptype, getfun, setfun} = Replace[type, types];
       {
         CDeclareAssign[cpptype, name, StringTemplate["`1`(Args[`2`])"][getfun, index]]
       }
@@ -481,7 +527,7 @@ transArg[type_] :=
 
 transRet[type_, value_] :=
     Module[{name = "res", cpptype, getfun, setfun},
-      {cpptype, getfun, setfun} = type /. types;
+      {cpptype, getfun, setfun} = Replace[type, types];
       {
         CDeclareAssign[cpptype, name, value],
         CCall[setfun, {"Res", name}]
@@ -490,18 +536,77 @@ transRet[type_, value_] :=
 
 transRet["Void", value_] := value
 
+
+numericTypes = <|
+  Integer -> "mint",
+  Real    -> "double",
+  Complex -> "mma::complex_t"
+|>;
+
+rawTypes = <|
+  "Integer8"          -> "int8_t",
+  "UnsignedInteger8"  -> "uint8_t",
+  "Integer16"         -> "int16_t",
+  "UnsignedInteger16" -> "uint16_t",
+  "Integer32"         -> "int32_t",
+  "UnsignedInteger32" -> "uint32_t",
+  "Integer64"         -> "int64_t",
+  "UnsignedInteger64" -> "uint64_t",
+  "Real32"            -> "float",
+  "Real64"            -> "double",
+  "Complex32"         -> "mma::complex_float_t",
+  "Complex64"         -> "mma::complex_double_t"
+|>;
+
+imageTypes = <|
+  "Bit"    -> "mma::im_bit_t",
+  "Byte"   -> "mma::im_byte_t",
+  "Bit16"  -> "mma::im_bit16_t",
+  "Real32" -> "mma::im_real32_t",
+  "Real"   -> "mma::im_real_t"
+|>;
+
+
 types = Dispatch@{
-  Integer -> {"mint", "MArgument_getInteger", "MArgument_setInteger"},
-  Real -> {"double", "MArgument_getReal", "MArgument_setReal"},
-  Complex -> {"std::complex<double>", "mma::detail::getComplex", "mma::detail::setComplex"},
-  "Boolean" -> {"bool", "MArgument_getBoolean", "MArgument_setBoolean"},
-  "UTF8String" -> {"const char *", "mma::detail::getString", "mma::detail::setString"},
-  {Integer, __} -> {"mma::IntTensorRef", "mma::detail::getTensor<mint>", "mma::detail::setTensor<mint>"},
-  {Real, __} -> {"mma::RealTensorRef", "mma::detail::getTensor<double>", "mma::detail::setTensor<double>"},
-  {Complex, __} -> {"mma::ComplexTensorRef", "mma::detail::getTensor< mma::complex_t >", "mma::detail::setTensor< mma::complex_t >"},
-  LibraryDataType[SparseArray, Integer, ___] | {LibraryDataType[SparseArray, Integer, ___], ___} -> {"mma::SparseArrayRef<mint>", "mma::detail::getSparseArray<mint>", "mma::detail::setSparseArray<mint>"},
-  LibraryDataType[SparseArray, Real, ___] | {LibraryDataType[SparseArray, Real, ___], _} -> {"mma::SparseArrayRef<double>", "mma::detail::getSparseArray<double>", "mma::detail::setSparseArray<double>"},
-  LibraryDataType[SparseArray, Complex, ___] | {LibraryDataType[SparseArray, Complex, ___], ___} -> {"mma::SparseArrayRef< mma::complex_t >", "mma::detail::getSparseArray< mma::complex_t >", "mma::detail::setSparseArray< mma::complex_t >"},
+  Integer      -> {"mint",                 "MArgument_getInteger",     "MArgument_setInteger"},
+  Real         -> {"double",               "MArgument_getReal",        "MArgument_setReal"},
+  Complex      -> {"std::complex<double>", "mma::detail::getComplex",  "mma::detail::setComplex"},
+  "Boolean"    -> {"bool",                 "MArgument_getBoolean",     "MArgument_setBoolean"},
+  "UTF8String" -> {"const char *",         "mma::detail::getString",   "mma::detail::setString"},
+
+  {LType[List, type_, ___], ___} :>
+      With[{ctype = numericTypes[type]},
+        {"mma::TensorRef<" <> ctype <> ">", "mma::detail::getTensor<" <> ctype <> ">", "mma::detail::setTensor<" <> ctype <> ">"}
+      ],
+
+  {LType[SparseArray, type_, ___], ___} :>
+      With[{ctype = numericTypes[type]},
+        {"mma::SparseArrayRef<" <> ctype <> ">", "mma::detail::getSparseArray<" <> ctype <> ">", "mma::detail::setSparseArray<" <> ctype <> ">"}
+      ],
+
+  {LType[RawArray, type_, ___], ___} :>
+      With[
+        {ctype = rawTypes[type]},
+        {"mma::RawArrayRef<" <> ctype <> ">", "mma::detail::getRawArray<" <> ctype <> ">", "mma::detail::setRawArray<" <> ctype <> ">"}
+      ],
+
+  {LType[RawArray], ___} -> {"mma::GenericRawArray", "mma::detail::getGenericRawArray", "mma::detail::setGenericRawArray"},
+
+  {LType[Image, type_, ___], ___} :>
+      With[
+        {ctype = imageTypes[type]},
+        {"mma::ImageRef<" <> ctype <> ">", "mma::detail::getImage<" <> ctype <> ">", "mma::detail::setImage<" <> ctype <> ">"}
+      ],
+
+  {LType[Image], ___} -> {"mma::GenericImage", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
+
+  {LType[Image3D, type_, ___], ___} :>
+      With[
+        {ctype = imageTypes[type]},
+        {"mma::Image3DRef<" <> ctype <> ">", "mma::detail::getImage3D<" <> ctype <> ">", "mma::detail::setImage3D<" <> ctype <> ">"}
+      ],
+
+  {LType[Image3D], ___} -> {"mma::GenericImage", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
 
   (* This is a special type that translates integer managed expression IDs on the Mathematica side
      into a class reference on the C++ side. It cannot be returned. *)
@@ -515,13 +620,13 @@ types = Dispatch@{
 (* TODO: Break out loading and compilation into separate files
    This is to make it easy to include them in other projects *)
 
-getCollection (* underlies LClassInstances, the get_collection library function is associated with it in loadClass *)
+getCollection (* underlies LExpressionList, the get_collection library function is associated with it in loadClass *)
 
 symName[classname_String] := LClassContext[] <> classname
 
 
 LoadTemplate[tem_] :=
-    With[{t = normalizeTemplate[tem]},
+    With[{t = NormalizeTemplate[tem]},
       If[validateTemplate[t],
         Check[loadTemplate[t], $Failed],
         $Failed
@@ -546,21 +651,24 @@ loadClass[libname_][tem : LClass[classname_String, funs_]] := (
   With[{sym = Symbol@symName[classname]},
     MessageName[sym, "usage"] = formatTemplate[tem];
     sym[id_Integer][(f_String)[___]] /; (Message[LTemplate::nofun, StringTemplate["``::``"][sym, f]]; False) := $Failed;
-    getCollection[sym] = LibraryFunctionLoad[libname, funName[classname]["get_collection"], {}, {Integer, 1}];
+    getCollection[sym] = LibraryFunctionLoad[libname, funName[classname]["get_collection"], {}, LibraryDataType[List, Integer, 1]];
   ];
 )
 
 
 loadFun[libname_, classname_][LFun[name_String, args_List, ret_]] :=
-    With[{classsym = Symbol@symName[classname], funname = funName[classname][name], loadargs = Prepend[args /. loadingTypes, Integer]},
+    With[{classsym = Symbol@symName[classname], funname = funName[classname][name],
+      loadargs = Prepend[Replace[args, loadingTypes, {1}], Integer],
+      loadret = Replace[ret, loadingTypes]
+    },
       If[$lazyLoading,
         classsym[idx_Integer]@name[argumentsx___] :=
-            With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, ret]},
+            With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, loadret]},
               classsym[id_Integer]@name[arguments___] := lfun[id, arguments];
               classsym[idx]@name[argumentsx]
             ]
         ,
-        With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, ret]},
+        With[{lfun = LibraryFunctionLoad[libname, funname, loadargs, loadret]},
           classsym[id_Integer]@name[arguments___] := lfun[id, arguments];
         ]
       ]
@@ -583,11 +691,15 @@ loadFun[libname_, classname_][LOFun[name_String]] :=
 
 
 (* For types that need to be translated to LibraryFunctionLoad compatible forms before loading. *)
-loadingTypes = Dispatch@{ LExpressionID[_] -> Integer };
+loadingTypes = Dispatch@{
+  LExpressionID[_] -> Integer,
+  {LType[RawArray, ___], passing___} :> {RawArray, passing},
+  {LType[args__], passing___} :> {LibraryDataType[args], passing}
+};
 
 
 UnloadTemplate[tem_] :=
-    With[{t = normalizeTemplate[tem]},
+    With[{t = NormalizeTemplate[tem]},
       If[validateTemplate[t],
         unloadTemplate[t],
         $Failed
@@ -607,7 +719,7 @@ unloadTemplate[LTemplate[libname_String, classes_]] :=
 
 (* TODO: verify class exists for Make and LExpressionList *)
 
-Make[class_Symbol] := Make@SymbolName[class]
+Make[class_Symbol] := Make@SymbolName[class] (* SymbolName returns the name of the symbol without a context *)
 Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symName[classname]]
 
 
@@ -617,8 +729,10 @@ LExpressionList[classname_String] := LExpressionList@Symbol@symName[classname]
 
 (********************* Compile template ********************)
 
+CompileTemplate::comp = "The compiler specification `` is invalid. It must be a symbol.";
+
 CompileTemplate[tem_, sources_List, opt : OptionsPattern[CreateLibrary]] :=
-    With[{t = normalizeTemplate[tem]},
+    With[{t = NormalizeTemplate[tem]},
       If[validateTemplate[t],
         compileTemplate[t, sources, opt],
         $Failed
@@ -629,8 +743,20 @@ CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] := CompileTemplate[te
 
 compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : OptionsPattern[CreateLibrary]] :=
     Catch[
-      Module[{sourcefile, code, includeDirs, classlist, print},
+      Module[{sourcefile, code, includeDirs, classlist, print, driver},
         print[args__] := Apply[Print, Style[#, Darker@Blue]& /@ {args}];
+
+        (* Determine the compiler driver that will be used. *)
+        (* It is unclear if the "Compiler" option of CreateLibrary supports option lists as a compiler specification
+           like $CCompiler does. Trying to use one frequently leads to errors as of M11.2.  This may or may not be a bug.
+           For now we forbid anything but symbol compiler specifications, such as CCompilerDriver`ClangCompiler`ClangCompiler *)
+        driver = OptionValue["Compiler"];
+        If[driver === Automatic, driver = DefaultCCompiler[]];
+        If[driver === $Failed, Throw[$Failed, compileTemplate]];
+        If[Not@Developer`SymbolQ[driver],
+          Message[CompileTemplate::comp, driver];
+          Throw[$Failed, compileTemplate]
+        ];
 
         print["Current directory is: ", Directory[]];
         classlist = Cases[classes, LClass[s_String, __] :> s];
@@ -646,10 +772,26 @@ compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : Option
         Export[sourcefile, code, "String"];
         print["Compiling library code ..."];
         includeDirs = Flatten[{OptionValue["IncludeDirectories"], $includeDirectory}];
-        CreateLibrary[
-          AbsoluteFileName /@ Flatten[{sourcefile, sources}], libname,
-          "IncludeDirectories" -> includeDirs,
-          Sequence@@FilterRules[{opt}, Except["IncludeDirectories"]]]
+
+        With[{driver = driver},
+          Internal`InheritedBlock[{driver},
+            SetOptions[driver,
+              "SystemCompileOptions" -> Flatten@{
+                OptionValue[driver, "SystemCompileOptions"],
+                Switch[{$OperatingSystem, driver["Name"][]},
+                  {"Windows", "Visual Studio"}, {},
+                  {"Windows", "Intel Compiler"}, "/Qstd=c++11",
+                  {_, _}, "-std=c++11"
+                ]
+              }
+            ];
+            CreateLibrary[
+              AbsoluteFileName /@ Flatten[{sourcefile, sources}], libname,
+              "IncludeDirectories" -> includeDirs,
+              Sequence @@ FilterRules[{opt}, Except["IncludeDirectories"]]
+            ]
+          ]
+        ]
       ],
       compileTemplate
     ]
@@ -658,20 +800,22 @@ compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : Option
 (****************** Pretty print a template ********************)
 
 FormatTemplate[template_] :=
-    Block[{LFun, LClass, LTemplate},
-    (* If the template is invalid, we report errors but we do not abort.
-       Pretty-printing is still useful for invalid templates to facilitate finding mistakes.
-     *)
-      ValidTemplateQ[template];
-      formatTemplate@normalizeTemplate[template]
+    With[{t = NormalizeTemplate[template]},
+      (* If the template is invalid, we report errors but we do not abort.
+         Pretty-printing is still useful for invalid templates to facilitate finding mistakes.
+       *)
+      validateTemplate[t];
+      formatTemplate@NormalizeTemplate[t]
     ]
 
-(* Used in loadClass[] without FormatTemplate wrapper to set usage messages.
-   TODO: fix this redundancy.
- *)
 formatTemplate[template_] :=
-    Block[{LFun, LOFun, LClass, LTemplate},
-      With[{tem = template /. normalizeTypesRules /. normalizeFunctionsRules /. {LExpressionID -> "LExpressionID"}},
+    Block[{LFun, LOFun, LClass, LTemplate, LType, LExpressionID},
+      With[{tem = template},
+        LType /: {LType[head_, rest___], passing : passingMethodPattern} :=
+            If[{passing} =!= {}, passing <> " ", ""] <>
+            ToString[head] <>
+            If[{rest} =!= {}, "<" <> StringTake[ToString[{rest}], {2,-2}] <> ">", ""];
+        LExpressionID[head_String] := "LExpressionID<" <> head <> ">";
         LFun[name_, args_, ret_] := StringTemplate["`` ``(``)"][ToString[ret], name, StringJoin@Riffle[ToString /@ args, ", "]];
         LOFun[name_] := StringTemplate["LinkObject ``(LinkObject)"][name];
         LClass[name_, funs_] := StringTemplate["class ``:\n``"][name, StringJoin@Riffle["    " <> ToString[#] & /@ funs, "\n"]];
