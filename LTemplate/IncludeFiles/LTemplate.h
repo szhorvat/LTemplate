@@ -857,6 +857,10 @@ class ImageRef : public GenericImageRef {
     T * const image_data;
 
 public:
+
+    /// Random access iterator for accessing the pixels of a single image channel in order
+    typedef pixel_iterator<T> pixel_iterator;
+
     ImageRef(const MImage &mim) :
         GenericImageRef(mim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(mim)))
@@ -875,6 +879,7 @@ public:
             throw LibraryError("2D image expected.", LIBRARY_TYPE_ERROR);
     }
 
+    /// Returns 2 for a 2D image.
     mint rank() const { return 2; }
 
     ImageRef clone() const {
@@ -884,22 +889,29 @@ public:
         return c;
     }
 
+    /// Pointer to the image data
     T *data() const { return image_data; }
 
+    /// Returns an interator to the beginning of the image data
     T *begin() const { return data(); }
+
+    /// Returns an interator to the end of the image data
     T *end() const { return begin() + length(); }
 
-    pixel_iterator<T> pixelBegin(mint channel) const {
+    /// Returns a pixel iterator to the beginning of \p channel
+    pixel_iterator pixelBegin(mint channel) const {
         if (interleavedQ())
-            return pixel_iterator<T>(image_data + channel, channels());
+            return pixel_iterator(image_data + channel, channels());
         else
-            return pixel_iterator<T>(image_data + channelSize()*channel, 1);
+            return pixel_iterator(image_data + channelSize()*channel, 1);
     }
 
-    pixel_iterator<T> pixelEnd(mint channel) const {
+    /// Returns an iterator to the end of \p channel
+    pixel_iterator pixelEnd(mint channel) const {
         return pixelBegin(channel) + channelSize();
     }
 
+    /// Index into the image
     T &operator ()(mint row, mint col, mint channel) const {
         if (interleavedQ())
             return image_data[row*cols()*channels() + col*channels()+ channel];
@@ -933,6 +945,10 @@ class Image3DRef : public GenericImageRef {
     T * const image_data;
 
 public:
+
+    /// Random access iterator for accessing the pixels of a single image channel in order
+    typedef pixel_iterator<T> pixel_iterator;
+
     Image3DRef(const MImage &mim) :
         GenericImageRef(mim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(mim)))
@@ -951,7 +967,8 @@ public:
             throw LibraryError("3D image expected.", LIBRARY_TYPE_ERROR);
     }
 
-    mint rank() const { return 3; }   
+    /// Returns 3 for a 3D image
+    mint rank() const { return 3; }
 
     Image3DRef clone() const {
         MImage c = NULL;
@@ -960,23 +977,30 @@ public:
         return c;
     }
 
+    /// Pointer to the image data
     T *data() const { return image_data; }
 
+    /// Returns an interator to the beginning of the image data
     T *begin() const { return data(); }
+
+    /// Returns an interator to the end of the image data
     T *end() const { return begin() + length(); }
 
-    pixel_iterator<T> pixelBegin(mint channel) const {
+    /// Returns a pixel iterator to the beginning of \p channel
+    pixel_iterator pixelBegin(mint channel) const {
         if (interleavedQ())
-            return pixel_iterator<T>(image_data + channel, channels());
+            return pixel_iterator(image_data + channel, channels());
         else
-            return pixel_iterator<T>(image_data + channelSize()*channel, 1);
+            return pixel_iterator(image_data + channelSize()*channel, 1);
     }
 
-    pixel_iterator<T> pixelEnd(mint channel) const {
+    /// Returns an iterator to the end of \p channel
+    pixel_iterator pixelEnd(mint channel) const {
         return pixelBegin(channel) + channelSize();
     }
 
-    T &operator ()(mint slice, mint row, mint col, mint channel) const {
+    /// Index into the image
+    T &operator ()(mint slice, mint row, mint col, mint channel = 0) const {
         if (interleavedQ())
             return image_data[slice*rows()*cols()*channels() + row*cols()*channels() + col*channels() + channel];
         else
