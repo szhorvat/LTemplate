@@ -912,7 +912,7 @@ public:
     }
 
     /// Index into the image
-    T &operator ()(mint row, mint col, mint channel) const {
+    T &operator ()(mint row, mint col, mint channel = 0) const {
         if (interleavedQ())
             return image_data[row*cols()*channels() + col*channels()+ channel];
         else
