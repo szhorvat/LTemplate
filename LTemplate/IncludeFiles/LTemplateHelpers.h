@@ -48,11 +48,11 @@ inline void setGenericImage(MArgument marg, GenericImageRef &val) { MArgument_se
 #ifdef LTEMPLATE_RAWARRAY
 template<typename T>
 inline RawArrayRef<T> getRawArray(MArgument marg) { return MArgument_getMRawArray(marg); }
-inline GenericRawArray getGenericRawArray(MArgument marg) { return MArgument_getMRawArray(marg); }
+inline GenericRawArrayRef getGenericRawArray(MArgument marg) { return MArgument_getMRawArray(marg); }
 
 template<typename T>
 inline void setRawArray(MArgument marg, RawArrayRef<T> &val) { MArgument_setMRawArray(marg, val.rawArray()); }
-inline void setGenericRawArray(MArgument marg, GenericRawArray &val) { MArgument_setMRawArray(marg, val.rawArray()); }
+inline void setGenericRawArray(MArgument marg, GenericRawArrayRef &val) { MArgument_setMRawArray(marg, val.rawArray()); }
 #endif // LTEMPLATE_RAWARRAY
 
 inline complex_t getComplex(MArgument marg) {

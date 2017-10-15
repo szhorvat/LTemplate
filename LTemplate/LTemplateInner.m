@@ -590,7 +590,7 @@ types = Dispatch@{
         {"mma::RawArrayRef<" <> ctype <> ">", "mma::detail::getRawArray<" <> ctype <> ">", "mma::detail::setRawArray<" <> ctype <> ">"}
       ],
 
-  {LType[RawArray], ___} -> {"mma::GenericRawArray", "mma::detail::getGenericRawArray", "mma::detail::setGenericRawArray"},
+  {LType[RawArray], ___} -> {"mma::GenericRawArrayRef", "mma::detail::getGenericRawArray", "mma::detail::setGenericRawArray"},
 
   {LType[Image, type_, ___], ___} :>
       With[
@@ -598,7 +598,7 @@ types = Dispatch@{
         {"mma::ImageRef<" <> ctype <> ">", "mma::detail::getImage<" <> ctype <> ">", "mma::detail::setImage<" <> ctype <> ">"}
       ],
 
-  {LType[Image], ___} -> {"mma::GenericImage", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
+  {LType[Image], ___} -> {"mma::GenericImageRef", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
 
   {LType[Image3D, type_, ___], ___} :>
       With[
@@ -606,7 +606,7 @@ types = Dispatch@{
         {"mma::Image3DRef<" <> ctype <> ">", "mma::detail::getImage3D<" <> ctype <> ">", "mma::detail::setImage3D<" <> ctype <> ">"}
       ],
 
-  {LType[Image3D], ___} -> {"mma::GenericImage", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
+  {LType[Image3D], ___} -> {"mma::GenericImageRef", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
 
   (* This is a special type that translates integer managed expression IDs on the Mathematica side
      into a class reference on the C++ side. It cannot be returned. *)

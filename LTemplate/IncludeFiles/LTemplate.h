@@ -537,14 +537,14 @@ template<typename T> class RawArrayRef;
 
 
 /// Wrapper class for `MRawArray` pointers; unspecialized base class. Typically used through \ref RawArrayRef.
-class GenericRawArray {
+class GenericRawArrayRef {
     const MRawArray ra;
     const mint len;
 
-    GenericRawArray & operator = (const GenericRawArray &) = delete;
+    GenericRawArrayRef & operator = (const GenericRawArrayRef &) = delete;
 
 public:
-    GenericRawArray(const MRawArray &mra) :
+    GenericRawArrayRef(const MRawArray &mra) :
         ra(mra),
         len(libData->rawarrayLibraryFunctions->MRawArray_getFlattenedLength(mra))
     { }
@@ -585,12 +585,12 @@ public:
 
 /// Wrapper class for `MRawArray` pointers.
 template<typename T>
-class RawArrayRef : public GenericRawArray {
+class RawArrayRef : public GenericRawArrayRef {
     T * const array_data;
 
 public:
     RawArrayRef(const MRawArray &mra) :
-        GenericRawArray(mra),
+        GenericRawArrayRef(mra),
         array_data(reinterpret_cast<T *>(libData->rawarrayLibraryFunctions->MRawArray_getData(mra)))
     {
         rawarray_t received = libData->rawarrayLibraryFunctions->MRawArray_getType(mra);
