@@ -988,17 +988,33 @@ public:
 };
 
 
-/// Create a new Image.
+/** \brief Create a new Image
+ *  \param cols is the number of columns (image width)
+ *  \param rows is the number of rows (image height)
+ *  \param channels is the number of image channels
+ *  \param interleaving specifies whether to store the data in interleaved mode
+ *  \param colorspace may be one of `MImage_CS_Automatic`, `MImage_CS_Gray`, `MImage_CS_RGB`, `MImage_CS_HSB`, `MImage_CS_CMYK`, `MImage_CS_XYZ`, `MImage_CS_LUV`, `MImage_CS_LAB`, `MImage_CS_LCH`
+ *  \tparam T is the pixel type
+ */
 template<typename T>
-ImageRef<T> makeImage(mint cols, mint rows, mint channels = 0, colorspace_t colorspace = MImage_CS_Automatic, bool interleaving = true) {
+ImageRef<T> makeImage(mint cols, mint rows, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
     MImage mim;
     libData->imageLibraryFunctions->MImage_new2D(cols, rows, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
 }
 
-/// Create a new Image3D.
+/** \brief Create a new Image3D
+ *  \param slices is the number of image slices
+ *  \param cols is the number of columns (image width)
+ *  \param rows is the number of rows (image height)
+ *  \param channels is the number of image channels
+ *  \param interleaving specifies whether to store the data in interleaved mode
+ *  \param colorspace may be one of `MImage_CS_Automatic`, `MImage_CS_Gray`, `MImage_CS_RGB`, `MImage_CS_HSB`, `MImage_CS_CMYK`, `MImage_CS_XYZ`, `MImage_CS_LUV`, `MImage_CS_LAB`, `MImage_CS_LCH`
+ *  \tparam T is the pixel type
+ *
+ */
 template<typename T>
-Image3DRef<T> makeImage(mint slices, mint cols, mint rows, mint channels = 0, colorspace_t colorspace = MImage_CS_Automatic, bool interleaving = true) {
+Image3DRef<T> makeImage3D(mint slices, mint cols, mint rows, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
     MImage mim;
     libData->imageLibraryFunctions->MImage_new3D(slices, cols, rows, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
