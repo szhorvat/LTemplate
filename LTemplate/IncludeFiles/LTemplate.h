@@ -227,7 +227,7 @@ public:
     /// Returns the number of elements in the tensor, synonym of \ref length()
     mint size() const { return length(); }
 
-    /// Frees the referenced \c MTensor, same as \c MTensor_free
+    /// Frees the referenced Tensor, same as \c MTensor_free
     /**
      * Warning: multiple \ref TensorRef objects may reference the same \c MTensor.
      * Freeing the \c MTensor invalidates all references to it.
@@ -239,7 +239,7 @@ public:
 
     mint shareCount() const { return libData->MTensor_shareCount(t); }
 
-    /// Clones the referenced \c MTensor and returns a new \ref TensorRef object pointing to it
+    /// Creates a copy of the referenced Tensor
     TensorRef clone() const {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
@@ -444,6 +444,7 @@ public:
 
     mint shareCount() const { return libData->sparseLibraryFunctions->MSparseArray_shareCount(sa); }
 
+    /// Creates a copy of the referenced SparseArray
     SparseArrayRef clone() const {
         MSparseArray c = NULL;
         int err = libData->sparseLibraryFunctions->MSparseArray_clone(sa, &c);
@@ -565,7 +566,7 @@ public:
     /// Returns the number of elements in the tensor, synonym of \ref length()
     mint size() const { return length(); }
 
-    /// Frees the referenced \c MRawArray, same as \c MRawArray_free
+    /// Frees the referenced RawArray, same as \c MRawArray_free
     /**
      * Warning: multiple \ref RawArrayRef objects may reference the same \c MRawArray.
      * Freeing the \c MRawArray invalidates all references to it.
@@ -607,6 +608,7 @@ public:
         }
     }
 
+    /// Creates a copy of the referenced RawArray
     RawArrayRef clone() const {
         MRawArray c = NULL;
         int err = libData->rawarrayLibraryFunctions->MRawArray_clone(rawArray(), &c);
@@ -625,7 +627,7 @@ public:
     rawarray_t type() const { return detail::libraryRawType<T>(); }
 };
 
-/// Creates a rank 1 \c MRawArray of the given length
+/// Creates a rank 1 RawArray of the given length
 template<typename T>
 inline RawArrayRef<T> makeRawVector(mint len) {
     MRawArray ra = NULL;
@@ -886,6 +888,7 @@ public:
     /// Returns 2 for a 2D image.
     mint rank() const { return 2; }
 
+    /// Creates a copy of the referenced Image
     ImageRef clone() const {
         MImage c = NULL;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
@@ -974,6 +977,7 @@ public:
     /// Returns 3 for a 3D image
     mint rank() const { return 3; }
 
+    /// Creates a copy of the referenced Image3D
     Image3DRef clone() const {
         MImage c = NULL;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
