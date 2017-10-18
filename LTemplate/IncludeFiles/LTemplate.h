@@ -179,7 +179,8 @@ namespace detail { // private
 
 namespace detail { // private
     template<typename T> inline mint libraryType() {
-        static_assert(std::is_same<T, T&>::value, "Only mint, double and mma::complex_t are allowed in mma::TensorRef<...>.");
+        static_assert(std::is_same<T, T&>::value,
+            "Only mint, double and mma::complex_t are allowed in mma::TensorRef<...> and mma::SparseArrayRef<...>.");
     }
 
     template<> inline mint libraryType<mint>()      { return MType_Integer; }
@@ -211,7 +212,7 @@ public:
         tensor_data(detail::getData<T>(t)),
         len(libData->MTensor_getFlattenedLength(t))
     {
-        // empty
+        detail::libraryType<T>(); // causes compile time error if T is invalid
     }
 
     /// Returns the referenced \c MTensor
@@ -428,7 +429,10 @@ class SparseArrayRef {
     SparseArrayRef & operator = (const SparseArrayRef &) = delete;
 
 public:
-    SparseArrayRef(const MSparseArray &msa) : sa(msa) { /* empty */ }
+    SparseArrayRef(const MSparseArray &msa) : sa(msa)
+    {
+        detail::libraryType<T>(); // causes compile time error if T is invalid
+    }
 
     MSparseArray sparseArray() const { return sa; }
 
