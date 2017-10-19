@@ -15,7 +15,7 @@ LFun::usage =
 LType::usage =
      "LType[head] represents an array library type corresponding to head.\n" <>
      "LType[head, etype] represents an array library corresponding to head, with element type etype.\n" <>
-     "LType[head, etype, d] represents an array library corresponding to head, with element type etype and depth d.";
+     "LType[head, etype, d] represents an array library corresponding to head, with element type etype and depth/rank d.";
 
 TranslateTemplate::usage = "TranslateTemplate[template] translates the template into C++ code.";
 
@@ -711,7 +711,7 @@ unloadTemplate[LTemplate[libname_String, classes_]] :=
       res = LibraryUnload[libname];
       With[{syms = Symbol /@ symName /@ Cases[classes, LClass[name_, __] :> name]},
         ClearAll /@ syms;
-        Unset[getCollection[#]]& /@ syms;
+        Quiet@Unset[getCollection[#]]& /@ syms;
       ];
       res
     ]
