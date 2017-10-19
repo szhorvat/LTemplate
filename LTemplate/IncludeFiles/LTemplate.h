@@ -865,7 +865,7 @@ class ImageRef : public GenericImageRef {
 public:
 
     /// Random access iterator for accessing the pixels of a single image channel in order
-    typedef pixel_iterator<T> pixel_iterator;
+    typedef class pixel_iterator<T> pixel_iterator;
 
     ImageRef(const MImage &mim) :
         GenericImageRef(mim),
@@ -954,7 +954,7 @@ class Image3DRef : public GenericImageRef {
 public:
 
     /// Random access iterator for accessing the pixels of a single image channel in order
-    typedef pixel_iterator<T> pixel_iterator;
+    typedef class pixel_iterator<T> pixel_iterator;
 
     Image3DRef(const MImage &mim) :
         GenericImageRef(mim),
