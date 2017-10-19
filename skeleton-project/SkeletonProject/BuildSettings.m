@@ -4,7 +4,7 @@
 Switch[$OperatingSystem,
   "MacOSX", (* Compilation settings for OS X *)
   $buildSettings = {
-    "CompileOptions" -> {(* "-std=c++11", "-mmacosx-version-min=10.9" *)}
+    "CompileOptions" -> {(* "-std=c++14", "-mmacosx-version-min=10.9" *)}
 
     (*
     , "IncludeDirectories" -> {}
@@ -14,19 +14,12 @@ Switch[$OperatingSystem,
 
   "Unix", (* Compilation settings for Linux *)
   $buildSettings = {
-    "CompileOptions" -> {(* "-std=c++11" *)}
+    "CompileOptions" -> {(* "-std=c++14" *)}
 
     (*
     , "IncludeDirectories" -> {}
     , "LibraryDirectories" -> {}
     *)
-
-    (* The following is only necessary if you are including mlstream.h
-       and compiling on 32-bit Linux, e.g. on a Raspberry Pi. *)
-    , If[$SystemWordLength == 32,
-        "Defines" -> {"MLSTREAM_32BIT_INT_AND_LONG"},
-        Unevaluated@Sequence[]
-      ]
   },
 
   "Windows", (* Compilation settings for Windows *)
