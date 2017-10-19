@@ -1,0 +1,471 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Printing messages from an LTemplate library", "Section",
+ ExpressionUUID -> "1afcf7ff-2148-49b1-bca3-c1d27cb68e11"],
+
+Cell[TextData[{
+ "This example illustrates how to print form a library into a notebook (as in \
+",
+ ButtonBox["Print",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/Print"],
+ "), and how to issue messages (as in ",
+ ButtonBox["Message",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/Print"],
+ "), as well as other features useful for error reporting or debugging."
+}], "Text",
+ ExpressionUUID -> "5e0c3751-73d6-48b8-a521-a495e915b9b5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SetDirectory", "@", 
+  RowBox[{"NotebookDirectory", "[", "]"}]}]}], "Input",
+ ExpressionUUID -> "04ef3909-ebdf-4f84-88f6-fe52710284f9"],
+
+Cell[BoxData["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
+Examples/PrintingAndMessages\"\>"], "Output",
+ ExpressionUUID -> "4cf531e0-cac0-44a0-a767-d201041b2b01"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<Printing\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<set\>\"", ",", 
+         RowBox[{"{", "Integer", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<hello\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<printValue\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<message\>\"", ",", 
+         RowBox[{"{", "\"\<UTF8String\>\"", "}"}], ",", "\"\<Void\>\""}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<messageValue\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<assertDemo\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<exception\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "\"\<Void\>\""}], "]"}]}], 
+      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input",
+ ExpressionUUID -> "5992e7b7-1044-4d77-8909-7c0400320a42"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "030e9f79-2e4b-4b44-8c70-062e521e3c35"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
+Examples/PrintingAndMessages\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
+PrintingAndMessages", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"Printing\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["Printing", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"LTemplate-Printing.cpp\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" already exists and will be overwritten.\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["LTemplate-Printing.cpp", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" already exists and will be overwritten.", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/Printing.dylib\"\>"], "Output",
+ ExpressionUUID -> "4720fb93-8457-416f-a5e1-13992ba63a6f"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "f2c79f41-1ae4-4b80-9037-7ef180f26b82"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "=", 
+  RowBox[{"Make", "[", "Printing", "]"}]}]], "Input",
+ ExpressionUUID -> "6e6482a9-786c-4c70-9e9f-f997dd8d8fb6"],
+
+Cell[BoxData[
+ RowBox[{"Printing", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "e0e4b7a6-cb75-45bb-9c11-974ffedda9f8"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Throwing an mma::LibraryError object causes the associate error message to \
+be shown as an ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LTemplate", "::", "error"}], TraditionalForm]],
+  ExpressionUUID -> "ac3ead2e-094d-4bd9-a11a-2ad688c223d0"],
+ " message in the notebook."
+}], "Text",
+ ExpressionUUID -> "ce4ad3db-ccbc-427b-8167-f14db2a6dd07"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{"\"\<set\>\"", "[", 
+   RowBox[{"-", "1"}], "]"}]}]], "Input",
+ ExpressionUUID -> "4576c374-6ce1-44cb-ab66-317041a79b37"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value must be \
+positive.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "3fcb915e-04af-4620-bcad-4e769c0301c6"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "58c43b02-e080-4489-b9e2-e450873666e6"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{"\"\<set\>\"", "[", "42", "]"}]}]], "Input",
+ ExpressionUUID -> "67abd17d-c6c3-42a0-857a-83db6147921e"],
+
+Cell["Printing directly into the notebook, as with Print:", "Text",
+ ExpressionUUID -> "7ca22b0f-a792-43c9-b519-d35e6babb132"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{"\"\<hello\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "9e5da1b1-e270-43a7-9d4d-8a567bff464a"],
+
+Cell[BoxData["\<\"Hello world!\"\>"], "Print",
+ ExpressionUUID -> "b4ef3684-611a-4813-b24e-061f50960a34"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{"\"\<printValue\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "18e2ac87-f132-4ee9-8370-63689269e88e"],
+
+Cell[BoxData["\<\"My value is 42!\"\>"], "Print",
+ ExpressionUUID -> "3a93b2df-2159-4424-9afd-35b017268e1b"]
+}, Open  ]],
+
+Cell["Issuing message directly from the library:", "Text",
+ ExpressionUUID -> "51d2ae64-0a11-4939-8ab7-7fd41d857685"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{
+  "\"\<message\>\"", "[", "\"\<Hello from Message!\>\"", "]"}]}]], "Input",
+ ExpressionUUID -> "058c1324-2d04-478c-aa00-f0fc62d1ea60"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Hello from Message!\
+\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "424eee77-650c-42ae-a335-e550cf345d42"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{"\"\<messageValue\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "85bf86be-5305-4ee7-8ed8-38ab0e81753e"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value is \
+42.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "e2b1d362-349e-499f-bd0f-70e0e1d3d89a"]
+}, Open  ]],
+
+Cell[TextData[{
+ "There are three basic types of messages to choose from ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LTemplate", "::", "info"}], TraditionalForm]],
+  ExpressionUUID -> "0334245a-ecf7-45ac-a4ef-ee0eb08eff26"],
+ ", ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LTemplate", "::", "warning"}], TraditionalForm]],
+  ExpressionUUID -> "d41a1c79-ca68-4078-9fb4-70d5f993ef7b"],
+ " ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LTemplate", "::", "error"}], TraditionalForm]],
+  ExpressionUUID -> "cfb885ab-e547-4d18-98e5-69659ca41971"],
+ ". Additionally, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"LTemplate", "::", "assert"}], TraditionalForm]],
+  ExpressionUUID -> "a192dfa9-f3ee-4892-bf5f-44a9af66177d"],
+ " is used by the massert() macro. When embedding LTemplate into another \
+package, the symbol with which message are associated can be changed to \
+something else than ",
+ Cell[BoxData[
+  FormBox["LTemplate", TraditionalForm]],
+  ExpressionUUID -> "1ede47f2-1366-4123-b323-006b08763669"],
+ ". See the skeleton project included in the LTemplate distribution to see \
+how this is accomplished."
+}], "Text",
+ ExpressionUUID -> "2ec5a785-d7e5-4ef2-af22-5d6194dce795"],
+
+Cell["\<\
+LTemplate.h provides the massert() macro as a replacement for the standard C \
+assert() macro. Unlike assert(), massert() will not terminate the kernel \
+process. Instead, it prints the assertion failure message directly into the \
+notebook and returns from the library function.\
+\>", "Text",
+ ExpressionUUID -> "fdcf12aa-5d3d-4cb6-a0fb-f0d4f438e6a8"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{"\"\<assertDemo\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "ee1c42ba-786d-4ccc-9aa2-2c8f5fc998fb"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "assert"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Assertion failed: \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"42 == 137, file \
+/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
+PrintingAndMessages/Printing.h, line 56\\\\\\\"\\\"}]\\)\[NoBreak].\"\>"}]], \
+"Message", "MSG",
+ ExpressionUUID -> "dcf44bc0-82df-49b6-8b39-f851369c95ce"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "3f981706-4bd3-4bfd-bed2-3d21b962aefd"]
+}, Open  ]],
+
+Cell[TextData[{
+ "LTemplate functions will catch ",
+ StyleBox["all",
+  FontSlant->"Italic"],
+ " C++ exceptions to avoid killing the kernel. For exceptions different from \
+Mathematica::LibraryError a warning message is shown: uncaught exceptions can \
+indicate a serious error in the library, possibly even memory corruption, \
+thus it is best to restart the kernel session. If the exception derives from \
+std::exception, the what() description is also included."
+}], "Text",
+ ExpressionUUID -> "827ac7f3-b8b5-4e93-8e59-2f84568a1ddd"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{"\"\<exception\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "d3dca0fe-04a0-42f9-a548-4394ac2e1aff"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Unknown exception \
+caught in Printing::exception(). The library may be in an inconsistent state. \
+It is recommended that you restart the kernel now to avoid instability.\\\\\\\
+\\nvector\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "4b958576-2c0e-4050-aa31-432503d82f65"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "d3ca1829-0e10-4ecc-906c-71fed771766f"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 751},
+WindowMargins->{{124, Automatic}, {36, Automatic}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
