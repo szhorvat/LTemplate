@@ -1,0 +1,697 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     25656,        689]
+NotebookOptionsPosition[     23472,        613]
+NotebookOutlinePosition[     23828,        629]
+CellTagsIndexPosition[     23785,        626]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Interfacing with Armadillo", "Section",
+ CellChangeTimes->{{3.717515109829385*^9, 3.71751511516369*^9}},
+ ExpressionUUID -> "8bd4df63-6158-481b-b1b2-e6e4b62bbad3"],
+
+Cell[TextData[{
+ "This notebook demonstrates how to interface with ",
+ ButtonBox["the Armadillo linear algebra library",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://arma.sourceforge.net/"], None},
+  ButtonNote->"http://arma.sourceforge.net/"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.717515116827546*^9, 3.717515168941497*^9}, {
+  3.717519484108074*^9, 3.717519484111351*^9}},
+ ExpressionUUID -> "01e1195f-2312-498b-8fe0-2a76b4a18164"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6736577655772667`*^9, 3.673657769024543*^9}, {
+  3.717515176987113*^9, 3.717515185692979*^9}},
+ ExpressionUUID -> "88621568-1a53-49b9-b3ba-912fe70acb8a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<Arma\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<inv\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}], "}"}], 
+         ",", 
+         RowBox[{"{", 
+          RowBox[{"Real", ",", "2"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<eigs\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"LType", "[", 
+              RowBox[{"SparseArray", ",", "Real", ",", "2"}], "]"}], ",", 
+             "\"\<Constant\>\""}], "}"}], ",", "Integer"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Complex", ",", "1"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<print\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}], "}"}], 
+         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<printSparse\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"LType", "[", 
+             RowBox[{"SparseArray", ",", "Real", ",", "2"}], "]"}], ",", 
+            "\"\<Constant\>\""}], "}"}], "}"}], ",", "\"\<Void\>\""}], 
+        "]"}]}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6736616417212877`*^9, 3.6736616670320587`*^9}, {
+  3.673662050138974*^9, 3.6736620515869417`*^9}, {3.7175156814372797`*^9, 
+  3.717515693180414*^9}, {3.717517220109118*^9, 3.717517229692026*^9}, {
+  3.7175173036431723`*^9, 3.7175173055690117`*^9}, {3.717518225859083*^9, 
+  3.717518255089362*^9}, {3.7175187385140667`*^9, 3.717518756753392*^9}},
+ ExpressionUUID -> "a60bea31-7298-447b-a08e-65f897a1c342"],
+
+Cell["\<\
+When using an additional library like Armadillo, it is typically necessary to \
+specify include paths, library paths, and libraries to link against. Adjust \
+the CompileTemplate options below according to where you have installed \
+Armadillo.\
+\>", "Text",
+ CellChangeTimes->{{3.717515297398986*^9, 3.717515386971394*^9}, {
+  3.717519504003772*^9, 3.717519511674465*^9}},
+ ExpressionUUID -> "a16949ca-9b39-4751-8425-3ce464b632af"],
+
+Cell["\<\
+On OS X, Armadillo can optionally make use of the Accelerate framework, which \
+is included in the compile options below.\
+\>", "Text",
+ CellChangeTimes->{{3.717515405695314*^9, 3.7175154385406637`*^9}},
+ ExpressionUUID -> "ac80dced-dac5-4573-b591-920203b59d35"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", 
+  RowBox[{"template", ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<IncludeDirectories\>\"", "\[Rule]", 
+    RowBox[{"{", "\"\</opt/local/include\>\"", "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"\"\<LibraryDirectories\>\"", "\[Rule]", 
+    RowBox[{"{", "\"\</opt/local/lib\>\"", "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"\"\<Libraries\>\"", "\[Rule]", 
+    RowBox[{"{", "\"\<armadillo\>\"", "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<CompileOptions\>\"", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<-std=c++14\>\"", ",", "\"\<-framework Accelerate\>\""}], 
+     "}"}]}]}], "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.673661670672886*^9, 3.6736616747517023`*^9}, {
+  3.673661741945381*^9, 3.673661742640747*^9}, {3.673661778878098*^9, 
+  3.6736618127253*^9}, {3.673662172785602*^9, 3.6736621882856827`*^9}, {
+  3.717515395637103*^9, 3.717515402525406*^9}, {3.71751731248135*^9, 
+  3.7175173170210247`*^9}, {3.717519449367025*^9, 3.7175194511989107`*^9}},
+ ExpressionUUID -> "3a05f56d-5c7d-4d7e-a3eb-3c8461a91196"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
+Examples/Armadillo\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
+Armadillo", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.673661676004973*^9, 3.6736617360127287`*^9, {3.673661814297635*^9, 
+   3.6736618895651083`*^9}, 3.673661921703369*^9, 3.673662113054311*^9, 
+   3.673662194163027*^9, 3.717515205374997*^9, 3.717515396672514*^9, 
+   3.717515440778324*^9, {3.717515695653298*^9, 3.717515719288991*^9}, 
+   3.717515752206052*^9, 3.71751595872164*^9, {3.71751645841555*^9, 
+   3.717516468466392*^9}, {3.717517232711591*^9, 3.7175172540013866`*^9}, {
+   3.717517307528899*^9, 3.717517317271697*^9}, 3.7175182579240294`*^9, 
+   3.7175187600327272`*^9, 3.717519026689912*^9},
+ ExpressionUUID -> "df2ece27-d4fd-4c1f-b49c-99c6b45f3dd3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"Arma\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["Arma", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.673661676004973*^9, 3.6736617360127287`*^9, {3.673661814297635*^9, 
+   3.6736618895651083`*^9}, 3.673661921703369*^9, 3.673662113054311*^9, 
+   3.673662194163027*^9, 3.717515205374997*^9, 3.717515396672514*^9, 
+   3.717515440778324*^9, {3.717515695653298*^9, 3.717515719288991*^9}, 
+   3.717515752206052*^9, 3.71751595872164*^9, {3.71751645841555*^9, 
+   3.717516468466392*^9}, {3.717517232711591*^9, 3.7175172540013866`*^9}, {
+   3.717517307528899*^9, 3.717517317271697*^9}, 3.7175182579240294`*^9, 
+   3.7175187600327272`*^9, 3.717519026701092*^9},
+ ExpressionUUID -> "df2ece27-d4fd-4c1f-b49c-99c6b45f3dd3"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ CellChangeTimes->{
+  3.673661676004973*^9, 3.6736617360127287`*^9, {3.673661814297635*^9, 
+   3.6736618895651083`*^9}, 3.673661921703369*^9, 3.673662113054311*^9, 
+   3.673662194163027*^9, 3.717515205374997*^9, 3.717515396672514*^9, 
+   3.717515440778324*^9, {3.717515695653298*^9, 3.717515719288991*^9}, 
+   3.717515752206052*^9, 3.71751595872164*^9, {3.71751645841555*^9, 
+   3.717516468466392*^9}, {3.717517232711591*^9, 3.7175172540013866`*^9}, {
+   3.717517307528899*^9, 3.717517317271697*^9}, 3.7175182579240294`*^9, 
+   3.7175187600327272`*^9, 3.7175190267115517`*^9},
+ ExpressionUUID -> "df2ece27-d4fd-4c1f-b49c-99c6b45f3dd3"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ CellChangeTimes->{
+  3.673661676004973*^9, 3.6736617360127287`*^9, {3.673661814297635*^9, 
+   3.6736618895651083`*^9}, 3.673661921703369*^9, 3.673662113054311*^9, 
+   3.673662194163027*^9, 3.717515205374997*^9, 3.717515396672514*^9, 
+   3.717515440778324*^9, {3.717515695653298*^9, 3.717515719288991*^9}, 
+   3.717515752206052*^9, 3.71751595872164*^9, {3.71751645841555*^9, 
+   3.717516468466392*^9}, {3.717517232711591*^9, 3.7175172540013866`*^9}, {
+   3.717517307528899*^9, 3.717517317271697*^9}, 3.7175182579240294`*^9, 
+   3.7175187600327272`*^9, 3.7175190267312193`*^9},
+ ExpressionUUID -> "df2ece27-d4fd-4c1f-b49c-99c6b45f3dd3"],
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{
+  3.673661676004973*^9, 3.6736617360127287`*^9, {3.673661814297635*^9, 
+   3.6736618895651083`*^9}, 3.673661921703369*^9, 3.673662113054311*^9, 
+   3.673662194163027*^9, 3.717515205374997*^9, 3.717515396672514*^9, 
+   3.717515440778324*^9, {3.717515695653298*^9, 3.717515719288991*^9}, 
+   3.717515752206052*^9, 3.71751595872164*^9, {3.71751645841555*^9, 
+   3.717516468466392*^9}, {3.717517232711591*^9, 3.7175172540013866`*^9}, {
+   3.717517307528899*^9, 3.717517317271697*^9}, 3.7175182579240294`*^9, 
+   3.7175187600327272`*^9, 3.717519032459363*^9},
+ ExpressionUUID -> "df2ece27-d4fd-4c1f-b49c-99c6b45f3dd3"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/Arma.dylib\"\>"], "Output",
+ CellChangeTimes->{
+  3.673661676013117*^9, 3.673661736736301*^9, {3.673661816349374*^9, 
+   3.6736618908335257`*^9}, 3.673661923941285*^9, 3.6736621140329447`*^9, 
+   3.6736621959322577`*^9, 3.717515208417241*^9, 3.717515398477291*^9, 
+   3.717515442612767*^9, {3.717515697534059*^9, 3.717515721186266*^9}, 
+   3.71751575493407*^9, 3.7175159608003817`*^9, {3.717516460342887*^9, 
+   3.7175164701219683`*^9}, {3.717517234326151*^9, 3.717517256080205*^9}, {
+   3.717517309604019*^9, 3.71751731935858*^9}, 3.7175182600530853`*^9, 
+   3.7175187655591593`*^9, 3.717519032470291*^9},
+ ExpressionUUID -> "11349f47-affd-4731-862f-aa642473d9d6"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ CellChangeTimes->{{3.673661925673595*^9, 3.67366193034138*^9}},
+ ExpressionUUID -> "e10769b9-0b40-4b81-9fc1-21f9e2afca46"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"arma", "=", 
+  RowBox[{"Make", "[", "Arma", "]"}]}]], "Input",
+ CellChangeTimes->{{3.673661932960877*^9, 3.673661936653049*^9}, {
+  3.717515233742415*^9, 3.717515234150413*^9}},
+ ExpressionUUID -> "5704c617-e2fb-4036-b713-a2ffb86188a9"],
+
+Cell[BoxData[
+ RowBox[{"Arma", "[", "1", "]"}]], "Output",
+ CellChangeTimes->{3.673661937135316*^9, 3.6736621159526587`*^9, 
+  3.673662198310132*^9, 3.7175152346852293`*^9, 3.717515412954494*^9, 
+  3.717515450054392*^9, 3.717515759957489*^9, 3.717515960969205*^9, 
+  3.717518263044764*^9, 3.7175187726385193`*^9, 3.717519064196875*^9},
+ ExpressionUUID -> "b950a5a0-f397-4c86-bcef-91a0f1391be7"]
+}, Open  ]],
+
+Cell["Let us create a large random matrix ...", "Text",
+ CellChangeTimes->{{3.7175154538929367`*^9, 3.717515480760529*^9}},
+ ExpressionUUID -> "1e9e7353-f080-471b-a5cf-5648a4e28a10"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"m", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"500", ",", "500"}], "}"}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6736619419772177`*^9, 3.6736619476130943`*^9}, {
+  3.673662138504672*^9, 3.6736621571838837`*^9}},
+ ExpressionUUID -> "3df978d1-7c6e-4c7c-a0d9-7b74a572f71a"],
+
+Cell["... and compute its inverse.", "Text",
+ CellChangeTimes->{{3.717515459756605*^9, 3.7175154631325617`*^9}},
+ ExpressionUUID -> "547ec4c7-9a64-4121-ad3d-89538b94fb2f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"im", "=", 
+    RowBox[{"arma", "@", 
+     RowBox[{"\"\<inv\>\"", "[", "m", "]"}]}]}], ";"}], "//", 
+  "RepeatedTiming"}]], "Input",
+ CellChangeTimes->{{3.67366193800128*^9, 3.673661949869088*^9}, {
+  3.673662141960678*^9, 3.673662147856275*^9}, {3.673662212934985*^9, 
+  3.673662213312046*^9}, {3.717515245822063*^9, 3.717515246502095*^9}},
+ ExpressionUUID -> "eab85687-bdad-4ebd-aa60-d0f8f19df11c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.00476213461538461425848201002963833162`2.", ",", "Null"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.673661950624256*^9, 3.673662117987752*^9, {3.673662148404262*^9, 
+   3.673662160255241*^9}, {3.673662200631537*^9, 3.673662218121211*^9}, 
+   3.717515248046774*^9, 3.7175154162386513`*^9, {3.717515767564831*^9, 
+   3.717515775386148*^9}, 3.7175159620300407`*^9, 3.717518266595649*^9, 
+   3.717518777510783*^9},
+ ExpressionUUID -> "53ff12ca-8f2f-43f6-85b0-07d42ef76338"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"im2", "=", 
+    RowBox[{"Inverse", "[", "m", "]"}]}], ";"}], "//", 
+  "RepeatedTiming"}]], "Input",
+ CellChangeTimes->{{3.673661952112763*^9, 3.673661953302329*^9}, {
+  3.673662150576171*^9, 3.673662152520001*^9}, {3.673662220462852*^9, 
+  3.673662220791853*^9}},
+ ExpressionUUID -> "30af84bb-b811-4e80-9a82-2589d8dd4140"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.00736805555555555477531548547176498687`2.", ",", "Null"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.673661953539736*^9, {3.6736621248718653`*^9, 3.6736621633082457`*^9}, {
+   3.673662202858798*^9, 3.67366222219307*^9}, 3.7175152605136757`*^9, 
+   3.717515770578679*^9, 3.7175159636781073`*^9, 3.7175182676349916`*^9, 
+   3.717518778565218*^9},
+ ExpressionUUID -> "2235c2fa-35ab-4140-a654-6f45cc90c023"]
+}, Open  ]],
+
+Cell["\<\
+Armadillo can be set up to output messages to any stream. In this example, it \
+is set up to output to mma::mout. This way the messages appear directly in \
+the notebook in case of an error.\
+\>", "Text",
+ CellChangeTimes->{{3.717515838056922*^9, 3.717515871463821*^9}},
+ ExpressionUUID -> "5d9d9e36-f046-42fc-a4e1-3f10438a8542"],
+
+Cell["\<\
+Exceptions are also caught by LTemplate and their description is included \
+into the message.\
+\>", "Text",
+ CellChangeTimes->{{3.717515880288625*^9, 3.717515908551879*^9}},
+ ExpressionUUID -> "a819ce0e-fa86-4431-972f-6c1600e8e508"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"arma", "@", 
+  RowBox[{"\"\<inv\>\"", "[", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "6"}], "}"}]}], "]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.673661960199265*^9, 3.673661966609639*^9}, {
+  3.717515266545231*^9, 3.717515266953332*^9}},
+ ExpressionUUID -> "32a0f707-db58-4d9c-99b9-3ad4346e0982"],
+
+Cell[BoxData["\<\"\\nerror: inv(): given matrix must be square sized\"\>"], \
+"Print",
+ CellChangeTimes->{3.673661967550878*^9, 3.67366212701309*^9, 
+  3.6736622043286*^9, 3.717515267314625*^9, 3.7175159637565002`*^9, 
+  3.717518271057658*^9, 3.717518781259473*^9},
+ ExpressionUUID -> "1228b6de-7067-4dde-a6e5-c278ea5fc689"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Unknown exception \
+caught in Arma::inv(). The library may be in an inconsistent state. It is \
+recommended that you restart the kernel now to avoid \
+instability.\\\\\\\\ninv(): given matrix must be square \
+sized\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.673661967548308*^9, 3.673662127007983*^9, 
+  3.67366220432378*^9, 3.717515267320177*^9, 3.7175159641039248`*^9, 
+  3.717518271337775*^9, 3.717518781561442*^9},
+ ExpressionUUID -> "aec5b101-4c3e-4607-9286-fc2bb3e76590"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ CellChangeTimes->{3.673661967555365*^9, 3.673662127017502*^9, 
+  3.673662204330982*^9, 3.717515267340884*^9, 3.7175159641121693`*^9, 
+  3.717518271348338*^9, 3.717518781572789*^9},
+ ExpressionUUID -> "69043570-7be6-47f7-a78f-643d8034aee1"]
+}, Open  ]],
+
+Cell["\<\
+Compute the first few eigenvalues (those largest in magnitude) of a sparse \
+matrix.\
+\>", "Text",
+ CellChangeTimes->{{3.717519256308786*^9, 3.7175192881432447`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"sparse", "=", 
+   RowBox[{"N", "@", 
+    RowBox[{"AdjacencyMatrix", "@", 
+     RowBox[{"RandomGraph", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"10", ",", "25"}], "}"}], ",", 
+       RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}]}]}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.717518826038774*^9, 3.7175188326137257`*^9}, {
+  3.7175188700766573`*^9, 3.7175188712507677`*^9}, {3.717519195595379*^9, 
+  3.71751921577282*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"arma", "@", 
+  RowBox[{"\"\<eigs\>\"", "[", 
+   RowBox[{"sparse", ",", "5"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7175188360840273`*^9, 3.717518841365568*^9}, 
+   3.717518932160186*^9, {3.717518970758086*^9, 3.717518976053898*^9}, 
+   3.717519089131769*^9, 3.7175192199647303`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"2.7050392917636734`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.7998291323071148`"}], "+", 
+    RowBox[{"1.1213785437370662`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.7998291323071148`"}], "-", 
+    RowBox[{"1.1213785437370662`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.501643596520374`"}], "+", 
+    RowBox[{"1.1052962469733147`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.501643596520374`"}], "-", 
+    RowBox[{"1.1052962469733147`", " ", "\[ImaginaryI]"}]}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.717518841884656*^9, 3.7175188748792353`*^9, 3.717518932890132*^9, {
+   3.717518971923399*^9, 3.717518976564505*^9}, {3.7175190728829308`*^9, 
+   3.71751910163027*^9}, {3.7175192025833178`*^9, 3.717519220112924*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Eigenvalues", "[", 
+  RowBox[{"sparse", ",", "5"}], "]"}]], "Input",
+ CellChangeTimes->{{3.717518787253389*^9, 3.7175188346914253`*^9}, {
+   3.717518967005617*^9, 3.717518967117776*^9}, {3.7175190867079773`*^9, 
+   3.717519099899517*^9}, 3.7175192181565943`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"2.7050392917636756`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.7998291323071138`"}], "+", 
+    RowBox[{"1.1213785437370636`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.7998291323071138`"}], "-", 
+    RowBox[{"1.1213785437370636`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.5016435965203749`"}], "+", 
+    RowBox[{"1.105296246973315`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.5016435965203749`"}], "-", 
+    RowBox[{"1.105296246973315`", " ", "\[ImaginaryI]"}]}]}], "}"}]], "Output",\
+
+ CellChangeTimes->{{3.717518817637151*^9, 3.7175188353585367`*^9}, 
+   3.7175188726391497`*^9, 3.7175189674271297`*^9, {3.7175190715675707`*^9, 
+   3.717519100948605*^9}, {3.717519199812537*^9, 3.7175192183155403`*^9}}]
+}, Open  ]],
+
+Cell["Print an Armadillo matrix directly to the notebook:", "Text",
+ CellChangeTimes->{{3.717515805374082*^9, 3.7175158150538054`*^9}},
+ ExpressionUUID -> "adffc92e-f9d6-407a-882c-44b7b0ae9b90"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"arma", "@", 
+  RowBox[{"\"\<print\>\"", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "3"}], "}"}]}], "}"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7175157833767767`*^9, 3.7175157904161367`*^9}},
+ ExpressionUUID -> "b5dabc5b-2317-448f-ac6b-d6ed477da9cc"],
+
+Cell[BoxData["\<\"   1.0000   2.0000\\n   2.0000   3.0000\"\>"], "Print",
+ CellChangeTimes->{3.7175159641600647`*^9, 3.7175182795931597`*^9, 
+  3.717518783754825*^9}]
+}, Open  ]],
+
+Cell["Print the explicitly stored entries of a sparse matrix:", "Text",
+ CellChangeTimes->{{3.71751953786794*^9, 3.717519550587648*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"arma", "@", 
+  RowBox[{"\"\<printSparse\>\"", "[", 
+   RowBox[{"AdjacencyMatrix", "@", 
+    RowBox[{"RandomGraph", "[", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "5"}], "}"}], "]"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.717518280591382*^9, 3.717518299045785*^9}}],
+
+Cell[BoxData["\<\"[matrix size: 5x5; n_nonzero: 10; density: 40.00%]\\n\\n    \
+ (4, 0)         1.0000\\n     (5, 0)         1.0000\\n     (4, 1)         \
+1.0000\\n     (5, 2)         1.0000\\n     (1, 3)         1.0000\\n     (2, \
+3)         1.0000\\n     (5, 3)         1.0000\\n     (1, 4)         \
+1.0000\\n     (3, 4)         1.0000\\n     (4, 4)         1.0000\\n\"\>"], \
+"Print",
+ CellChangeTimes->{3.717518300300261*^9, 3.717518784593203*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 752},
+WindowMargins->{{316, Automatic}, {Automatic, 50}},
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 169, 2, 64, "Section"],
+Cell[752, 26, 448, 11, 30, "Text"],
+Cell[1203, 39, 372, 7, 46, "Input"],
+Cell[1578, 48, 2106, 49, 165, "Input"],
+Cell[3687, 99, 440, 8, 68, "Text"],
+Cell[4130, 109, 272, 5, 49, "Text"],
+Cell[CellGroupData[{
+Cell[4427, 118, 1115, 20, 114, "Input"],
+Cell[CellGroupData[{
+Cell[5567, 142, 1726, 46, 38, "Print"],
+Cell[7296, 190, 1995, 59, 22, "Print"],
+Cell[9294, 251, 995, 22, 22, "Print"],
+Cell[10292, 275, 994, 22, 22, "Print"],
+Cell[11289, 299, 668, 10, 21, "Print"]
+}, Open  ]],
+Cell[11972, 312, 764, 11, 46, "Output"]
+}, Open  ]],
+Cell[12751, 326, 196, 3, 28, "Input"],
+Cell[CellGroupData[{
+Cell[12972, 333, 260, 5, 28, "Input"],
+Cell[13235, 340, 394, 6, 28, "Output"]
+}, Open  ]],
+Cell[13644, 349, 182, 2, 30, "Text"],
+Cell[13829, 353, 367, 9, 28, "Input"],
+Cell[14199, 364, 171, 2, 30, "Text"],
+Cell[CellGroupData[{
+Cell[14395, 370, 446, 10, 28, "Input"],
+Cell[14844, 382, 515, 10, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[15396, 397, 369, 9, 28, "Input"],
+Cell[15768, 408, 448, 9, 28, "Output"]
+}, Open  ]],
+Cell[16231, 420, 339, 6, 49, "Text"],
+Cell[16573, 428, 242, 5, 30, "Text"],
+Cell[CellGroupData[{
+Cell[16840, 437, 380, 9, 28, "Input"],
+Cell[17223, 448, 324, 5, 38, "Print"],
+Cell[17550, 455, 671, 13, 75, "Message"],
+Cell[18224, 470, 367, 6, 28, "Output"]
+}, Open  ]],
+Cell[18606, 479, 176, 4, 30, "Text"],
+Cell[18785, 485, 483, 13, 28, "Input"],
+Cell[CellGroupData[{
+Cell[19293, 502, 310, 6, 28, "Input"],
+Cell[19606, 510, 913, 21, 46, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20556, 536, 286, 5, 28, "Input"],
+Cell[20845, 543, 892, 20, 46, "Output"]
+}, Open  ]],
+Cell[21752, 566, 194, 2, 30, "Text"],
+Cell[CellGroupData[{
+Cell[21971, 572, 376, 10, 28, "Input"],
+Cell[22350, 584, 166, 2, 37, "Print"]
+}, Open  ]],
+Cell[22531, 589, 136, 1, 30, "Text"],
+Cell[CellGroupData[{
+Cell[22692, 594, 295, 7, 28, "Input"],
+Cell[22990, 603, 454, 6, 203, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
