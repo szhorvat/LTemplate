@@ -438,6 +438,8 @@ public:
 
     mint rank() const { return libData->sparseLibraryFunctions->MSparseArray_getRank(sa); }
 
+    const mint *dimensions() const { return libData->sparseLibraryFunctions->MSparseArray_getDimensions(sa); }
+
     void free() const { libData->sparseLibraryFunctions->MSparseArray_free(sa); }
     void disown() const { libData->sparseLibraryFunctions->MSparseArray_disown(sa); }
     void disownAll() const { libData->sparseLibraryFunctions->MSparseArray_disownAll(sa); }
@@ -452,13 +454,51 @@ public:
         return c;
     }
 
-    /// Returns the indices of non-default (i.e. explicit) values in the sparse array.
-    /// The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
-    /// Clone it before returning it to the kernel.
+    /** \brief  Creates a new integer Tensor containing the indices of non-default (i.e. explicit) values in the sparse array.
+     *
+     *  You are responsible for freeing this data structure using the TensorRef::free() function when done using it.
+     */
     IntTensorRef explicitPositions() const {
         MTensor mt = NULL;
-        libData->sparseLibraryFunctions->MSparseArray_getExplicitPositions(sa, &mt);
-        return IntTensorRef(mt);
+        int err = libData->sparseLibraryFunctions->MSparseArray_getExplicitPositions(sa, &mt);
+        if (err) throw LibraryError("MSParseArray_getExplicitPositions() failed.", err);
+
+        // Workaround for MSparseArray_getExplicitPositions() returning a non-empty rank-0 MTensor
+        // when the SparseArray has no explicit positions: in this case we manually construct
+        // a rank-2 0-by-n empty integer MTensor and return that instead.
+        if (libData->MTensor_getRank(mt) == 0) {
+            libData->MTensor_free(mt);
+            return makeMatrix<mint>(0, rank());
+        }
+        else {
+            return IntTensorRef(mt);
+        }
+    }
+
+    /** \brief Returns the column indices of the SparseArray's internal CSR representation, as an integer Tensor.
+     *
+     * This function is useful when converting a SparseArray for use with another library that also
+     * uses a CSR or CSC representation.
+     *
+     * The result is either a rank-2 Tensor or an empty one.
+     *
+     * The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
+     * Clone it before returning it to the kernel using \ref clone().
+     */
+    IntTensorRef columnIndices() const {
+        return *(libData->sparseLibraryFunctions->MSparseArray_getColumnIndices(sa));
+    }
+
+    /** \brief Returns the row pointers of the SparseArrat's internal CSR representation, as a rank-1 integer Tensor.
+     *
+     * This function is useful when converting a SparseArray for use with another library that also
+     * uses a CSR or CSC representation.
+     *
+     * The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
+     * Clone it before returning it to the kernel using \ref clone().
+     */
+    IntTensorRef rowPointers() const {
+        return *(libData->sparseLibraryFunctions->MSparseArray_getRowPointers(sa));
     }
 
     /// True if the sparse array has explicit values.  Pattern arrays do not have explicit values.
@@ -466,9 +506,13 @@ public:
         return libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa) != NULL;
     }
 
-    /// Returns the explicit values in the sparse array as an `MTensor`.
-    /// The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
-    /// Clone it before returning it to the kernel.
+    /** \brief Returns the explicit values in the sparse array as a Tensor.
+     *
+     * The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
+     * Clone it before returning it to the kernel using \ref clone().
+     *
+     * For pattern arrays a \ref LibraryError exception is thrown.
+     */
     TensorRef<T> explicitValues() const {
         MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa);
         if (*mt == NULL)
@@ -476,11 +520,13 @@ public:
         return TensorRef<T>(*mt);
     }
 
+    /// Returns the background element of the sparse array
     T implicitValue() const {
         MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getImplicitValue(sa);
         return (TensorRef<T>(*mt).data())[0];
     }
 
+    /// Creates a new dense Tensor containing the same elements as the sparse array
     TensorRef<T> toTensor() const {
         MTensor t = NULL;
         int err = libData->sparseLibraryFunctions->MSparseArray_toMTensor(sa, &t);
@@ -488,6 +534,7 @@ public:
         return t;
     }
 
+    /// Returns the element type of the sparse array
     mint type() const { return detail::libraryType<T>(); }
 };
 
