@@ -206,6 +206,13 @@ class TensorRef {
 
     TensorRef & operator = (const TensorRef &) = delete;
 
+    // A "null" TensorRef is used only for SparseArrayRef's ev member to handle pattern arrays
+    // It cannot be publicly constructed
+    TensorRef() : t(nullptr), tensor_data(nullptr), len(0) { }
+    bool nullQ() const { return t == nullptr; }
+
+    friend class SparseArrayRef<T>;
+
 public:
     TensorRef(const MTensor &mt) :
         t(mt),
@@ -424,15 +431,41 @@ inline TensorRef<T> makeVector(mint len, const U *data) {
 }
 
 
+template<typename T> class SparseMatrixRef;
+
 /// Wrapper class for `MSparseArray` pointers
 template<typename T>
 class SparseArrayRef {
     const MSparseArray sa; // reminder: MSparseArray is a pointer type
+    const IntTensorRef rp; // row pointers
+    const IntTensorRef ci; // column indices
+    const TensorRef<T> ev; // explicit values, ev.nullQ() may be true
+    T &iv;                 // implicit value
 
-    SparseArrayRef & operator = (const SparseArrayRef &) = delete;
+    SparseArrayRef & operator = (const SparseArrayRef &) = delete;   
+
+    static TensorRef<T> getExplicitValues(const MSparseArray &msa) {
+        MTensor *ev = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(msa);
+        if (*ev == NULL)
+            return TensorRef<T>();
+        else
+            return TensorRef<T>(*ev);
+    }
+
+    static T &getImplicitValue(const MSparseArray &msa) {
+        MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getImplicitValue(msa);
+        return *(detail::getData<T>(*mt));
+    }
+
+    friend class SparseMatrixRef<T>;
 
 public:
-    SparseArrayRef(const MSparseArray &msa) : sa(msa)
+    SparseArrayRef(const MSparseArray &msa) :
+        sa(msa),
+        rp(*(libData->sparseLibraryFunctions->MSparseArray_getRowPointers(msa))),
+        ci(*(libData->sparseLibraryFunctions->MSparseArray_getColumnIndices(msa))),
+        ev(getExplicitValues(msa)),
+        iv(getImplicitValue(msa))
     {
         detail::libraryType<T>(); // causes compile time error if T is invalid
     }
@@ -500,14 +533,10 @@ public:
      * The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
      * Clone it before returning it to the kernel using \ref clone().
      */
-    IntTensorRef rowPointers() const {
-        return *(libData->sparseLibraryFunctions->MSparseArray_getRowPointers(sa));
-    }
+    IntTensorRef rowPointers() const { return rp; }
 
     /// True if the sparse array has explicit values.  Pattern arrays do not have explicit values.
-    bool explicitValuesQ() const {
-        return libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa) != NULL;
-    }
+    bool explicitValuesQ() const { return ! ev.nullQ(); }
 
     /** \brief Returns the explicit values in the sparse array as a Tensor.
      *
@@ -517,17 +546,13 @@ public:
      * For pattern arrays a \ref LibraryError exception is thrown.
      */
     TensorRef<T> explicitValues() const {
-        MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa);
-        if (*mt == NULL)
+        if (ev.nullQ())
             throw LibraryError("SparseArrayRef::explicitValues() called on pattern array");
-        return TensorRef<T>(*mt);
+        return ev;
     }
 
     /// Returns the background element of the sparse array
-    T implicitValue() const {
-        MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getImplicitValue(sa);
-        return (TensorRef<T>(*mt).data())[0];
-    }
+    T &implicitValue() const { return iv; }
 
     /// Creates a new dense Tensor containing the same elements as the sparse array
     TensorRef<T> toTensor() const {
@@ -541,6 +566,58 @@ public:
     mint type() const { return detail::libraryType<T>(); }
 };
 
+
+/// Wrapper class for rank-2 SparseArrays
+template<typename T>
+class SparseMatrixRef : public SparseArrayRef<T> {
+    mint ncols, nrows;
+
+    using SparseArrayRef<T>::rp;
+    using SparseArrayRef<T>::ci;
+    using SparseArrayRef<T>::ev;
+    using SparseArrayRef<T>::iv;
+
+public:
+    using SparseArrayRef<T>::rank;
+    using SparseArrayRef<T>::dimensions;
+    using SparseArrayRef<T>::explicitValuesQ;
+
+    SparseMatrixRef(const SparseArrayRef<T> &sa) : SparseArrayRef<T>(sa)
+    {
+        if (rank() != 2) {
+            throw LibraryError("SparseMatrixRef: Matrix expected.");
+        }
+        const mint *dims = dimensions();
+        nrows = dims[0];
+        ncols = dims[1];
+    }
+
+    /// Number of rows in the sparse matrix
+    mint rows() const { return nrows; }
+
+    /// Number of columns in the sparse matrix
+    mint cols() const { return ncols; }
+
+    /// Index into a sparse matrix
+    T operator () (mint i, mint j) const {
+        if (! explicitValuesQ())
+            throw LibraryError("SparseMatrixRef: cannot index into a pattern array.");
+
+        // if (i,j) is explicitly stored, it must be located between
+        // the following array indices in ev and ci:
+        mint lower = rp[i];
+        mint upper = rp[i+1];
+
+        // look for the index j between those locations:
+        mint *cp = std::lower_bound(&ci[lower], &ci[upper], j+1);
+        if (cp == &ci[upper]) // no bound found
+            return iv;
+        else if (*cp == j+1)  // found a bound equal to the sought column index
+            return ev[lower + (cp - &ci[lower])];
+        else                  // column index not found
+            return iv;
+    }
+};
 
 
 //////////////////////////////////////////  RAW ARRAY HANDLING  //////////////////////////////////////////
