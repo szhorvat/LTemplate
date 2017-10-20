@@ -177,8 +177,7 @@ difference is that LTemplate requries specifying the element type of arrays. \
 The general ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"_", ",", "_"}], "}"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"_", ",", "_"}], "}"}]]],
  " array specification is disallowed."
 }], "Text",
  ExpressionUUID -> "6453a1af-3ed8-42c0-95dd-3eb56bc71306"],
@@ -500,10 +499,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"trace: Square \
-matrix expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"trace: Square matrix \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "89f1b593-180d-43e6-b2ba-20f921e05c52"],
 
 Cell[BoxData[
@@ -619,8 +617,7 @@ Cell[BoxData["\<\"MeanVariance.h\"\>"], "Output",
 Cell[TextData[{
  "If a template contains only a single class, ",
  Cell[BoxData[
-  RowBox[{"LTemplate", "[", "\[Ellipsis]", "]"}]],
-  FormatType->"StandardForm"],
+  RowBox[{"LTemplate", "[", "\[Ellipsis]", "]"}]]],
  " can be omitted."
 }], "Text",
  ExpressionUUID -> "7f0952d3-7119-4732-bae7-56f57556d42a"],
@@ -845,11 +842,9 @@ Cell[TextData[{
  StyleBox["Side note:",
   FontWeight->"Bold"],
  " ",
- Cell[BoxData["Block"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["Block"]],
  " performs slightly better than ",
- Cell[BoxData["Module"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["Module"]],
  ", and in this particular application this performance difference can be \
 noticeable. Make sure you understand ",
  ButtonBox["the caveats of Block",
@@ -859,8 +854,7 @@ noticeable. Make sure you understand ",
   ButtonNote->"http://mathematica.stackexchange.com/a/633/12"],
  " before using it. A rule of thumb is that a function like this can safely \
 use ",
- Cell[BoxData["Block"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["Block"]],
  " is no symbols will ever be passed into it. "
 }], "Text",
  ExpressionUUID -> "227218c7-a825-42e3-9efa-37ed67b43e81"],
@@ -1648,10 +1642,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addTwo: two \
-arguments expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addTwo: two arguments \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "dbc9b21d-798b-410b-a1f8-100999044295"],
 
 Cell[BoxData[
@@ -1671,10 +1664,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addTwo: integer \
-arguments expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addTwo: integer arguments \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "4038c918-1d41-46b5-af96-64dbe53cf8dc"],
 
 Cell[BoxData[
@@ -1955,11 +1947,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addMultTwo: 2 \
-arguments expected, 3 received.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], \
-"Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addMultTwo: 2 arguments \
+expected, 3 received.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "55732318-f879-402c-b054-ea657b3eff3c"],
 
 Cell[BoxData[
@@ -1979,10 +1969,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addMultTwo: \
-Integer32 expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addMultTwo: Integer32 \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "d67f9c06-2049-4f08-9299-9ac47829b1ec"],
 
 Cell[BoxData[
@@ -2333,8 +2322,7 @@ in a ",
   FontSlant->"Italic"],
  " application. When used as standalone package, it can be loaded using ",
  Cell[BoxData[
-  RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]],
-  FormatType->"StandardForm"],
+  RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]]],
  ". However, when building a package using LTemplate, it is best to embed \
 LTemplate directly into the package. This is to avoid users having to install \
 LTemplate in order for the package to work, and also to avoid breaking the \
@@ -2469,18 +2457,19 @@ Cell[BoxData[{
      RowBox[{"$LibraryPath", ",", " ", "$libraryDirectory"}], "]"}]}], "\n", 
    "]"}], "\n"}], "\n", 
  RowBox[{
-  RowBox[{"template", " ", "=", " ", 
-   RowBox[{"LTemplate", "[", "...", "]"}]}], ";", " ", 
+  RowBox[{
+   RowBox[{"template", " ", "=", " ", 
+    RowBox[{"LTemplate", "[", "...", "]"}]}], ";"}], " ", 
   RowBox[{"(*", " ", 
    RowBox[{"template", " ", "specification"}], " ", "*)"}], "\n", "\n", 
   RowBox[{"(*", " ", 
    RowBox[{
    "These", " ", "two", " ", "functions", " ", "will", " ", "probably", " ", 
     "incorporate", " ", "additional", " ", "checks", " ", "and", " ", 
-    RowBox[{"options", ":"}]}], " ", "*)"}], "\n", 
-  RowBox[{
-   RowBox[{"loadMyApp", "[", "]"}], " ", ":=", " ", 
-   RowBox[{"LoadTemplate", "[", "template", "]"}]}]}], "\n", 
+    RowBox[{"options", ":"}]}], " ", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"loadMyApp", "[", "]"}], " ", ":=", " ", 
+  RowBox[{"LoadTemplate", "[", "template", "]"}]}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"compileMyApp", "[", "]"}], " ", ":=", " ", "\n", "\t", 
@@ -2513,8 +2502,7 @@ Cell[BoxData[{
 
 Cell[TextData[{
  "LTemplate functions will now reside in the ",
- Cell[BoxData["MyApp`LTemplate`"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["MyApp`LTemplate`"]],
  " context, and will not be visible to the users of your package. This also \
 avoids conflicts between multiple applications using various versions of \
 LTemplate."
@@ -2611,6 +2599,7 @@ Cell[BoxData[
           ButtonNote->"LTemplate`"], 
          ButtonBox["LTemplate",
           BaseStyle->"InformationLink",
+          
           ButtonData:>{
            "Info913717407495-9227688", {"LTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
@@ -2730,11 +2719,9 @@ LClass[name, \[Ellipsis]] in templates.\"\>", "MSG"]], "Print", "PrintUsage",
 }, Open  ]],
 
 Cell[TextData[{
- Cell[BoxData["LType"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["LType"]],
  " is mostly equivalent to ",
- Cell[BoxData["LibraryDataType"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["LibraryDataType"]],
  ", but shorter to type. It also supports element type specifications for \
 RawArrays."
 }], "Text"],
@@ -2752,6 +2739,103 @@ corresponding to head, with element type etype and depth/rank d.\"\>",
   "MSG"]], "Print", "PrintUsage",
  CellTags->"Info973717407600-9227688"]
 }, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["A note on type conversions", "Subsubsection"],
+
+Cell["\<\
+Arguments passed to library functions are generally converted to the \
+indicated type, when possible. If the conversion is not possible, an error \
+will be shown.\
+\>", "Text"],
+
+Cell["\<\
+The one exception to this rule is RawArray. If the type of the RawArray does \
+not match the indicated type, an error will be thrown immediately. No \
+conversion will be attempted.\
+\>", "Text"],
+
+Cell["Examples of conversions:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "If ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1", ",", 
+    RowBox[{"2", "/", "3"}], ",", "Pi"}], "}"}]],
+  FormatType->"StandardForm"],
+ " is passed as a ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"Real", ",", "1"}], "}"}]],
+  FormatType->"StandardForm"],
+ " argument, it will be automatically numericised to ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1.`", ",", "0.6666666666666666`", ",", "3.141592653589793`"}], 
+   "}"}]],
+  FormatType->"StandardForm"]
+}], "Item"],
+
+Cell[TextData[{
+ "If ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1.0", ",", "2.0", ",", "3.0"}], "}"}]],
+  FormatType->"StandardForm"],
+ " is passed as an ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"Integer", ",", "1"}], "}"}]],
+  FormatType->"StandardForm"],
+ " argument, it will be converted to ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1", ",", "2", ",", "3"}], "}"}]],
+  FormatType->"StandardForm"],
+ ". If ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1.0", ",", "2.5", ",", "3.0"}], "}"}]],
+  FormatType->"StandardForm"],
+ " is passed, an error will be thrown because ",
+ Cell[BoxData["2.5"],
+  FormatType->"StandardForm"],
+ " is not mathematically an integer."
+}], "Item"],
+
+Cell[TextData[{
+ "If a dense array is passed to a function that expects a sparse argument, \
+e.g. ",
+ Cell[BoxData[
+  RowBox[{"LType", "[", 
+   RowBox[{"SparseArray", ",", "Real"}], "]"}]],
+  FormatType->"StandardForm"],
+ ", it will be converted to a sparse array automatically. The reverse, \
+however, is not done. Sparse arrays cannot be passed to functions that expect \
+a dense array."
+}], "Item"],
+
+Cell[TextData[{
+ "Images are automatically converted to the expected pixel type, if the pixel \
+type is specified (e.g. ",
+ Cell[BoxData[
+  RowBox[{"LType", "[", 
+   RowBox[{"Image", ",", "\"\<Byte\>\""}], "]"}]],
+  FormatType->"StandardForm"],
+ "). If the pixel type is not specified, i.e. ",
+ Cell[BoxData[
+  RowBox[{"LType", "[", "Image", "]"}]],
+  FormatType->"StandardForm"],
+ ", no conversion is done."
+}], "Item"]
+}, Open  ]],
+
+Cell["", "Text"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2774,8 +2858,7 @@ read way.\"\>", "MSG"]], "Print", "PrintUsage",
 Cell[TextData[{
  "Use format template to pretty-print your templates and quickly find \
 mistakes. ",
- Cell[BoxData["FormatTemplate"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["FormatTemplate"]],
  " attempts to format even syntactically incorrect templates."
 }], "Text"]
 }, Closed]],
@@ -2799,8 +2882,7 @@ is valid.\"\>", "MSG"]], "Print", "PrintUsage",
 }, Open  ]],
 
 Cell[TextData[{
- Cell[BoxData["ValidTemplateQ"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["ValidTemplateQ"]],
  " is effectively used by most other LTemplate functions, to verify that \
 template specifications are correct."
 }], "Text"]
@@ -2823,12 +2905,10 @@ LTemplate functions.\"\>", "MSG"]], "Print", "PrintUsage",
 }, Open  ]],
 
 Cell[TextData[{
- Cell[BoxData["NormalizeTemplate"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["NormalizeTemplate"]],
  " brings a template to a canonical form used internally by LTemplate. \
 Shorthands are expanded and all array-like type specifications use the ",
- Cell[BoxData["LType"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["LType"]],
  " form."
 }], "Text"]
 }, Closed]],
@@ -2873,8 +2953,7 @@ additional source files in the compilation.\"\>",
 }, Open  ]],
 
 Cell[TextData[{
- Cell[BoxData["CompileTemplate"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["CompileTemplate"]],
  " takes the same options as ",
  ButtonBox["CreateLibrary",
   BaseStyle->"Link",
@@ -2884,8 +2963,7 @@ Cell[TextData[{
  ExpressionUUID -> "858073fb-a398-4ca0-8aac-f78ecaf598b2"],
 
 Cell[TextData[{
- Cell[BoxData["CompileTemplate"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["CompileTemplate"]],
  " will silently unload the template before compilation."
 }], "Text",
  ExpressionUUID -> "53e0d77f-d6da-409b-9615-f4d4ad44c22b"],
@@ -2893,21 +2971,17 @@ Cell[TextData[{
 Cell[TextData[{
  "It always looks for source files in the current directory. If your source \
 files are located elsewhere use ",
- Cell[BoxData["CompileTemplate"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["CompileTemplate"]],
  " in conjunction with ",
- Cell[BoxData["SetDirectory"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["SetDirectory"]],
  " and ",
- Cell[BoxData["ResetDirectory"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["ResetDirectory"]],
  "."
 }], "Text"],
 
 Cell[TextData[{
  "LTemplate requires a C++11 capable compiler, and ",
- Cell[BoxData["CompileTemplate"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["CompileTemplate"]],
  " will automatically pass the ",
  StyleBox["-std=c++11", "Program"],
  " or equivalent option to it. If you wish to use a newer standard, specify \
@@ -2916,8 +2990,7 @@ it manually, e.g. ",
   RowBox[{"CompileTemplate", "[", 
    RowBox[{"\[Ellipsis]", ",", " ", 
     RowBox[{"\"\<CompileOptions\>\"", "\[Rule]", 
-     RowBox[{"{", "\"\<-std=c++14\>\"", "}"}]}]}], "]"}]],
-  FormatType->"StandardForm"],
+     RowBox[{"{", "\"\<-std=c++14\>\"", "}"}]}]}], "]"}]]],
  "."
 }], "Text"]
 }, Closed]],
@@ -3034,6 +3107,38 @@ Complex\t\t\tmma::complex_t  =  std::complex<double>
 
 Cell[CellGroupData[{
 
+Cell["A note on array-like types and memory management", "Subsubsection"],
+
+Cell[TextData[{
+ "It is important to keep in mind that the C++ classes used for working with \
+array-like data structures, such as Tensors, SparseArrays, RawArrays and \
+Images, act as ",
+ StyleBox["references",
+  FontSlant->"Italic"],
+ " to these arrays. The same array may have more than one such reference to \
+it. The names of all these classes end in \[OpenCurlyDoubleQuote]Ref\
+\[CloseCurlyDoubleQuote] to remind the user of this fact."
+}], "Text"],
+
+Cell[TextData[{
+ "For this reason, the creation and destruction of these data structures must \
+be handled explicitly. Please carefully read the ",
+ ButtonBox["LibraryLink tutorial",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:http://reference.wolfram.com/language/LibraryLink/tutorial/\
+Overview.html"],
+ ", especially the section on ",
+ ButtonBox["the memory management of MTensors",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:LibraryLink/tutorial/InteractionWithMathematica#97446640"],
+ "."
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["Tensor types", "Subsubsection",
  ExpressionUUID -> "fc5f8ef4-da69-4a95-8519-27c004e1e055"],
 
@@ -3042,7 +3147,7 @@ Cell["Tensors are mapped as", "Text",
 
 Cell["\<\
 {Integer, _}\tIntTensorRef      =  TensorRef<mint>
-{Real, _}\t\tRealTensorRef     =  TensorRef<double>
+{Real,    _}\tRealTensorRef     =  TensorRef<double>
 {Complex, _}\tComplexTensorRef  =  TensorRef<mma::complex_t>\
 \>", "Program",
  ExpressionUUID -> "0dbf82f7-663a-415e-bc67-424384e03f47"],
@@ -3071,11 +3176,11 @@ indexing though ",
 
 Cell["\<\
 {Integer, 2}\tIntMatrixRef      =  MatrixRef<mint>
-{Real, 2}\t\tRealMatrixRef     =  MatrixRef<double>
+{Real,    2}\tRealMatrixRef     =  MatrixRef<double>
 {Complex, 2}\tComplexMatrixRef  =  MatrixRef<mma::complex_t>
 
 {Integer, 3}\tIntCubeRef      =  CubeRef<mint>
-{Real, 3}\t\tRealCubeRef     =  CubeRef<double>
+{Real,    3}\tRealCubeRef     =  CubeRef<double>
 {Complex, 3}\tComplexCubeRef  =  CubeRef<mma::complex_t>\
 \>", "Program",
  ExpressionUUID -> "24cc9d6f-7c76-4ffe-9a09-cd8ea090c88e"],
@@ -3135,7 +3240,7 @@ Cell[TextData[{
  ", are not supported."
 }], "Text",
  ExpressionUUID -> "c61d54b8-1a60-458e-8e71-ea438207c160"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3152,11 +3257,9 @@ LType[SparseArray, Complex]\t\tSparseArrayRef<mma::complex_t>\
 Cell[TextData[{
  "Optionally a rank specification can be given, for example ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"LibraryDataType", "[", 
-    RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}], 
-   TraditionalForm]],
-  ExpressionUUID -> "285f99c0-c14d-4e05-aee8-8f0d9f2b5ca2"],
+  RowBox[{"LType", "[", 
+   RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}]],
+  FormatType->"StandardForm"],
  "."
 }], "Text",
  ExpressionUUID -> "687dfe52-ecf9-4c99-ab78-08a1e3f3ffad"],
@@ -3164,9 +3267,8 @@ Cell[TextData[{
 Cell[TextData[{
  "Sparse array patterns without type specifications, i.e. ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"LibraryDataType", "[", "SparseArray", "]"}], TraditionalForm]],
-  ExpressionUUID -> "c18cdade-4d78-4e8a-869e-a22723324ecb"],
+  RowBox[{"LType", "[", "SparseArray", "]"}]],
+  FormatType->"StandardForm"],
  ", are not supported."
 }], "Text",
  ExpressionUUID -> "18fc7847-3c5e-4a53-9db6-7479c43e16b1"]
@@ -3358,7 +3460,7 @@ LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
  ExpressionUUID -> "e06b21af-2283-4b43-85d7-5a89e2997501"]
 }, Closed]]
 }, Open  ]]
-}, Closed]]
+}, Open  ]]
 }, Open  ]]
 },
 WindowSize->{990, 700},
