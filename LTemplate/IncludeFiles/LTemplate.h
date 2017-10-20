@@ -331,7 +331,7 @@ typedef MatrixRef<complex_t>  ComplexMatrixRef;
 /// Wrapper class for `MTensor` pointers to rank 3 tensors
 template<typename T>
 class CubeRef : public TensorRef<T> {
-    mint nrows, ncols, nslices;
+    mint nslices, nrows, ncols;
 
 public:
     CubeRef(const TensorRef<T> &tr) : TensorRef<T>(tr)
@@ -339,9 +339,9 @@ public:
         if (TensorRef<T>::rank() != 3)
             throw LibraryError("CubeRef: Rank-3 tensor expected.");
         const mint *dims = TensorRef<T>::dimensions();
-        nrows = dims[0];
-        ncols = dims[1];
-        nslices = dims[2];
+        nslices = dims[0];
+        nrows   = dims[1];
+        ncols   = dims[2];
     }
 
     /// Number of rows in the cube
@@ -353,8 +353,8 @@ public:
     /// Number of slices in the cube
     mint slices() const { return nslices; }
 
-    /// Index into a cube using row, column and slice indices
-    T & operator () (mint i, mint j, mint k) const { return (*this)[nslices*ncols*i + nslices*j + k]; }
+    /// Index into a cube using slicem row, and column indices
+    T & operator () (mint i, mint j, mint k) const { return (*this)[i*nrows*ncols + j*ncols + k]; }
 };
 
 typedef CubeRef<mint>       IntCubeRef;
@@ -365,12 +365,12 @@ typedef CubeRef<complex_t>  ComplexCubeRef;
 
 /// Creates a rank 3 tensor of the given dimensions
 template<typename T>
-inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
+inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
     MTensor t = NULL;
     mint dims[3];
-    dims[0] = nrow;
-    dims[1] = ncol;
-    dims[2] = nslice;
+    dims[0] = nslice;
+    dims[1] = nrow;
+    dims[2] = ncol;
     int err = libData->MTensor_new(detail::libraryType<T>(), 3, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
