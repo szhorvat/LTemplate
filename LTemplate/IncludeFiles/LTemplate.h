@@ -229,6 +229,9 @@ public:
 
     /// Frees the referenced Tensor, same as \c MTensor_free
     /**
+     * Tensors created by the library with functions such as \ref makeVector() must be freed
+     * after use unless they are returned to Mathematica.
+     *
      * Warning: multiple \ref TensorRef objects may reference the same \c MTensor.
      * Freeing the \c MTensor invalidates all references to it.
      */
@@ -708,11 +711,13 @@ static_assert(sizeof(bool) == 1, "The bool type is expected to be of size 1.");
  * from WolframImageLibrary.h with the exception of im_bit_t, which is bool.
  * This is so that it will be distinct from im_byte_t.
  */
+/// @{
 typedef bool            im_bit_t;
 typedef unsigned char   im_byte_t;
 typedef unsigned short  im_bit16_t;
 typedef float           im_real32_t;
 typedef double          im_real_t;
+/// @}
 
 namespace detail { // private
     template<typename T> inline imagedata_t libraryImageType() {
@@ -989,7 +994,7 @@ public:
  *  `"Real32"` | `im_real32_t` |  `float`
  *  `"Real"`   | `im_real_t`   |  `double`
  *
- * Note that this class only holds a reference to an Image. Multiple \ref ImageRef
+ * Note that this class only holds a reference to an Image. Multiple \ref Image3DRef
  * or \ref GenericImageRef objects may point to the same Image.
  *
  * \sa ImageRef
