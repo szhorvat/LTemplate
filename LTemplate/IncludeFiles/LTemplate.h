@@ -402,6 +402,19 @@ inline TensorRef<T> makeTensor(mint rank, const U *dims) {
     return t;
 }
 
+/** \brief Create a Tensor of the given dimensions.
+ *  \param rank is the Tensor depth
+ *  \param dims are the dimensions stored in a C array of length \c rank
+ */
+template<typename T>
+inline TensorRef<T> makeTensor(mint rank, mint *dims) {
+    MTensor t = NULL;
+    int err = libData->MTensor_new(detail::libraryType<T>(), rank, dims, &t);
+    if (err)
+        throw LibraryError("MTensor_new() failed.", err);
+    return t;
+}
+
 
 /// Creates a rank-3 Tensor of the given dimensions
 template<typename T>
