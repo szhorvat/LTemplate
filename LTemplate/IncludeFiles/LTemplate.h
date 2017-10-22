@@ -452,6 +452,18 @@ class SparseArrayRef {
             return TensorRef<T>(*ev);
     }
 
+    static IntTensorRef getColumnIndices(const MSparseArray &msa) {
+        MTensor *ci = libData->sparseLibraryFunctions->MSparseArray_getColumnIndices(msa);
+
+        // Ensure that sparse arrays always have a (possibly empty) column indices vector
+        if (*ci == NULL) {
+            mint dims[2] = {0, libData->sparseLibraryFunctions->MSparseArray_getRank(msa)};
+            libData->MTensor_new(MType_Integer, 2, dims, ci);
+        }
+
+        return *ci;
+    }
+
     static T &getImplicitValue(const MSparseArray &msa) {
         MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getImplicitValue(msa);
         return *(detail::getData<T>(*mt));
@@ -463,7 +475,7 @@ public:
     SparseArrayRef(const MSparseArray &msa) :
         sa(msa),
         rp(*(libData->sparseLibraryFunctions->MSparseArray_getRowPointers(msa))),
-        ci(*(libData->sparseLibraryFunctions->MSparseArray_getColumnIndices(msa))),
+        ci(getColumnIndices((msa))),
         ev(getExplicitValues(msa)),
         iv(getImplicitValue(msa))
     {
@@ -522,7 +534,7 @@ public:
      * Clone it before returning it to the kernel using \ref clone().
      */
     IntTensorRef columnIndices() const {
-        return *(libData->sparseLibraryFunctions->MSparseArray_getColumnIndices(sa));
+        return ci;
     }
 
     /** \brief Returns the row pointers of the SparseArrat's internal CSR representation, as a rank-1 integer Tensor.
