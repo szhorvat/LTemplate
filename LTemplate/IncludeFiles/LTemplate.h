@@ -260,7 +260,7 @@ public:
     TensorRef clone() const {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
-        if (err) throw LibraryError("MTensor_clone() failed", err);
+        if (err) throw LibraryError("MTensor_clone() failed.", err);
         return c;
     }
 
@@ -603,7 +603,7 @@ public:
     SparseArrayRef clone() const {
         MSparseArray c = NULL;
         int err = libData->sparseLibraryFunctions->MSparseArray_clone(sa, &c);
-        if (err) throw LibraryError("MSparseArray_clone() failed", err);
+        if (err) throw LibraryError("MSparseArray_clone() failed.", err);
         return c;
     }
 
@@ -664,7 +664,7 @@ public:
      */
     TensorRef<T> explicitValues() const {
         if (ev.nullQ())
-            throw LibraryError("SparseArrayRef::explicitValues() called on pattern array");
+            throw LibraryError("SparseArrayRef::explicitValues() called on pattern array.");
         return ev;
     }
 
@@ -947,7 +947,7 @@ public:
     RawArrayRef clone() const {
         MRawArray c = NULL;
         int err = libData->rawarrayLibraryFunctions->MRawArray_clone(rawArray(), &c);
-        if (err) throw LibraryError("MRawArray_clone() failed", err);
+        if (err) throw LibraryError("MRawArray_clone() failed.", err);
         return c;
     }
 
@@ -1229,7 +1229,7 @@ public:
     ImageRef clone() const {
         MImage c = NULL;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
-        if (err) throw LibraryError("MImage_clone() failed", err);
+        if (err) throw LibraryError("MImage_clone() failed.", err);
         return c;
     }
 
@@ -1318,7 +1318,7 @@ public:
     Image3DRef clone() const {
         MImage c = NULL;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
-        if (err) throw LibraryError("MImage_clone() failed", err);
+        if (err) throw LibraryError("MImage_clone() failed.", err);
         return c;
     }
 
