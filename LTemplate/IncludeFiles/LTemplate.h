@@ -744,12 +744,14 @@ SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, IntTensor
 
     MTensor it = NULL;
     err = libData->MTensor_new(detail::libraryType<T>(), 0, NULL, &it);
-    if (err) throw LibraryError("makeSparseArray: MTensor_new() failed.");
+    if (err)
+        throw LibraryError("makeSparseArray: MTensor_new() failed.", err);
     *detail::getData<T>(it) = imp;
 
     MSparseArray sa = NULL;
     err = libData->sparseLibraryFunctions->MSparseArray_fromExplicitPositions(pos.tensor(), vals.tensor(), dims.tensor(), it, &sa);
-    if (err) throw LibraryError("makeSparseArray: MSparseArray_fromExplicitPositions() failed.");
+    if (err)
+        throw LibraryError("makeSparseArray: MSparseArray_fromExplicitPositions() failed.", err);
 
     libData->MTensor_free(it);
 
