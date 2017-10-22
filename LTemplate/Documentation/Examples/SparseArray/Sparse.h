@@ -115,4 +115,17 @@ public:
 
         return sa;
     }
+
+
+    // RECOMPUTE STRUCTURE
+
+    // Recompute the sparse structure to eliminate unnecessary explicit values
+    mma::SparseArrayRef<double> resetImplicitValue(mma::SparseArrayRef<double> sa) {
+        return sa.resetImplicitValue();
+    }
+
+    // Recomute the sparse structure based on a user-specified implicit value
+    mma::SparseArrayRef<double> newImplicitValue(mma::SparseArrayRef<double> sa, double iv) {
+        return sa.resetImplicitValue(iv);
+    }
 };
