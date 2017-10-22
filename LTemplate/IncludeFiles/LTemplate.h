@@ -653,6 +653,54 @@ public:
 };
 
 
+/** \brief Create a new SparseArray from a set of positions and values.
+ *
+ * \param pos is the list of explicitly stored positions using 1-based indexing.
+ * \param vals is the list of explicitly stored values.
+ * \param dims is a list of the sparse array dimensions.
+ * \param imp is the implicit value.
+ */
+template<typename T>
+SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, IntTensorRef dims, T imp = 0) {
+    int err;
+
+    massert(pos.cols() == dims.size());
+    massert(pos.rows() == vals.size());
+
+    MTensor it = NULL;
+    err = libData->MTensor_new(detail::libraryType<T>(), 0, NULL, &it);
+    if (err) throw LibraryError("makeSparseArray: MTensor_new() failed.");
+    *detail::getData<T>(it) = imp;
+
+    MSparseArray sa = NULL;
+    err = libData->sparseLibraryFunctions->MSparseArray_fromExplicitPositions(pos.tensor(), vals.tensor(), dims.tensor(), it, &sa);
+    if (err) throw LibraryError("makeSparseArray: MSparseArray_fromExplicitPositions() failed.");
+
+    libData->MTensor_free(it);
+
+    return sa;
+}
+
+/** \brief Create a new sparse matrix from a set of positions and values.
+ *
+ * \param pos is the list of explicitly stored positions using 1-based indexing.
+ * \param vals is the list of explicitly stored values.
+ * \param nrow is the number of matrix rows.
+ * \param ncol is the number of matrix columns.
+ * \param imp is the implicit value.
+ */
+template<typename T>
+SparseMatrixRef<T> makeSparseMatrix(IntMatrixRef pos, TensorRef<T> vals, mint nrow, mint ncol, T imp = 0) {
+    massert(pos.cols() == 2);
+
+    IntTensorRef dims = makeVector<mint>({nrow, ncol});
+    SparseMatrixRef<T> sa = makeSparseArray(pos, vals, dims, imp);
+    dims.free();
+
+    return sa;
+}
+
+
 //////////////////////////////////////////  RAW ARRAY HANDLING  //////////////////////////////////////////
 
 #ifdef LTEMPLATE_RAWARRAY
