@@ -658,6 +658,33 @@ public:
     /// Returns the background element of the sparse array
     T &implicitValue() const { return iv; }
 
+    /// Creates a new SparseArray in which explicitly stored values that are equal to the current implicit value are eliminated
+    SparseArrayRef resetImplicitValue() const {
+        MSparseArray msa = NULL;
+        int err = libData->sparseLibraryFunctions->MSparseArray_resetImplicitValue(sa, NULL, &msa);
+        if (err) throw LibraryError("MSparseArray_resetImplicitValue() failed.", err);
+        return msa;
+    }
+
+    /** \brief Creates a new SparseArray based on a new implicit value
+     *  \param iv is the new implicit value
+     */
+    SparseArrayRef resetImplicitValue(const T &iv) const {
+        MSparseArray msa = NULL;
+
+        MTensor it = NULL;
+        int err = libData->MTensor_new(detail::libraryType<T>(), 0, NULL, &it);
+        if (err) throw LibraryError("MTensor_new() failed.", err);
+        *detail::getData<T>(it) = iv;
+
+        err = libData->sparseLibraryFunctions->MSparseArray_resetImplicitValue(sa, it, &msa);
+        if (err) throw LibraryError("MSparseArray_resetImplicitValue() failed.", err);
+
+        libData->MTensor_free(it);
+
+        return msa;
+    }
+
     /// Creates a new dense Tensor containing the same elements as the sparse array
     TensorRef<T> toTensor() const {
         MTensor t = NULL;
