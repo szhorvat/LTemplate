@@ -129,7 +129,10 @@ public:
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
-/// Replacement for the standard `assert` macro. Instead of aborting the process, it throws a mma::LibraryError
+/** \brief Replacement for the standard `assert` macro. Instead of aborting the process, it throws a mma::LibraryError
+ *
+ * As with the standard `assert` macro, define `NDEBUG` to disable assertion checks.
+ */
 #define massert(condition) (void)(((condition) || mma::detail::massert_impl(#condition, __FILE__, __LINE__)), 0)
 #endif
 
@@ -197,6 +200,9 @@ template<typename T> class SparseArrayRef;
  *
  * Note that just like `MTensor`, this class only holds a reference to a Tensor.
  * Multiple \ref TensorRef objects may refer to the same Tensor.
+ *
+ * \sa MatrixRef, CubeRef
+ * \sa makeVector(), makeMatrix(), makeCube()
  */
 template<typename T>
 class TensorRef {
@@ -298,6 +304,9 @@ typedef TensorRef<complex_t> ComplexTensorRef;
 /// Wrapper class for `MTensor` pointers to rank 2 tensors
 /**
  * Remember that \c MTensor stores data in row-major order.
+ *
+ * \sa TensorRef, CubeRef
+ * \sa makeMatrix()
  */
 template<typename T>
 class MatrixRef : public TensorRef<T> {
@@ -328,7 +337,11 @@ typedef MatrixRef<double>     RealMatrixRef;
 typedef MatrixRef<complex_t>  ComplexMatrixRef;
 
 
-/// Wrapper class for `MTensor` pointers to rank 3 tensors
+/** \brief Wrapper class for `MTensor` pointers to rank 3 tensors
+ *
+ * \sa TensorRef, MatrixRef
+ * \sa makeCube()
+ */
 template<typename T>
 class CubeRef : public TensorRef<T> {
     mint nslices, nrows, ncols;
@@ -433,7 +446,11 @@ inline TensorRef<T> makeVector(mint len, const U *data) {
 
 template<typename T> class SparseMatrixRef;
 
-/// Wrapper class for `MSparseArray` pointers
+/** \brief Wrapper class for `MSparseArray` pointers
+ *
+ * \sa SparseMatrixRef
+ * \sa makeSparseArray(), makeSparseMatrix()
+ */
 template<typename T>
 class SparseArrayRef {
     const MSparseArray sa; // reminder: MSparseArray is a pointer type
@@ -528,7 +545,7 @@ public:
      * This function is useful when converting a SparseArray for use with another library that also
      * uses a CSR or CSC representation.
      *
-     * The result is either a rank-2 Tensor or an empty one.
+     * The result is either a rank-2 Tensor or an empty one. The indices are 1-based.
      *
      * The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
      * Clone it before returning it to the kernel using \ref clone().
@@ -537,7 +554,7 @@ public:
         return ci;
     }
 
-    /** \brief Returns the row pointers of the SparseArrat's internal CSR representation, as a rank-1 integer Tensor.
+    /** \brief Returns the row pointers of the SparseArray's internal CSR representation, as a rank-1 integer Tensor.
      *
      * This function is useful when converting a SparseArray for use with another library that also
      * uses a CSR or CSC representation.
@@ -579,7 +596,11 @@ public:
 };
 
 
-/// Wrapper class for rank-2 SparseArrays
+/** \brief Wrapper class for rank-2 SparseArrays
+ *
+ * \sa SparseArrayRef
+ * \sa makeSparseMatrix()
+ */
 template<typename T>
 class SparseMatrixRef : public SparseArrayRef<T> {
     mint ncols, nrows;
