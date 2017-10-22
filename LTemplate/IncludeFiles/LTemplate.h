@@ -376,6 +376,32 @@ typedef CubeRef<double>     RealCubeRef;
 typedef CubeRef<complex_t>  ComplexCubeRef;
 
 
+/// Create a Tensor of the given dimensions
+template<typename T>
+inline TensorRef<T> makeTensor(std::initializer_list<mint> dims) {
+    MTensor t = NULL;
+    int err = libData->MTensor_new(detail::libraryType<T>(), dims.size(), dims.begin(), &t);
+    if (err)
+        throw LibraryError("MTensor_new() failed.", err);
+    return t;
+}
+
+/** \brief Create a Tensor of the given dimensions.
+ *  \param rank is the Tensor depth
+ *  \param dims are the dimensions stored in a C array of length \c rank
+ */
+template<typename T, typename U>
+inline TensorRef<T> makeTensor(mint rank, const U *dims) {
+    MTensor t = NULL;
+    mint *d = new mint[rank];
+    std::copy(dims, dims + rank, d);
+    int err = libData->MTensor_new(detail::libraryType<T>(), rank, d, &t);
+    delete [] d;
+    if (err)
+        throw LibraryError("MTensor_new() failed.", err);
+    return t;
+}
+
 
 /// Creates a rank-3 Tensor of the given dimensions
 template<typename T>
