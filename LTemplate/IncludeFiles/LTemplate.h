@@ -755,6 +755,16 @@ SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, IntTensor
 
     libData->MTensor_free(it);
 
+    // MSparseArray_fromExplicitPositions() will return a pattern array when the positions array is empty.
+    // When this happens, we manually insert an explicit values array to ensure that this function
+    // never returns a pattern array.
+    MTensor *ev;
+    ev = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa);
+    if (*ev == NULL) {
+        mint evdims[1] = {0};
+        libData->MTensor_new(detail::libraryType<T>(), 1, evdims, ev);
+    }
+
     return sa;
 }
 
