@@ -1456,7 +1456,7 @@ public:
  *  \tparam T is the pixel type
  */
 template<typename T>
-ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
+inline ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
     MImage mim;
     libData->imageLibraryFunctions->MImage_new2D(width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
@@ -1473,7 +1473,7 @@ ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool interleav
  *
  */
 template<typename T>
-Image3DRef<T> makeImage3D(mint slices, mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
+inline Image3DRef<T> makeImage3D(mint slices, mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
     MImage mim;
     libData->imageLibraryFunctions->MImage_new3D(slices, width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
