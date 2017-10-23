@@ -142,7 +142,7 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 /// Used for discarding a given number of expressions from an mlStream
 struct mlDiscard {
     const int count;
-    explicit mlDiscard(int count_ = 1) : count(count_) {}
+    explicit mlDiscard(int count_ = 1) : count(count_) { }
 };
 
 inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
@@ -157,7 +157,7 @@ inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
 
 #define MLSTREAM_DEF_BASIC_GET_INTEGRAL(MTYPE, CTYPE) \
     template<typename T, \
-             typename std::enable_if<std::is_integral<T>{} && std::is_signed<T>{} && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
     inline mlStream & operator >> (mlStream &ml, T &x) { \
         if (! MLGet ## MTYPE(ml.link(), reinterpret_cast<CTYPE *>(&x))) \
             ml.error(#MTYPE " expected"); \
@@ -183,7 +183,7 @@ MLSTREAM_DEF_BASIC_GET(Real128, mlextended_double)
 
 #define MLSTREAM_DEF_BASIC_PUT_INTEGRAL(MTYPE, CTYPE) \
     template<typename T, \
-             typename std::enable_if<std::is_integral<T>{} && std::is_signed<T>{} && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
     inline mlStream & operator << (mlStream &ml, T x) { \
         if (! MLPut ## MTYPE(ml.link(), static_cast<CTYPE>(x))) \
             ml.error("Cannot return " #MTYPE); \
@@ -235,7 +235,7 @@ inline mlStream & operator << (mlStream &ml, const char *s) {
 
 #define MLSTREAM_DEF_TENSOR_PUT_INTEGRAL(MTYPE, CTYPE) \
     template<typename T, \
-             typename std::enable_if<std::is_integral<T>{} && std::is_signed<T>{} && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
     inline mlStream & operator << (mlStream &ml, mma::TensorRef<T> t) { \
         const int maxrank  = 16; \
         const int rank = t.rank(); \
@@ -285,7 +285,7 @@ inline mlStream & operator << (mlStream &ml, const std::list<T> &ls) {
 // Put signed integer element types, 16, 32 and 64 bits.
 #define MLSTREAM_DEF_VEC_PUT_INTEGRAL(MTYPE, CTYPE) \
     template<typename T, \
-             typename std::enable_if<std::is_integral<T>{} && std::is_signed<T>{} && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
     inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) { \
         const CTYPE *data = vec.size() == 0 ? NULL : reinterpret_cast<const CTYPE *>(vec.data()); \
         if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
@@ -312,7 +312,7 @@ MLSTREAM_DEF_VEC_PUT(Real128, mlextended_double)
 
 // Put all other types
 template<typename T,
-         typename std::enable_if<! (std::is_integral<T>{} && std::is_signed<T>{} && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlextended_double)) ), int>::type = 0 >
+         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlextended_double)) ), int>::type = 0 >
 inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
     ml << mlHead("List", vec.size());
     for (typename std::vector<T>::const_iterator i = vec.begin(); i != vec.end(); ++i)
@@ -323,7 +323,7 @@ inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
 // Get signed integer element types
 #define MLSTREAM_DEF_VEC_GET_INTEGRAL(MTYPE, CTYPE) \
     template<typename T, \
-             typename std::enable_if<std::is_integral<T>{} && std::is_signed<T>{} && sizeof(T) == sizeof(CTYPE), int>::type = 0> \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0> \
     inline mlStream & operator >> (mlStream &ml, std::vector<CTYPE> &vec) { \
         CTYPE *data; \
         int count; \
