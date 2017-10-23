@@ -6,10 +6,10 @@
 
 class Tensor {
 public:
-    // A trivial function that returns a real array as-is
+    // A trivial function that returns a real array as-is.
     mma::RealTensorRef identity(mma::RealTensorRef t) { return t; }
 
-    // Return the depth of a real array
+    // Return the depth of a real array.
     mint depth(mma::RealTensorRef t) {
         return t.rank();
     }
@@ -17,6 +17,11 @@ public:
     // Return the dimensions of a real array. Demonstrates creating new arrays.
     mma::IntTensorRef dimensions(mma::RealTensorRef t) {
         return mma::makeVector<mint>(t.rank(), t.dimensions());
+    }
+
+    // Return the total number of elements in a real array.
+    mint length(mma::RealTensorRef t) {
+        return t.length();
     }
 
     // Sum the elements of an arbitrary dimensional real array.
@@ -45,19 +50,19 @@ public:
         }
     }
 
-    // Direct vector creation using initializer list.
-    mma::RealTensorRef createVector() {
-        return mma::makeVector<double>({1,2,3});
+    // Directly create a complex vector using initializer list.
+    mma::ComplexTensorRef createVector() {
+        return mma::makeVector<mma::complex_t>({mma::complex_t(2,-1), 2.5, 6});
     }
 
-    // Direct matrix creatin using initialier list.
+    // Directly create a real matrix using initializer list.
     mma::RealMatrixRef createMatrix() {
-        return mma::makeMatrix<double>({{1,2},{3,4}});
+        return mma::makeMatrix<double>({{1.5, 0.7}, {3.9, 4}});
     }
 
-    // Direct cube (rank-3 Tensor) creation using initializer list.
-    mma::RealCubeRef createCube() {
-        return mma::makeCube<double>({ {{1,2},{3,4}}, {{5,6},{7,8}} });
+    // Directly create an integer cube (rank-3 Tensor) using initializer list.
+    mma::IntTensorRef createCube() {
+        return mma::makeCube<mint>({ {{1,2},{3,4}}, {{5,6},{7,8}} });
     }
 
     // Create a high-dimensional Tensor, specifying its dimensions directly.

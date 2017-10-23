@@ -57,14 +57,20 @@ public:
     // ELEMENT ACCESS
 
     // Iterate through all index-pairs of a matrix and print the corresponding element.
-    void printAll(mma::SparseMatrixRef<double> sm) {
+    void printMatrix(mma::SparseMatrixRef<double> sm) {
         mma::mout << "Rows: " << sm.rows() << ", Cols: " << sm.cols() << std::endl;
         for (int i=0; i < sm.rows(); ++i) {
             for (int j=0; j < sm.cols(); ++j)
                 mma::mout << std::setw(9) << sm(i,j);
             mma::mout << '\n';
         }
-        mma::mout << std::endl;
+    }
+
+    // Iterate through all explicitly stored elements of a sparse matrix
+    void printExplicit(mma::SparseMatrixRef<double> sm) {
+        mma::mout << "Rows: " << sm.rows() << ", Cols: " << sm.cols() << std::endl;
+        for (auto it = sm.begin(); it != sm.end(); ++it)
+            mma::mout << "(" << it.row() << ", " << it.col() << ") " << *it << '\n';
     }
 
 

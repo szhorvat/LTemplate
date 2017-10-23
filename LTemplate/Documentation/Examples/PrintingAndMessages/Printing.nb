@@ -18,18 +18,12 @@ Cell[TextData[{
 }], "Text",
  ExpressionUUID -> "5e0c3751-73d6-48b8-a521-a495e915b9b5"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[{
  RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
- RowBox[{"SetDirectory", "@", 
-  RowBox[{"NotebookDirectory", "[", "]"}]}]}], "Input",
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]}], "Input",
  ExpressionUUID -> "04ef3909-ebdf-4f84-88f6-fe52710284f9"],
-
-Cell[BoxData["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
-Examples/PrintingAndMessages\"\>"], "Output",
- ExpressionUUID -> "4cf531e0-cac0-44a0-a767-d201041b2b01"]
-}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -52,6 +46,10 @@ Cell[BoxData[
        "\[IndentingNewLine]", 
        RowBox[{"LFun", "[", 
         RowBox[{"\"\<message\>\"", ",", 
+         RowBox[{"{", "\"\<UTF8String\>\"", "}"}], ",", "\"\<Void\>\""}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<errorMessage\>\"", ",", 
          RowBox[{"{", "\"\<UTF8String\>\"", "}"}], ",", "\"\<Void\>\""}], 
         "]"}], ",", "\[IndentingNewLine]", 
        RowBox[{"LFun", "[", 
@@ -114,7 +112,7 @@ PrintingAndMessages",
     RGBColor[0, 0, 
      Rational[2, 3]]]],
   Editable->False]], "Print",
- ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
+ ExpressionUUID -> "35331c6b-de6a-4b9f-844e-603973de16b9"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -166,7 +164,7 @@ Cell[BoxData[
     RGBColor[0, 0, 
      Rational[2, 3]]]],
   Editable->False]], "Print",
- ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
+ ExpressionUUID -> "35331c6b-de6a-4b9f-844e-603973de16b9"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -181,44 +179,7 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print",
- ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
-
-Cell[BoxData[
- InterpretationBox[
-  RowBox[{
-   StyleBox["\<\"LTemplate-Printing.cpp\"\>",
-    StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
-   StyleBox["\<\" already exists and will be overwritten.\"\>",
-    StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]]}],
-  SequenceForm[
-   Style["LTemplate-Printing.cpp", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" already exists and will be overwritten.", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]]],
-  Editable->False]], "Print",
- ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"],
+ ExpressionUUID -> "35331c6b-de6a-4b9f-844e-603973de16b9"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -233,12 +194,12 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print",
- ExpressionUUID -> "fbf1b785-a195-434e-95d6-235436b497c3"]
+ ExpressionUUID -> "35331c6b-de6a-4b9f-844e-603973de16b9"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
 LibraryResources/MacOSX-x86-64/Printing.dylib\"\>"], "Output",
- ExpressionUUID -> "4720fb93-8457-416f-a5e1-13992ba63a6f"]
+ ExpressionUUID -> "8a7e178c-7e8d-4096-b074-63b7ee78f393"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -254,7 +215,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"Printing", "[", "1", "]"}]], "Output",
- ExpressionUUID -> "e0e4b7a6-cb75-45bb-9c11-974ffedda9f8"]
+ ExpressionUUID -> "fc669461-212f-400d-a861-6265724e6d55"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -283,12 +244,12 @@ Cell[BoxData[
   RowBox[{
   ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value must be \
 positive.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
- ExpressionUUID -> "3fcb915e-04af-4620-bcad-4e769c0301c6"],
+ ExpressionUUID -> "655db173-eb2d-4167-808e-f1d194644760"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
   RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
- ExpressionUUID -> "58c43b02-e080-4489-b9e2-e450873666e6"]
+ ExpressionUUID -> "07f2da4a-e2b3-46fc-a5ee-83a14302b2a3"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -321,7 +282,7 @@ Cell[BoxData["\<\"My value is 42!\"\>"], "Print",
  ExpressionUUID -> "3a93b2df-2159-4424-9afd-35b017268e1b"]
 }, Open  ]],
 
-Cell["Issuing message directly from the library:", "Text",
+Cell["Issuing messages directly from the library:", "Text",
  ExpressionUUID -> "51d2ae64-0a11-4939-8ab7-7fd41d857685"],
 
 Cell[CellGroupData[{
@@ -340,6 +301,23 @@ Cell[BoxData[
   ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Hello from Message!\
 \\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "424eee77-650c-42ae-a335-e550cf345d42"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"expr", "@", 
+  RowBox[{
+  "\"\<errorMessage\>\"", "[", "\"\<Error encountered.\>\"", 
+   "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Error \
+encountered.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -414,7 +392,7 @@ Cell[BoxData[
   ":", " "}], "\<\"Assertion failed: \
 \[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"42 == 137, file \
 /Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
-PrintingAndMessages/Printing.h, line 56\\\\\\\"\\\"}]\\)\[NoBreak].\"\>"}]], \
+PrintingAndMessages/Printing.h, line 67\\\\\\\"\\\"}]\\)\[NoBreak].\"\>"}]], \
 "Message", "MSG",
  ExpressionUUID -> "dcf44bc0-82df-49b6-8b39-f851369c95ce"],
 
@@ -469,3 +447,4 @@ FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
 2016)",
 StyleDefinitions->"Default.nb"
 ]
+
