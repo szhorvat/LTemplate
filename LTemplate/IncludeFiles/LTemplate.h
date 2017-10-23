@@ -1031,16 +1031,41 @@ public:
     rawarray_t type() const { return detail::libraryRawType<T>(); }
 };
 
-/// Creates a rank 1 RawArray of the given length
+/// Creates a RawArray of the given dimensions
+template<typename T>
+inline RawArrayRef<T> makeRawArray(std::initializer_list<mint> l) {
+    MRawArray ra = NULL;
+    int err = libData->rawarrayLibraryFunctions->MRawArray_new(detail::libraryRawType<T>(), l.size(), l.begin(), &ra);
+    if (err) throw LibraryError("MRawArray_new() failed.", err);
+    return ra;
+}
+
+/** \brief Create a RawArray of the given dimensions.
+ *  \param rank is the RawArray depth
+ *  \param dims are the dimensions stored in a C array of length \c rank and type \c mint
+ */
+template<typename T>
+inline RawArrayRef<T> makeRawArray(mint rank, const mint *dims) {
+    MRawArray ra = NULL;
+    int err = libData->rawarrayLibraryFunctions->MRawArray_new(detail::libraryRawType<T>(), rank, dims, &ra);
+    if (err) throw LibraryError("MRawArray_new() failed.", err);
+    return ra;
+}
+
+/** \brief Create a RawArray of the given dimensions.
+ *  \param rank is the RawArray depth
+ *  \param dims are the dimensions stored in a C array of length \c rank and type \c U
+ */
+template<typename T, typename U>
+inline RawArrayRef<T> makeRawArray(mint rank, const U *dims) {
+    std::vector<mint> d(dims, dims+rank);
+    return makeRawArray<T>(rank, d.data());
+}
+
+/// Creates a rank-1 RawArray of the given length
 template<typename T>
 inline RawArrayRef<T> makeRawVector(mint len) {
-    MRawArray ra = NULL;
-    mint dims[1];
-    dims[0] = len;
-    int err = libData->rawarrayLibraryFunctions->MRawArray_new(detail::libraryRawType<T>(), 1, dims, &ra);
-    if (err)
-        throw LibraryError("MRawArray_new() failed.", err);
-    return RawArrayRef<T>(ra);
+    return makeRawArray<T>({len});
 }
 
 #endif // LTEMPLATE_RAWARRAY
