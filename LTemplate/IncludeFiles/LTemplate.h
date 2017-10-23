@@ -12,6 +12,8 @@
  * For the latest version of the package go to https://github.com/szhorvat/LTemplate
  *
  * See `LTemplateTutorial.nb` for an introduction and additional documentation.
+ *
+ * Many commented examples can be found in the `LTemplate/Documentation/Examples` directory.
  */
 
 #ifndef LTEMPLATE_H
@@ -41,17 +43,17 @@
 // It is normally only used with .tm files and it is not needed for LTemplate.
 #undef P
 
+#include <cstdint>
+#include <complex>
 #include <string>
 #include <ostream>
 #include <sstream>
-#include <complex>
-#include <cstdint>
 #include <vector>
 #include <type_traits>
 #include <iterator>
 #include <initializer_list>
 
-
+/// The namespace used by LTemplate
 namespace mma {
 
 /// Global `WolframLibraryData` object for accessing the LibraryLink API.
@@ -134,6 +136,8 @@ public:
 /** \brief Replacement for the standard `assert` macro. Instead of aborting the process, it throws a mma::LibraryError
  *
  * As with the standard `assert` macro, define `NDEBUG` to disable assertion checks.
+ * LTemplate uses massert() internally in a few places. It can be disabled this way
+ * for a minor performance boost.
  */
 #define massert(condition) (void)(((condition) || mma::detail::massert_impl(#condition, __FILE__, __LINE__)), 0)
 #endif
@@ -233,19 +237,19 @@ public:
     /// Returns the referenced \c MTensor
     MTensor tensor() const { return t; }
 
-    /// Returns the rank of the tensor, same as \c MTensor_getRank
+    /// Returns the rank of the Tensor, same as \c MTensor_getRank
     mint rank() const { return libData->MTensor_getRank(t); }
 
-    /// Returns the number of elements in the tensor, same as \c MTensor_getFlattenedLength
+    /// Returns the number of elements in the Tensor, same as \c MTensor_getFlattenedLength
     mint length() const { return len; }
 
-    /// Returns the number of elements in the tensor, synonym of \ref length()
+    /// Returns the number of elements in the Tensor, synonym of \ref length()
     mint size() const { return length(); }
 
     /// Frees the referenced Tensor, same as \c MTensor_free
     /**
      * Tensors created by the library with functions such as \ref makeVector() must be freed
-     * after use unless they are returned to Mathematica.
+     * after use unless they are returned to _Mathematica_.
      *
      * Warning: multiple \ref TensorRef objects may reference the same \c MTensor.
      * Freeing the \c MTensor invalidates all references to it.
@@ -283,7 +287,8 @@ public:
     template<typename U>
     TensorRef<U> convertTo() const {
         MTensor mt;
-        libData->MTensor_new(detail::libraryType<U>(), rank(), dimensions(), &mt);
+        int err = libData->MTensor_new(detail::libraryType<U>(), rank(), dimensions(), &mt);
+        if (err) throw LibraryError("MTensor_new() failed.", err);
         TensorRef<U> tr(mt);
         std::copy(begin(), end(), tr.begin());
         return tr;
@@ -303,7 +308,7 @@ typedef TensorRef<double>    RealTensorRef;
 typedef TensorRef<complex_t> ComplexTensorRef;
 
 
-/// Wrapper class for `MTensor` pointers to rank 2 tensors
+/// Wrapper class for `MTensor` pointers to rank-2 tensors
 /**
  * Remember that \c MTensor stores data in row-major order.
  *
@@ -339,7 +344,7 @@ typedef MatrixRef<double>     RealMatrixRef;
 typedef MatrixRef<complex_t>  ComplexMatrixRef;
 
 
-/** \brief Wrapper class for `MTensor` pointers to rank 3 tensors
+/** \brief Wrapper class for `MTensor` pointers to rank-3 tensors
  *
  * \sa TensorRef, MatrixRef
  * \sa makeCube()
@@ -413,10 +418,7 @@ inline TensorRef<T> makeTensor(mint rank, const U *dims) {
 template<typename T>
 inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
     MTensor t = NULL;
-    mint dims[3];
-    dims[0] = nslice;
-    dims[1] = nrow;
-    dims[2] = ncol;
+    mint dims[3] = {nslice, nrow, ncol};
     int err = libData->MTensor_new(detail::libraryType<T>(), 3, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
@@ -434,9 +436,9 @@ inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
 /// Creates a rank-3 Tensor using initializer list.
 template<typename T>
 inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::initializer_list<T>>> c) {
-    mint ns = c.size();
-    mint rs = ns ? c.begin()->size() : 0;
-    mint cs = rs ? c.begin()->begin()->size() : 0;
+    size_t ns = c.size();
+    size_t rs = ns ? c.begin()->size() : 0;
+    size_t cs = rs ? c.begin()->begin()->size() : 0;
     CubeRef<T> t = makeCube<T>(ns, rs, cs);
     T *ptr = t.data();
     for (const auto &slice : c) {
@@ -501,8 +503,7 @@ inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
 template<typename T>
 inline TensorRef<T> makeVector(mint len) {
     MTensor t = NULL;
-    mint dims[1];
-    dims[0] = len;
+    mint dims[1] = {len};
     int err = libData->MTensor_new(detail::libraryType<T>(), 1, dims, &t);
     if (err) throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
@@ -670,7 +671,10 @@ public:
     /// Returns the background element of the sparse array
     T &implicitValue() const { return iv; }
 
-    /// Creates a new SparseArray in which explicitly stored values that are equal to the current implicit value are eliminated
+    /** \brief Creates a new SparseArray in which explicitly stored values that are equal to the current implicit value are eliminated.
+     *
+     * Should not be used on a pattern array.
+     */
     SparseArrayRef resetImplicitValue() const {
         MSparseArray msa = NULL;
         int err = libData->sparseLibraryFunctions->MSparseArray_resetImplicitValue(sa, NULL, &msa);
@@ -747,6 +751,10 @@ public:
 
         iterator(const iterator &) = default;
 
+        /** \brief Access explicit value.
+         *
+         * Should not be used with pattern arrays. There is no safety check for this.
+         */
         T &operator *() const { return sm.ev[index]; }
 
         bool operator == (const iterator &it) const { return index == it.index; }
@@ -797,7 +805,11 @@ public:
     /// Number of columns in the sparse matrix
     mint cols() const { return ncols; }
 
-    /// Index into a sparse matrix
+    /** \brief Index into a sparse matrix (read-only, 0-based)
+     *
+     * This operator provides read access only.
+     * For write access to explicit values, use explicitValues().
+     */
     T operator () (mint i, mint j) const {
         if (! explicitValuesQ())
             throw LibraryError("SparseMatrixRef: cannot index into a pattern array.");
@@ -817,6 +829,12 @@ public:
             return iv;
     }
 
+    /** \brief Iterator to beginning of explicit values and positions
+     *
+     *  If you only need explicit values, not explicit positions, use `sparseArray.explicitValues().begin()` instead.
+     *
+     * \sa SparseMatrixRef::iterator
+     */
     iterator begin() const {
         mint row_index = 0;
         while (rp[row_index+1] == 0 && row_index < size())
@@ -824,6 +842,7 @@ public:
         return iterator{*this, row_index, 0};
     }
 
+    /// Iterator to the end of explicit values and positions
     iterator end() const {
         return iterator{*this, rows(), size()};
     }
@@ -852,10 +871,9 @@ SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, IntTensor
 
     MSparseArray sa = NULL;
     err = libData->sparseLibraryFunctions->MSparseArray_fromExplicitPositions(pos.tensor(), vals.tensor(), dims.tensor(), it, &sa);
+    libData->MTensor_free(it);
     if (err)
         throw LibraryError("makeSparseArray: MSparseArray_fromExplicitPositions() failed.", err);
-
-    libData->MTensor_free(it);
 
     // MSparseArray_fromExplicitPositions() will return a pattern array when the positions array is empty.
     // When this happens, we manually insert an explicit values array to ensure that this function
@@ -954,13 +972,13 @@ public:
     /// Returns the referenced \c MRawArray
     MRawArray rawArray() const { return ra; }
 
-    /// Returns the rank of the tensor, same as \c MRawArray_getRank
+    /// Returns the rank of the RawArray, same as \c MRawArray_getRank
     mint rank() const { return libData->rawarrayLibraryFunctions->MRawArray_getRank(ra); }
 
-    /// Returns the number of elements in the tensor, same as \c MRawArray_getFlattenedLength
+    /// Returns the number of elements in the RawArray, same as \c MRawArray_getFlattenedLength
     mint length() const { return len; }
 
-    /// Returns the number of elements in the tensor, synonym of \ref length()
+    /// Returns the number of elements in the RawArray, synonym of \ref length()
     mint size() const { return length(); }
 
     /// Frees the referenced RawArray, same as \c MRawArray_free
@@ -1227,7 +1245,7 @@ public:
     bool operator == (const pixel_iterator &it) const { return ptr == it.ptr; }
     bool operator != (const pixel_iterator &it) const { return ptr != it.ptr; }
 
-    T &operator *() { return *ptr; }
+    T &operator *() const { return *ptr; }
 
     pixel_iterator &operator ++ () {
         ptr += step;
@@ -1445,24 +1463,24 @@ public:
 
 
 /** \brief Create a new Image
- *  \param cols is the number of columns (image width)
- *  \param rows is the number of rows (image height)
+ *  \param width of the image (number of columns)
+ *  \param height of the image (number of rows)
  *  \param channels is the number of image channels
  *  \param interleaving specifies whether to store the data in interleaved mode
  *  \param colorspace may be one of `MImage_CS_Automatic`, `MImage_CS_Gray`, `MImage_CS_RGB`, `MImage_CS_HSB`, `MImage_CS_CMYK`, `MImage_CS_XYZ`, `MImage_CS_LUV`, `MImage_CS_LAB`, `MImage_CS_LCH`
  *  \tparam T is the pixel type
  */
 template<typename T>
-ImageRef<T> makeImage(mint cols, mint rows, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
+ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
     MImage mim;
-    libData->imageLibraryFunctions->MImage_new2D(cols, rows, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
+    libData->imageLibraryFunctions->MImage_new2D(width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
 }
 
 /** \brief Create a new Image3D
  *  \param slices is the number of image slices
- *  \param cols is the number of columns (image width)
- *  \param rows is the number of rows (image height)
+ *  \param width of individual slices (number of rows)
+ *  \param height of individual slices (number of columns)
  *  \param channels is the number of image channels
  *  \param interleaving specifies whether to store the data in interleaved mode
  *  \param colorspace may be one of `MImage_CS_Automatic`, `MImage_CS_Gray`, `MImage_CS_RGB`, `MImage_CS_HSB`, `MImage_CS_CMYK`, `MImage_CS_XYZ`, `MImage_CS_LUV`, `MImage_CS_LAB`, `MImage_CS_LCH`
@@ -1470,9 +1488,9 @@ ImageRef<T> makeImage(mint cols, mint rows, mint channels = 1, bool interleaving
  *
  */
 template<typename T>
-Image3DRef<T> makeImage3D(mint slices, mint cols, mint rows, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
+Image3DRef<T> makeImage3D(mint slices, mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
     MImage mim;
-    libData->imageLibraryFunctions->MImage_new3D(slices, cols, rows, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
+    libData->imageLibraryFunctions->MImage_new3D(slices, width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
 }
 
