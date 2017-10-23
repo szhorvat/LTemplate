@@ -415,43 +415,28 @@ inline TensorRef<T> makeTensor(mint rank, const U *dims) {
 }
 
 
-/** \brief Creates a rank-3 Tensor of the given dimensions
- * \param nslice is the number of slices
- * \param nrow is the number of rows
- * \param ncol is the number of columns
- * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
+/** \brief Creates a vector (rank-1 Tensor) of the given length
+ * \param len is the vector length
+ * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
  */
 template<typename T>
-inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
-    return makeTensor<T>({nslice, nrow, ncol});
+inline TensorRef<T> makeVector(mint len) {
+    return makeTensor<T>({len});
 }
 
-/// Creates a rank-3 Tensor of the given dimensions and copies the contents of a C array into it
+/// Creates a vector (rank-1 Tensor) of the given length and copies the contents of a C array into it
 template<typename T, typename U>
-inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
-    CubeRef<T> t = makeCube<T>(nslice, nrow, ncol);
-    std::copy(data, data + t.size(), t.begin());
+inline TensorRef<T> makeVector(mint len, const U *data) {
+    TensorRef<T> t = makeVector<T>(len);
+    std::copy(data, data+len, t.begin());
     return t;
 }
 
-/// Creates a rank-3 Tensor from a nested initializer list
+/// Creates a vector (rank-1 Tensor) from an intializer list
 template<typename T>
-inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::initializer_list<T>>> c) {
-    size_t ns = c.size();
-    size_t rs = ns ? c.begin()->size() : 0;
-    size_t cs = rs ? c.begin()->begin()->size() : 0;
-    CubeRef<T> t = makeCube<T>(ns, rs, cs);
-    T *ptr = t.data();
-    for (const auto &slice : c) {
-        massert(slice.size() == rs);
-        for (const auto &row : slice) {
-            massert(row.size() == cs);
-            for (const auto &el : row){
-                *ptr = el;
-                ptr++;
-            }
-        }
-    }
+inline TensorRef<T> makeVector(std::initializer_list<T> l) {
+    TensorRef<T> t = makeVector<T>(l.size());
+    std::copy(l.begin(), l.end(), t.begin());
     return t;
 }
 
@@ -498,28 +483,43 @@ inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
 }
 
 
-/** \brief Creates a vector (rank-1 Tensor) of the given length
- * \param len is the vector length
- * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+/** \brief Creates a rank-3 Tensor of the given dimensions
+ * \param nslice is the number of slices
+ * \param nrow is the number of rows
+ * \param ncol is the number of columns
+ * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
  */
 template<typename T>
-inline TensorRef<T> makeVector(mint len) {
-    return makeTensor<T>({len});
+inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
+    return makeTensor<T>({nslice, nrow, ncol});
 }
 
-/// Creates a vector (rank-1 Tensor) of the given length and copies the contents of a C array into it
+/// Creates a rank-3 Tensor of the given dimensions and copies the contents of a C array into it
 template<typename T, typename U>
-inline TensorRef<T> makeVector(mint len, const U *data) {
-    TensorRef<T> t = makeVector<T>(len);
-    std::copy(data, data+len, t.begin());
+inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
+    CubeRef<T> t = makeCube<T>(nslice, nrow, ncol);
+    std::copy(data, data + t.size(), t.begin());
     return t;
 }
 
-/// Creates a vector (rank-1 Tensor) from an intializer list
+/// Creates a rank-3 Tensor from a nested initializer list
 template<typename T>
-inline TensorRef<T> makeVector(std::initializer_list<T> l) {
-    TensorRef<T> t = makeVector<T>(l.size());
-    std::copy(l.begin(), l.end(), t.begin());
+inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::initializer_list<T>>> c) {
+    size_t ns = c.size();
+    size_t rs = ns ? c.begin()->size() : 0;
+    size_t cs = rs ? c.begin()->begin()->size() : 0;
+    CubeRef<T> t = makeCube<T>(ns, rs, cs);
+    T *ptr = t.data();
+    for (const auto &slice : c) {
+        massert(slice.size() == rs);
+        for (const auto &row : slice) {
+            massert(row.size() == cs);
+            for (const auto &el : row){
+                *ptr = el;
+                ptr++;
+            }
+        }
+    }
     return t;
 }
 
