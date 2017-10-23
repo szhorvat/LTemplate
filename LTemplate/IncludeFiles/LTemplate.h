@@ -417,12 +417,7 @@ inline TensorRef<T> makeTensor(mint rank, const U *dims) {
 /// Creates a rank-3 Tensor of the given dimensions
 template<typename T>
 inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
-    MTensor t = NULL;
-    mint dims[3] = {nslice, nrow, ncol};
-    int err = libData->MTensor_new(detail::libraryType<T>(), 3, dims, &t);
-    if (err)
-        throw LibraryError("MTensor_new() failed.", err);
-    return TensorRef<T>(t);
+    return makeTensor<T>({nslice, nrow, ncol});
 }
 
 /// Creates a rank-3 Tensor of the given dimensions from a C array.
@@ -458,14 +453,8 @@ inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::init
 /// Creates a matrix (rank-2 Tensor) of the given dimensions
 template<typename T>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
-    MTensor t = NULL;
-    mint dims[2] = {nrow, ncol};
-    int err = libData->MTensor_new(detail::libraryType<T>(), 2, dims, &t);
-    if (err)
-        throw LibraryError("MTensor_new() failed.", err);
-    return TensorRef<T>(t);
+    return makeTensor<T>({nrow, ncol});
 }
-
 
 /// Creates a matrix (rank-2 Tensor) of the given dimensions from a row-major storage C array
 template<typename T, typename U>
@@ -502,11 +491,7 @@ inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
 /// Creates a vector (rank-1 Tensor) of the given length
 template<typename T>
 inline TensorRef<T> makeVector(mint len) {
-    MTensor t = NULL;
-    mint dims[1] = {len};
-    int err = libData->MTensor_new(detail::libraryType<T>(), 1, dims, &t);
-    if (err) throw LibraryError("MTensor_new() failed.", err);
-    return TensorRef<T>(t);
+    return makeTensor<T>({len});
 }
 
 /// Creates a vector (rank-1 Tensor) of the given length from a C array
