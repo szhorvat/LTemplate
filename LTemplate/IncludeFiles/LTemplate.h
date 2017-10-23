@@ -855,7 +855,7 @@ public:
  * \param imp is the implicit value.
  */
 template<typename T>
-SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, IntTensorRef dims, T imp = 0) {
+inline SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, IntTensorRef dims, T imp = 0) {
     int err;
 
     massert(pos.cols() == dims.size());
@@ -895,7 +895,7 @@ SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, IntTensor
  * \param imp is the implicit value.
  */
 template<typename T>
-SparseMatrixRef<T> makeSparseMatrix(IntMatrixRef pos, TensorRef<T> vals, mint nrow, mint ncol, T imp = 0) {
+inline SparseMatrixRef<T> makeSparseMatrix(IntMatrixRef pos, TensorRef<T> vals, mint nrow, mint ncol, T imp = 0) {
     massert(pos.cols() == 2);
 
     IntTensorRef dims = makeVector<mint>({nrow, ncol});
