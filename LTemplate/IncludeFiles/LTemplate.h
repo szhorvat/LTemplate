@@ -394,6 +394,7 @@ inline TensorRef<T> makeTensor(std::initializer_list<mint> dims) {
 /** \brief Create a Tensor of the given dimensions.
  *  \param rank is the Tensor depth
  *  \param dims are the dimensions stored in a C array of length \c rank and type \c mint
+ *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
  */
 template<typename T>
 inline TensorRef<T> makeTensor(mint rank, mint *dims) {
@@ -414,13 +415,18 @@ inline TensorRef<T> makeTensor(mint rank, const U *dims) {
 }
 
 
-/// Creates a rank-3 Tensor of the given dimensions
+/** \brief Creates a rank-3 Tensor of the given dimensions
+ * \param nslice is the number of slices
+ * \param nrow is the number of rows
+ * \param ncol is the number of columns
+ * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
+ */
 template<typename T>
 inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
     return makeTensor<T>({nslice, nrow, ncol});
 }
 
-/// Creates a rank-3 Tensor of the given dimensions from a C array.
+/// Creates a rank-3 Tensor of the given dimensions and copies the contents of a C array into it
 template<typename T, typename U>
 inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
     CubeRef<T> t = makeCube<T>(nslice, nrow, ncol);
@@ -428,7 +434,7 @@ inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
     return t;
 }
 
-/// Creates a rank-3 Tensor using initializer list.
+/// Creates a rank-3 Tensor from a nested initializer list
 template<typename T>
 inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::initializer_list<T>>> c) {
     size_t ns = c.size();
@@ -450,13 +456,17 @@ inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::init
 }
 
 
-/// Creates a matrix (rank-2 Tensor) of the given dimensions
+/** \brief Creates a matrix (rank-2 Tensor) of the given dimensions
+ * \param nrow is the number of rows
+ * \param ncol is the number of columns
+ * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
+ */
 template<typename T>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     return makeTensor<T>({nrow, ncol});
 }
 
-/// Creates a matrix (rank-2 Tensor) of the given dimensions from a row-major storage C array
+/// Creates a matrix (rank-2 Tensor) of the given dimensions and copies the contents of a row-major storage C array into it
 template<typename T, typename U>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol, const U *data) {
     MatrixRef<T> t = makeMatrix<T>(nrow, ncol);
@@ -464,7 +474,7 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol, const U *data) {
     return t;
 }
 
-/// Creates  matrix (rank-2 Tensor) using an initializer list.
+/// Creates  matrix (rank-2 Tensor) using from a nested intializer list.
 template<typename T>
 inline MatrixRef<T> makeMatrix(std::initializer_list<std::initializer_list<T>> m) {
     MatrixRef<T> t = makeMatrix<T>(m.size(), m.size() ? m.begin()->size() : 0);
@@ -479,7 +489,7 @@ inline MatrixRef<T> makeMatrix(std::initializer_list<std::initializer_list<T>> m
     return t;
 }
 
-/// Creates a matrix (rank-2 Tensor) of the given dimensions from a column-major storage C array
+/// Creates a matrix (rank-2 Tensor) of the given dimensions and copies the contents of a column-major storage C array into it
 template<typename T, typename U>
 inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
     TensorRef<T> t = makeMatrix<T>(nrow, ncol);
@@ -488,13 +498,16 @@ inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
 }
 
 
-/// Creates a vector (rank-1 Tensor) of the given length
+/** \brief Creates a vector (rank-1 Tensor) of the given length
+ * \param len is the vector length
+ * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+ */
 template<typename T>
 inline TensorRef<T> makeVector(mint len) {
     return makeTensor<T>({len});
 }
 
-/// Creates a vector (rank-1 Tensor) of the given length from a C array
+/// Creates a vector (rank-1 Tensor) of the given length and copies the contents of a C array into it
 template<typename T, typename U>
 inline TensorRef<T> makeVector(mint len, const U *data) {
     TensorRef<T> t = makeVector<T>(len);
@@ -502,7 +515,7 @@ inline TensorRef<T> makeVector(mint len, const U *data) {
     return t;
 }
 
-/// Creates a vector (rank-1 Tensor) using an initializer list
+/// Creates a vector (rank-1 Tensor) from an intializer list
 template<typename T>
 inline TensorRef<T> makeVector(std::initializer_list<T> l) {
     TensorRef<T> t = makeVector<T>(l.size());
