@@ -2385,27 +2385,45 @@ Cell[BoxData[{
   "\n", 
   RowBox[{"(*", " ", 
    RowBox[{
-    RowBox[{
-     RowBox[{"ConfigureLTemplate", "[", "]"}], " ", 
-     StyleBox["must",
-      FontSlant->"Italic"], " ", "be", " ", "called", " ", "at", " ", "this", 
-     " ", 
-     RowBox[{"point", ".", "\n", "   ", "You"}], " ", "should", " ", "also", 
-     " ", "supply", " ", "a", " ", "symbol", " ", "from", " ", "the", " ", 
-     "MyApp`", " ", "context", " ", 
-     RowBox[{"(", 
-      RowBox[{"called", " ", "SomeSymbol", " ", "here"}], ")"}], " ", "to", 
-     "\n", "   ", "associate", " ", 
-     RowBox[{"LTemplate", "'"}], "s", " ", 
-     RowBox[{"standard", " ", "::", "error"}]}], ",", " ", 
-    RowBox[{"::", "warning"}], ",", " ", 
-    RowBox[{
-     RowBox[{"etc", ".", " ", "messages"}], " ", 
-     RowBox[{"with", "."}]}]}], "\n", " ", "*)"}]}], "\n", 
+    RowBox[{"ConfigureLTemplate", "[", "]"}], " ", 
+    StyleBox["must",
+     FontSlant->"Italic"], " ", "be", " ", "called", " ", "at", " ", "this", 
+    " ", 
+    RowBox[{"point", "."}]}], " ", "*)"}]}], "\n", 
  RowBox[{
-  RowBox[{"ConfigureLTemplate", "[", 
-   RowBox[{"\"\<MessageSymbol\>\"", " ", "->", " ", "SomeSymbol"}], "]"}], 
-  "\n", "\n", 
+  RowBox[{"ConfigureLTemplate", "[", "\n", "\t", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+     "You", " ", "should", " ", "also", " ", "supply", " ", "a", " ", 
+      "symbol", " ", "from", " ", "the", " ", "MyApp`", " ", "context", " ", 
+      RowBox[{"(", 
+       RowBox[{"called", " ", "SomeSymbol", " ", "here"}], ")"}], " ", "to", 
+      "\n", "       ", "associate", " ", 
+      RowBox[{"LTemplate", "'"}], "s", " ", 
+      RowBox[{"standard", " ", "::", "error"}]}], ",", " ", 
+     RowBox[{"::", "warning"}], ",", " ", 
+     RowBox[{
+      RowBox[{"etc", ".", " ", "messages"}], " ", 
+      RowBox[{"with", "."}]}]}], " ", "*)"}], "\n", "\t", 
+   RowBox[{
+    RowBox[{"\"\<MessageSymbol\>\"", " ", "->", " ", "SomeSymbol"}], ",", " ",
+     "\n", "\t", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"If", " ", "lazy", " ", "loading", " ", "is", " ", "enabled"}], 
+      ",", " ", 
+      RowBox[{
+      "functions", " ", "are", " ", "loaded", " ", "only", " ", "on", " ", 
+       "first", " ", 
+       RowBox[{"use", ".", "\n", "\t   ", "This"}], " ", "improves", " ", 
+       "package", " ", "loading", " ", "performance"}], ",", " ", 
+      RowBox[{
+      "but", " ", "it", " ", "is", " ", "not", " ", "convenient", "\n", 
+       "\t   ", "during", " ", "development", " ", "and", " ", 
+       RowBox[{"debugging", "."}]}]}], " ", "*)"}], "\n", "\t", 
+    RowBox[{"\"\<LazyLoading\>\"", " ", "\[Rule]", " ", "True"}]}], "\n", 
+   "]"}], "\n", "\n", 
   RowBox[{"(*", " ", 
    RowBox[{
    "Public", " ", "MyApp", " ", "package", " ", "symbols", " ", "go", " ", 
@@ -2457,19 +2475,18 @@ Cell[BoxData[{
      RowBox[{"$LibraryPath", ",", " ", "$libraryDirectory"}], "]"}]}], "\n", 
    "]"}], "\n"}], "\n", 
  RowBox[{
-  RowBox[{
-   RowBox[{"template", " ", "=", " ", 
-    RowBox[{"LTemplate", "[", "...", "]"}]}], ";"}], " ", 
+  RowBox[{"template", " ", "=", " ", 
+   RowBox[{"LTemplate", "[", "...", "]"}]}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{"template", " ", "specification"}], " ", "*)"}], "\n", "\n", 
   RowBox[{"(*", " ", 
    RowBox[{
    "These", " ", "two", " ", "functions", " ", "will", " ", "probably", " ", 
     "incorporate", " ", "additional", " ", "checks", " ", "and", " ", 
-    RowBox[{"options", ":"}]}], " ", "*)"}]}], "\n", 
- RowBox[{
-  RowBox[{"loadMyApp", "[", "]"}], " ", ":=", " ", 
-  RowBox[{"LoadTemplate", "[", "template", "]"}]}], "\n", 
+    RowBox[{"options", ":"}]}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{"loadMyApp", "[", "]"}], " ", ":=", " ", 
+   RowBox[{"LoadTemplate", "[", "template", "]"}]}]}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"compileMyApp", "[", "]"}], " ", ":=", " ", "\n", "\t", 
@@ -2766,45 +2783,37 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"{", 
    RowBox[{"1", ",", 
-    RowBox[{"2", "/", "3"}], ",", "Pi"}], "}"}]],
-  FormatType->"StandardForm"],
+    RowBox[{"2", "/", "3"}], ",", "Pi"}], "}"}]]],
  " is passed as a ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"Real", ",", "1"}], "}"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"Real", ",", "1"}], "}"}]]],
  " argument, it will be automatically numericised to ",
  Cell[BoxData[
   RowBox[{"{", 
    RowBox[{"1.`", ",", "0.6666666666666666`", ",", "3.141592653589793`"}], 
-   "}"}]],
-  FormatType->"StandardForm"]
+   "}"}]]]
 }], "Item"],
 
 Cell[TextData[{
  "If ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"1.0", ",", "2.0", ",", "3.0"}], "}"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"1.0", ",", "2.0", ",", "3.0"}], "}"}]]],
  " is passed as an ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"Integer", ",", "1"}], "}"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"Integer", ",", "1"}], "}"}]]],
  " argument, it will be converted to ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"1", ",", "2", ",", "3"}], "}"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"1", ",", "2", ",", "3"}], "}"}]]],
  ". If ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"1.0", ",", "2.5", ",", "3.0"}], "}"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"1.0", ",", "2.5", ",", "3.0"}], "}"}]]],
  " is passed, an error will be thrown because ",
- Cell[BoxData["2.5"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["2.5"]],
  " is not mathematically an integer."
 }], "Item"],
 
@@ -2813,8 +2822,7 @@ Cell[TextData[{
 e.g. ",
  Cell[BoxData[
   RowBox[{"LType", "[", 
-   RowBox[{"SparseArray", ",", "Real"}], "]"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"SparseArray", ",", "Real"}], "]"}]]],
  ", it will be converted to a sparse array automatically. The reverse, \
 however, is not done. Sparse arrays cannot be passed to functions that expect \
 a dense array."
@@ -2825,12 +2833,10 @@ Cell[TextData[{
 type is specified (e.g. ",
  Cell[BoxData[
   RowBox[{"LType", "[", 
-   RowBox[{"Image", ",", "\"\<Byte\>\""}], "]"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"Image", ",", "\"\<Byte\>\""}], "]"}]]],
  "). If the pixel type is not specified, i.e. ",
  Cell[BoxData[
-  RowBox[{"LType", "[", "Image", "]"}]],
-  FormatType->"StandardForm"],
+  RowBox[{"LType", "[", "Image", "]"}]]],
  ", no conversion is done."
 }], "Item"]
 }, Open  ]],
@@ -3258,8 +3264,7 @@ Cell[TextData[{
  "Optionally a rank specification can be given, for example ",
  Cell[BoxData[
   RowBox[{"LType", "[", 
-   RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}]]],
  "."
 }], "Text",
  ExpressionUUID -> "687dfe52-ecf9-4c99-ab78-08a1e3f3ffad"],
@@ -3267,8 +3272,7 @@ Cell[TextData[{
 Cell[TextData[{
  "Sparse array patterns without type specifications, i.e. ",
  Cell[BoxData[
-  RowBox[{"LType", "[", "SparseArray", "]"}]],
-  FormatType->"StandardForm"],
+  RowBox[{"LType", "[", "SparseArray", "]"}]]],
  ", are not supported."
 }], "Text",
  ExpressionUUID -> "18fc7847-3c5e-4a53-9db6-7479c43e16b1"]
@@ -3460,7 +3464,7 @@ LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
  ExpressionUUID -> "e06b21af-2283-4b43-85d7-5a89e2997501"]
 }, Closed]]
 }, Open  ]]
-}, Open  ]]
+}, Closed]]
 }, Open  ]]
 },
 WindowSize->{990, 700},

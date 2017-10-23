@@ -12,8 +12,9 @@ visualize it in real time in Mathematica.\
 
 Cell[BoxData[{
  RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
- RowBox[{"SetDirectory", "@", 
-  RowBox[{"NotebookDirectory", "[", "]"}]}]}], "Input",
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]}], "Input",
  ExpressionUUID -> "742d9654-8e42-415c-8976-dcce157c587c"],
 
 Cell[BoxData[

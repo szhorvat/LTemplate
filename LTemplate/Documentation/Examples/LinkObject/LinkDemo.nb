@@ -219,8 +219,7 @@ Cell[BoxData["\<\".dennis sinneD\"\>"], "Output"]
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"reverse2", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"reverse2", "[", "]"}], TraditionalForm]]],
  " is a simpler implementation of the same using mlstream.h."
 }], "Text"],
 
@@ -319,7 +318,7 @@ Cell[BoxData[
 }, Open  ]],
 
 Cell["\<\
-Compute both the produce and sum of an abitrary-length real list:\
+Compute both the produce and sum of an arbitrary-length real list:\
 \>", "Text"],
 
 Cell[CellGroupData[{
@@ -380,3 +379,4 @@ FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
 2016)",
 StyleDefinitions->"Default.nb"
 ]
+
