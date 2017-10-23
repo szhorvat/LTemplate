@@ -77,6 +77,9 @@ enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
 /** \brief Issue a _Mathematica_ message.
  *  \param msg the text of the message
  *  \param type determines the message tag which will be used
+ *
+ * If `msg == NULL`, no message will be issued. This is for compatibility with other libraries
+ * that may return a null pointer instead of message text.
  */
 void message(const char *msg, MessageType type = M_INFO);
 
