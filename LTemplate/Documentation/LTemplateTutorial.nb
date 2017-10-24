@@ -2475,18 +2475,19 @@ Cell[BoxData[{
      RowBox[{"$LibraryPath", ",", " ", "$libraryDirectory"}], "]"}]}], "\n", 
    "]"}], "\n"}], "\n", 
  RowBox[{
-  RowBox[{"template", " ", "=", " ", 
-   RowBox[{"LTemplate", "[", "...", "]"}]}], ";", " ", 
+  RowBox[{
+   RowBox[{"template", " ", "=", " ", 
+    RowBox[{"LTemplate", "[", "...", "]"}]}], ";"}], " ", 
   RowBox[{"(*", " ", 
    RowBox[{"template", " ", "specification"}], " ", "*)"}], "\n", "\n", 
   RowBox[{"(*", " ", 
    RowBox[{
    "These", " ", "two", " ", "functions", " ", "will", " ", "probably", " ", 
     "incorporate", " ", "additional", " ", "checks", " ", "and", " ", 
-    RowBox[{"options", ":"}]}], " ", "*)"}], "\n", 
-  RowBox[{
-   RowBox[{"loadMyApp", "[", "]"}], " ", ":=", " ", 
-   RowBox[{"LoadTemplate", "[", "template", "]"}]}]}], "\n", 
+    RowBox[{"options", ":"}]}], " ", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"loadMyApp", "[", "]"}], " ", ":=", " ", 
+  RowBox[{"LoadTemplate", "[", "template", "]"}]}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"compileMyApp", "[", "]"}], " ", ":=", " ", "\n", "\t", 
@@ -2862,10 +2863,9 @@ read way.\"\>", "MSG"]], "Print", "PrintUsage",
 }, Open  ]],
 
 Cell[TextData[{
- "Use format template to pretty-print your templates and quickly find \
-mistakes. ",
+ "Prints a template specification in an easily readable mannher. ",
  Cell[BoxData["FormatTemplate"]],
- " attempts to format even syntactically incorrect templates."
+ " attempts to format even syntactically incorrect templates to aid debugging."
 }], "Text"]
 }, Closed]],
 
@@ -3072,6 +3072,72 @@ Cell[BoxData[
 created.\"\>", "MSG"]], "Print", "PrintUsage",
  CellTags->"Info1013717408019-9227688"]
 }, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Embedding LTemplate into another package", "Subsubsection"],
+
+Cell["\<\
+LTemplate can be embedded into another package. See the Deployment section \
+above for details.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "ConfigureLTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"ConfigureLTemplate[options] must be called after loading the \
+LTemplate package privately.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info583717836718-2741957"]
+}, Open  ]],
+
+Cell[TextData[{
+ "When embedding LTemplate, it is required to call ",
+ Cell[BoxData["ConfigureLTemplate"]],
+ " and set certation options. The following options are available:"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData["\"\<MessageSymbol\>\""]],
+ " sets the symbol with which library messages will be associated (see \
+message() and LibraryException)."
+}], "Item"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<LazyLoading\>\""]],
+ ", when set to ",
+ Cell[BoxData["True"]],
+ ", library functions will only be loaded upon their first use. This improves \
+package loading performance, but it can be a hindrance when developing or \
+debugging."
+}], "Item"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LClassContext"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LClassContext[] returns the context where class symbols are \
+created.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info573717836654-2741957"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Use ",
+ Cell[BoxData[
+  RowBox[{"LClassContext", "[", "]"}]]],
+ " to retrieve the context where class symbols are created. When embedding \
+LTemplate, this context will not be automatically added to ",
+ Cell[BoxData["$ContextPath"]],
+ "."
+}], "Text"]
 }, Closed]]
 }, Open  ]],
 
@@ -3091,7 +3157,10 @@ Cell[TextData[{
 }], "Text",
  ExpressionUUID -> "0cb5adf7-80c7-4871-960e-dd1549cf6402"],
 
-Cell["Note: LTemplate requires a C++11 capable compiler.", "Text"],
+Cell["\<\
+Note: LTemplate requires a C++11 capable compiler. GCC 4.8 and MSVC 2015 have \
+been tested.\
+\>", "Text"],
 
 Cell[CellGroupData[{
 
@@ -3140,6 +3209,23 @@ Overview.html"],
   ButtonData->
    "paclet:LibraryLink/tutorial/InteractionWithMathematica#97446640"],
  "."
+}], "Text"],
+
+Cell["All array-like types provide the following member functions:", "Text"],
+
+Cell["\<\
+clone()
+free()
+disown()
+disownAll()
+shareCount()\
+\>", "Program"],
+
+Cell[TextData[{
+ "These provide the same functionality as the similarly-named LibraryLink API \
+functions, such as ",
+ StyleBox["MTensor_free()", "Program"],
+ ", etc."
 }], "Text"]
 }, Closed]],
 
@@ -3246,7 +3332,7 @@ Cell[TextData[{
  ", are not supported."
 }], "Text",
  ExpressionUUID -> "c61d54b8-1a60-458e-8e71-ea438207c160"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3462,9 +3548,22 @@ LibraryError(int error_code = LIBRARY_FUNCTION_ERROR);
 LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
 \>", "Program",
  ExpressionUUID -> "e06b21af-2283-4b43-85d7-5a89e2997501"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Accessing the LibraryLink C API", "Subsubsection"],
+
+Cell[TextData[{
+ "The LibraryLink callback functions are available through ",
+ StyleBox["mma::libData", "Program"],
+ ", e.g. ",
+ StyleBox["mma::libData->MTensor_new()", "Program"],
+ "."
+}], "Text"]
 }, Closed]]
 }, Open  ]]
-}, Closed]]
+}, Open  ]]
 }, Open  ]]
 },
 WindowSize->{990, 700},

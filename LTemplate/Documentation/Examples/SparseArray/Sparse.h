@@ -134,4 +134,24 @@ public:
     mma::SparseArrayRef<double> newImplicitValue(mma::SparseArrayRef<double> sa, double iv) {
         return sa.resetImplicitValue(iv);
     }
+
+
+    // MODIFY SPARSE ARRAY
+
+    mma::SparseArrayRef<double> modify(mma::SparseArrayRef<double> sa) {
+        auto fun = [] (double x) { return x*x + 1; }; // x -> x*x+1
+        for (auto &el : sa.explicitValues())
+            el = fun(el);
+        sa.implicitValue() = fun(sa.implicitValue());
+
+        /* Optionally, use
+         *
+         *     return sa.resetImplicitValue();
+         *
+         * to eliminate any redundant explicit values. This is unnecessary with the
+         * transformation x -> x*x+1 as it leaves no real value unchanged.
+         */
+
+        return sa;
+    }
 };

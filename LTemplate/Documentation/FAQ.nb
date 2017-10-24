@@ -36,6 +36,49 @@ functions for faster development and debugging."
 
 Cell[CellGroupData[{
 
+Cell["What is the best way to learn LTemplate?", "Subsection"],
+
+Cell[TextData[{
+ "It is recommended to understand the basics of the LibraryLink C API before \
+starting to use LTemplate. ",
+ ButtonBox["There is an excellent set of tutorials at Wolfram Community",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://community.wolfram.com/groups/-/m/t/189735/"], None},
+  ButtonNote->"http://community.wolfram.com/groups/-/m/t/189735/"],
+ ", written by Arnoud Buzing. These are much easier to follow than the User \
+Guide. Read them concurrently with ",
+ ButtonBox["the LibraryLink User Guide",
+  BaseStyle->"Link",
+  ButtonData->"paclet:LibraryLink/tutorial/Overview"],
+ " and learn at least about passing numerical arguments, returning results, \
+and basic handling of arrays."
+}], "Text"],
+
+Cell[TextData[{
+ "Once you have a grasp of the basics, start reading ",
+ ButtonBox["LTemplateTutorial",
+  BaseStyle->"Hyperlink",
+  ButtonData->{"LTemplateTutorial.nb", None}],
+ " while concurrently looking at the example programs in the \
+Documentation/Examples directory. Start with these two sets of examples: \
+Basics, Tensor."
+}], "Text"],
+
+Cell[TextData[{
+ "When working with array-like types, such as Tensors, SparseArray, Images \
+and RawArrays, it is important to understand memory management in \
+LibraryLink. This is discussed in the ",
+ ButtonBox["Memory Management of MTensors",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:LibraryLink/tutorial/InteractionWithMathematica#97446640"],
+ " section of the User Guide."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["\<\
 Do I need to learn LibraryLink before starting to use LTemplate?\
 \>", "Subsection",
@@ -52,7 +95,7 @@ look at ",
 
 Cell["\<\
 While LTemplate makes it much easier and faster to set up a library, it is \
-necessary to understand the basic concepts, such as the memory management of \
+necessary to understand certain concepts, such as the memory management of \
 MTensors, to be able to write correct code.\
 \>", "Text"]
 }, Open  ]],
@@ -127,6 +170,31 @@ versions of LTemplate.\
 
 Cell[CellGroupData[{
 
+Cell["Can I use the LibraryLink C API with LTemplate?", "Subsection"],
+
+Cell["\<\
+Yes, the C functions from WolframLibrary.h can be used in a library built \
+with LTemplate.\
+\>", "Text"],
+
+Cell[TextData[{
+ "Wrapper classes, such as ",
+ StyleBox["mma::TensorRef", "Program"],
+ ", always provide access to the underlying data structure, such as ",
+ StyleBox["MTensor", "Program"],
+ ".  See e.g. ",
+ StyleBox["mma::TensorRef::tensor()", "Program"],
+ "."
+}], "Text"],
+
+Cell[TextData[{
+ StyleBox["mma::libData", "Program"],
+ " provides access to the LibraryLink callback functions."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["Can I use LTemplate in another package?", "Subsection"],
 
 Cell["\<\
@@ -158,6 +226,27 @@ only when needed.\
 Cell["\<\
 See the skeleton-project directory for an example of embedding LTemplate.\
 \>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Are there any published packages built on LTemplate?", "Subsection"],
+
+Cell[TextData[{
+ ButtonBox["IGraph/M",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://szhorvat.net/mathematica/IGraphM"], None},
+  ButtonNote->"http://szhorvat.net/mathematica/IGraphM"],
+ " is an interface to the ",
+ ButtonBox["igraph network analysis library",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://igraph.org/"], None},
+  ButtonNote->"http://igraph.org/"],
+ ". It is built on top of LTemplate, and it implements a wrapper class for \
+igraph graphs."
+}], "Text"]
 }, Open  ]]
 }, Open  ]]
 },
