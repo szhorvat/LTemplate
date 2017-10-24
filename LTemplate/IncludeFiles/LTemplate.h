@@ -72,12 +72,12 @@ typedef std::complex<double> complex_double_t;
 /// Complex float type for RawArrays.
 typedef std::complex<float>  complex_float_t;
 
-/** \brief Complex number type for Tensors. Alias for \ref mma::complex_double_t.
+/** \brief Complex number type for Tensors. Alias for \ref complex_double_t.
  *  Same as \c std::complex<double>, thus it can be used with arithmetic operators.
  */
 typedef complex_double_t complex_t;
 
-/// For use in the \ref mma::message() function.
+/// For use in the \ref message() function.
 enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
 
 
@@ -87,13 +87,18 @@ enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
  *
  * If `msg == NULL`, no message will be issued. This is for compatibility with other libraries
  * that may return a null pointer instead of message text.
+ *
+ * \sa print()
  */
 void message(const char *msg, MessageType type = M_INFO);
 
 inline void message(std::string msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
 
 
-/// Call _Mathematica_'s `Print[]`.
+/** \brief Call _Mathematica_'s `Print[]`.
+ *
+ * \sa mout, message()
+ */
 inline void print(const char *msg) {
     if (libData->AbortQ())
         return; // trying to use the MathLink connection during an abort appears to break it
@@ -112,7 +117,13 @@ inline void print(const char *msg) {
 inline void print(std::string msg) { print(msg.c_str()); }
 
 
-/// Can be used to output with _Mathematica_'s `Print[]` in a manner similar to `std::cout`. The stream _must_ be flushed (`std::endl` or `std::flush`) to trigger printing.
+/** \brief Can be used to output with _Mathematica_'s `Print[]` in a manner similar to `std::cout`.
+ *
+ * The stream _must_ be flushed (`std::endl` or `std::flush`) to trigger printing earlier than
+ * the return of the library function.
+ *
+ * \sa print(), message()
+ */
 extern std::ostream mout;
 
 
@@ -143,7 +154,7 @@ public:
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
-/** \brief Replacement for the standard `assert` macro. Instead of aborting the process, it throws a mma::LibraryError
+/** \brief Replacement for the standard `assert` macro. Instead of aborting the process, it throws a \ref mma::LibraryError
  *
  * As with the standard `assert` macro, define `NDEBUG` to disable assertion checks.
  * LTemplate uses massert() internally in a few places. It can be disabled this way
@@ -174,7 +185,6 @@ inline void check_abort() {
 inline void disownString(const char *str) {
     libData->UTF8String_disown(const_cast<char *>(str));
 }
-
 
 
 ///////////////////////////////////////  DENSE AND SPARSE ARRAY HANDLING  ///////////////////////////////////////
@@ -218,7 +228,7 @@ template<typename T> class SparseArrayRef;
  * Multiple \ref TensorRef objects may refer to the same Tensor.
  *
  * \sa MatrixRef, CubeRef
- * \sa makeVector(), makeMatrix(), makeCube()
+ * \sa makeTensor(), makeVector(), makeMatrix(), makeCube()
  */
 template<typename T>
 class TensorRef {
@@ -296,7 +306,7 @@ public:
      */
     template<typename U>
     TensorRef<U> convertTo() const {
-        MTensor mt;
+        MTensor mt = NULL;
         int err = libData->MTensor_new(detail::libraryType<U>(), rank(), dimensions(), &mt);
         if (err) throw LibraryError("MTensor_new() failed.", err);
         TensorRef<U> tr(mt);
@@ -313,9 +323,11 @@ public:
     }
 };
 
+/// @{
 typedef TensorRef<mint>      IntTensorRef;
 typedef TensorRef<double>    RealTensorRef;
 typedef TensorRef<complex_t> ComplexTensorRef;
+/// @}
 
 
 /// Wrapper class for `MTensor` pointers to rank-2 tensors
@@ -349,9 +361,11 @@ public:
     T & operator () (mint i, mint j) const { return (*this)[ncols*i + j]; }
 };
 
+/// @{
 typedef MatrixRef<mint>       IntMatrixRef;
 typedef MatrixRef<double>     RealMatrixRef;
 typedef MatrixRef<complex_t>  ComplexMatrixRef;
+/// @}
 
 
 /** \brief Wrapper class for `MTensor` pointers to rank-3 tensors
@@ -387,9 +401,11 @@ public:
     T & operator () (mint i, mint j, mint k) const { return (*this)[i*nrows*ncols + j*ncols + k]; }
 };
 
+/// @{
 typedef CubeRef<mint>       IntCubeRef;
 typedef CubeRef<double>     RealCubeRef;
 typedef CubeRef<complex_t>  ComplexCubeRef;
+/// @}
 
 
 /// Create a Tensor of the given dimensions
@@ -1480,7 +1496,7 @@ public:
  */
 template<typename T>
 inline ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
-    MImage mim;
+    MImage mim = NULL;
     libData->imageLibraryFunctions->MImage_new2D(width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
 }
@@ -1497,7 +1513,7 @@ inline ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool in
  */
 template<typename T>
 inline Image3DRef<T> makeImage3D(mint slices, mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
-    MImage mim;
+    MImage mim = NULL;
     libData->imageLibraryFunctions->MImage_new3D(slices, width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
 }
