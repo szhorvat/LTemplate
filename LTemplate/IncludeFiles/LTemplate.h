@@ -43,6 +43,13 @@
 // It is normally only used with .tm files and it is not needed for LTemplate.
 #undef P
 
+// Sanity check for the size of mint.
+#ifdef MINT_32
+static_assert(sizeof(mint) == 4, "MINT_32 defined but sizeof(mint) != 4.");
+#else
+static_assert(sizeof(mint) == 8, "MINT_32 is not defined but sizeof(mint) != 8. Define MINT_32 when compiling on 32-bit platforms.");
+#endif
+
 #include <cstdint>
 #include <complex>
 #include <string>
@@ -542,7 +549,7 @@ class SparseArrayRef {
     const TensorRef<T> ev; // explicit values, ev.nullQ() may be true
     T &iv;                 // implicit value
 
-    SparseArrayRef & operator = (const SparseArrayRef &) = delete;   
+    SparseArrayRef & operator = (const SparseArrayRef &) = delete;
 
     static TensorRef<T> getExplicitValues(const MSparseArray &msa) {
         MTensor *ev = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(msa);

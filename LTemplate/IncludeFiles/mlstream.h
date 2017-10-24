@@ -52,6 +52,13 @@
 #include <sstream>
 #include <type_traits>
 
+
+// Sanity checks for the sizes of MathLink integer types.
+static_assert(sizeof(short) == 2,   "MathLink type size mismatch: sizeof(short) != 2.");
+static_assert(sizeof(int) == 4 ,    "MathLink type size mismatch: sizeof(int) != 4.");
+static_assert(sizeof(mlint64) == 8, "MathLink type size mismatch: sizeof(mlint64) != 8.");
+
+
 /// Wrapper for `MLINK` to allow using extractors and inserters
 class mlStream {
     MLINK lp;
