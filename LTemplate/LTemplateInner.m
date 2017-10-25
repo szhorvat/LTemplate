@@ -189,8 +189,25 @@ normalizeTypesRules = Dispatch@{
    This is for consistency with plain LibraryLink. *)
 nakedHeads = RawArray|Image|Image3D;
 wrapNakedHeadsRules = Dispatch@{
-  expr : LType[nakedHeads, rest___] :> expr, (* do not wrap if already wrapped *)
+  expr : LType[___] :> expr, (* do not wrap if already wrapped *)
   type : nakedHeads :> LType[type]
+};
+
+elemTypeAliases = Dispatch@{
+  LType[RawArray, "Byte", rest___]    :> LType[RawArray, "UnsignedInteger8", rest],
+  LType[RawArray, "Bit16", rest___]   :> LType[RawArray, "UnsignedInteger16", rest],
+  (* omit "Integer" because the naming is confusing and people may assume it's "Integer64" *)
+  (* LType[RawArray, "Integer"]          :> LType[RawArray, "Integer32", rest], *)
+  LType[RawArray, "Float", rest___]   :> LType[RawArray, "Real32", rest],
+  LType[RawArray, "Double", rest___]  :> LType[RawArray, "Real64", rest],
+  LType[RawArray, "Real", rest___]    :> LType[RawArray, "Real64", rest],
+  LType[RawArray, "Complex", rest___] :> LType[RawArray, "Complex128", rest],
+
+  LType[h : Image|Image3D, "UnsignedInteger8"]  :> LType[h, "Byte"],
+  LType[h : Image|Image3D, "UnsignedInteger16"] :> LType[h, "Bit16"],
+  LType[h : Image|Image3D, "Float"]             :> LType[h, "Real32"],
+  LType[h : Image|Image3D, "Double"]            :> LType[h, "Real"],
+  LType[h : Image|Image3D, "Real64"]            :> LType[h, "Real"]
 };
 
 normalizeFunsRules = Dispatch@{
@@ -207,7 +224,7 @@ typeRules = Dispatch@{
   type : LType[__] :> {type}
 };
 
-normalizeTypes[types_, level_ : 0] := Replace[types /. normalizeTypesRules /. wrapNakedHeadsRules, typeRules, {level}]
+normalizeTypes[types_, level_ : 0] := Replace[types /. normalizeTypesRules /. wrapNakedHeadsRules /. elemTypeAliases, typeRules, {level}]
 
 NormalizeTemplate[c : LClass[name_, funs_]] := NormalizeTemplate[LTemplate[name, {c}]]
 NormalizeTemplate[t : LTemplate[name_, classes_]] := t /. normalizeFunsRules
