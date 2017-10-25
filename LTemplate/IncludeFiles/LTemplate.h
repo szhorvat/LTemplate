@@ -44,11 +44,13 @@
 #undef P
 
 // Sanity check for the size of mint.
+/*
 #ifdef MINT_32
 static_assert(sizeof(mint) == 4, "MINT_32 defined but sizeof(mint) != 4.");
 #else
 static_assert(sizeof(mint) == 8, "MINT_32 is not defined but sizeof(mint) != 8. Define MINT_32 when compiling on 32-bit platforms.");
 #endif
+*/
 
 #include <cstdint>
 #include <complex>
@@ -56,6 +58,7 @@ static_assert(sizeof(mint) == 8, "MINT_32 is not defined but sizeof(mint) != 8. 
 #include <ostream>
 #include <sstream>
 #include <vector>
+#include <map>
 #include <type_traits>
 #include <iterator>
 #include <initializer_list>
@@ -184,6 +187,32 @@ inline void check_abort() {
 /// Convenience function for disowning `const char *` strings.
 inline void disownString(const char *str) {
     libData->UTF8String_disown(const_cast<char *>(str));
+}
+
+
+/** \brief Get all instances of an LTemplate class
+ *
+ *  *Do not* use `delete` on the Class pointers in this collection or a crash may result later in the session.
+ *
+ */
+template<typename Class>
+extern const std::map<mint, Class *> &getCollection();
+
+/** \brief Get class instance corresponding to the given managed library expression ID
+ *  \tparam Class the LTemplate class to get an instance of.
+ *  \param id is the managed library expression ID.
+ *
+ * If no class instance correponding to `id` exists, a \ref LibraryError will be thrown.
+ *
+ *  \throws LibraryError
+ */
+template<typename Class>
+inline Class &getInstance(mint id) {
+    auto collection = getCollection<Class>();
+    auto it = collection.find(id);
+    if (it == collection.end())
+        throw LibraryError("Managed library expression instance does not exist.");
+    return *(it->second);
 }
 
 

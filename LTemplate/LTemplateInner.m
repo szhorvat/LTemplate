@@ -321,6 +321,10 @@ fullyQualifiedSymbolName[sym_Symbol] := Context[sym] <> SymbolName[sym]
 setupCollection[classname_String] := {
   CDeclare[collectionType[classname], collectionName[classname]],
   "",
+  CFunction["template<> const " <> collectionType[classname] <> " &", "mma::getCollection<" <> classname <> ">", {},
+    CReturn[collectionName[classname]]
+  ],
+  "",
   CFunction["DLLEXPORT void", managerName[classname], {"WolframLibraryData libData", "mbool mode", "mint id"},
     CInlineCode@StringTemplate[ (* TODO: Check if id exists, use assert *)
       "\
