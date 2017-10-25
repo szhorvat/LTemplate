@@ -3401,26 +3401,27 @@ Cell["LExpressionID[\"SomeClass\"]\tSomeClass &", "Program",
 Cell[TextData[{
  "Arguments of type ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}], TraditionalForm]],
-  ExpressionUUID -> "c3587263-1733-4c85-9d98-1c1e19dd9873"],
+  RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}]],
+  FormatType->"StandardForm"],
  " are handled specially. On the ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " side a managed library expression ID is expected, i.e. an integer. This \
 can be obtained from a managed library expression using the function ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"ManagedLibraryExpressionID", "[", "]"}], TraditionalForm]],
-  ExpressionUUID -> "273dc2f9-7f27-40d3-94e8-84369c105247"],
+  RowBox[{"ManagedLibraryExpressionID", "[", "]"}]],
+  FormatType->"StandardForm"],
  ". On the C++ side it will be passed as a reference to a class instance, ",
- Cell[BoxData[
-  FormBox[
-   RowBox[{"SomeClass", " ", "&"}], TraditionalForm]],
-  ExpressionUUID -> "99aedd97-9609-444a-9b1d-be8f44d8138e"],
+ StyleBox["SomeClass &", "Program"],
  "."
 }], "Text",
- ExpressionUUID -> "e8becad8-52be-44f3-807d-c6c530c12699"]
+ ExpressionUUID -> "e8becad8-52be-44f3-807d-c6c530c12699"],
+
+Cell[TextData[{
+ "To get the class instance from an integer directly in C++, use ",
+ StyleBox["mma::getInstance(id)", "Program"],
+ "."
+}], "Text"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3480,14 +3481,10 @@ syntax for reading arguments and returning results.\
 
 Cell[CellGroupData[{
 
-Cell["Other functions", "Subsubsection",
+Cell["Issuing messages", "Subsubsection",
  ExpressionUUID -> "564e3304-a167-4740-be0d-808e1f1373a0"],
 
-Cell["Some other useful functions are", "Text",
- ExpressionUUID -> "74134ec0-03ba-414f-9556-0838633de84e"],
-
 Cell["\<\
-void check_abort();
 void message(const char *msg, MessageType type = M_INFO);
 void message(std::string msg, MessageType type = M_INFO);
 massert(condition) // analogous to C's standard assert macro, but doesn't \
@@ -3534,7 +3531,7 @@ mma::mout << \"The answer is: \" << ans << std::endl;\
 
 Cell[CellGroupData[{
 
-Cell["Error handling", "Subsubsection",
+Cell["Error handling and debugging", "Subsubsection",
  ExpressionUUID -> "45b8897f-d539-4098-bc8d-7abed08a3a07"],
 
 Cell["\<\
@@ -3547,7 +3544,23 @@ Cell["\<\
 LibraryError(int error_code = LIBRARY_FUNCTION_ERROR);
 LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
 \>", "Program",
- ExpressionUUID -> "e06b21af-2283-4b43-85d7-5a89e2997501"]
+ ExpressionUUID -> "e06b21af-2283-4b43-85d7-5a89e2997501"],
+
+Cell["\<\
+The massert() macro can be used as a direct alternative of the standard C \
+assert() macro.\
+\>", "Text"],
+
+Cell["\<\
+massert(condition) // analogous to C's standard assert macro, but doesn't \
+kill the kernel\
+\>", "Program"],
+
+Cell["\<\
+Define NDEBUG to disable assert checking. LTemplate uses a few assert checks \
+internally. Defining NDEBUG will disable these and may provide a tiny \
+performance boost.\
+\>", "Text"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3561,9 +3574,31 @@ Cell[TextData[{
  StyleBox["mma::libData->MTensor_new()", "Program"],
  "."
 }], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Other functions", "Subsubsection"],
+
+Cell["\<\
+To make a function abortable using Evaluation \[Rule] Abort Evaluation, \
+periodically run check_abort() in your function.\
+\>", "Text"],
+
+Cell["void check_abort(); // checks for an honours user aborts", "Program"],
+
+Cell["\<\
+Access to existing class instances are provided through the follwing \
+functions:\
+\>", "Text"],
+
+Cell["\<\
+template<typename Class> Class &getInstance(mint id);
+template<typename T> const std::map<mint, Class *> &getCollection();\
+\>", "Program"]
 }, Closed]]
 }, Open  ]]
-}, Open  ]]
+}, Closed]]
 }, Open  ]]
 },
 WindowSize->{990, 700},

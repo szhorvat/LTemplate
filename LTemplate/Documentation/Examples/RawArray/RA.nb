@@ -15,8 +15,7 @@ Cell[TextData[{
      None},
    ButtonNote->
     "http://reference.wolfram.com/language/ref/BinarySerialize.html"]],
-  FormatType->"StandardForm",ExpressionUUID->
-  "b73d0c21-921c-40e5-a0f1-bf9368919810"],
+  ExpressionUUID->"b73d0c21-921c-40e5-a0f1-bf9368919810"],
  " function."
 }], "Text",ExpressionUUID->"71315409-8bf1-4733-aabb-377f9feb2a01"],
 
@@ -47,16 +46,16 @@ Cell[BoxData[
              RowBox[{"List", ",", "Real", ",", "1"}], "]"}], ",", 
             "\"\<Constant\>\""}], "}"}], "}"}], ",", 
          RowBox[{"LType", "[", 
-          RowBox[{"RawArray", ",", "\"\<UnsignedInteger8\>\""}], "]"}]}], 
-        "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"RawArray", ",", "\"\<Byte\>\""}], "]"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
        RowBox[{"LFun", "[", 
         RowBox[{"\"\<deshuffle\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"{", 
            RowBox[{
             RowBox[{"LType", "[", 
-             RowBox[{"RawArray", ",", "\"\<UnsignedInteger8\>\""}], "]"}], 
-            ",", "\"\<Constant\>\""}], "}"}], "}"}], ",", 
+             RowBox[{"RawArray", ",", "\"\<Byte\>\""}], "]"}], ",", 
+            "\"\<Constant\>\""}], "}"}], "}"}], ",", 
          RowBox[{"LType", "[", 
           RowBox[{"List", ",", "Real", ",", "1"}], "]"}]}], "]"}]}], 
       "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
@@ -17176,9 +17175,8 @@ Cell[TextData[{
 underlying bytes of the data so that the first byte of each floating point \
 number are stored contiguously, followed by the second bytes, and so on. This \
 exposes the redundancy in the data. The ",
- Cell[BoxData["shuffle"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "96674cd3-b1e8-47ba-876b-a021153d76d7"],
+ Cell[BoxData[
+ "shuffle"],ExpressionUUID->"96674cd3-b1e8-47ba-876b-a021153d76d7"],
  " function performs this rearranging."
 }], "Text",ExpressionUUID->"633ef7d1-1ab3-4811-9c14-0a0b865c68bd"],
 
