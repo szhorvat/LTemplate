@@ -1103,6 +1103,18 @@ inline RawArrayRef<T> makeRawVector(mint len) {
     return makeRawArray<T>({len});
 }
 
+/** \brief Creates a rank-1 RawArray of the given type from a C array of the corresponding type
+ *
+ *  \param len is the vector length
+ *  \tparam T is the array type
+ */
+template<typename T>
+inline RawArrayRef<T> makeRawVector(mint len, const T *data) {
+    auto ra = makeRawVector<T>(len);
+    std::copy(data, data+len, ra.begin());
+    return ra;
+}
+
 #endif // LTEMPLATE_RAWARRAY
 
 
