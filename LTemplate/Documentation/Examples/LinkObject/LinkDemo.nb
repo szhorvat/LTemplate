@@ -27,41 +27,72 @@ Cell[BoxData[{
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"template", "=", "\[IndentingNewLine]", 
-   RowBox[{"LClass", "[", "\[IndentingNewLine]", 
-    RowBox[{"\"\<LinkDemo\>\"", ",", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"tensorClass", "[", "type_", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"ToString", "[", "type", "]"}], "<>", "\"\<Tensor\>\""}], ",", 
+     "\[IndentingNewLine]", 
      RowBox[{"{", "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-       "LinkObject", " ", "based", " ", "passing", " ", "can", " ", "be", " ",
-         "specified", " ", "in", " ", "the", " ", "same", " ", "was", " ", 
-        "as", " ", "in", " ", 
-        RowBox[{"LibraryFunctionLoad", ":"}]}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"LFun", "[", 
-        RowBox[{"\"\<reverse\>\"", ",", "LinkObject", ",", "LinkObject"}], 
-        "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       RowBox[{"(*", " ", 
-        RowBox[{
-         RowBox[{"when", " ", "using", " ", "LinkObject"}], "-", 
-         RowBox[{
-         "based", " ", "passing", " ", "the", " ", "\"\<return type\>\"", " ",
-           "may", " ", "be", " ", 
-          RowBox[{"omitted", ":"}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"\"\<set\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"type", ",", "_", ",", "\"\<Manual\>\""}], "}"}], "}"}], 
+         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
        RowBox[{"LFun", "[", 
-        RowBox[{"\"\<reverse2\>\"", ",", "LinkObject"}], "]"}], ",", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<addTwo\>\"", ",", "LinkObject"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<prodSum\>\"", ",", "LinkObject"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"LFun", "[", 
-        RowBox[{"\"\<sqrtList\>\"", ",", "LinkObject"}], "]"}]}], 
+        RowBox[{"\"\<value\>\"", ",", "LinkObject"}], "]"}]}], 
       "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
   ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LTemplate", "[", 
+    RowBox[{"\"\<LinkDemo\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LClass", "[", "\[IndentingNewLine]", 
+        RowBox[{"\"\<LinkDemo\>\"", ",", "\[IndentingNewLine]", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{"(*", " ", 
+           RowBox[{
+           "LinkObject", " ", "based", " ", "passing", " ", "can", " ", "be", 
+            " ", "specified", " ", "in", " ", "the", " ", "same", " ", "was", 
+            " ", "as", " ", "in", " ", 
+            RowBox[{"LibraryFunctionLoad", ":"}]}], " ", "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<reverse\>\"", ",", "LinkObject", ",", "LinkObject"}],
+             "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+             RowBox[{"when", " ", "using", " ", "LinkObject"}], "-", 
+             RowBox[{
+             "based", " ", "passing", " ", "the", " ", "\"\<return type\>\"", 
+              " ", "may", " ", "be", " ", 
+              RowBox[{"omitted", ":"}]}]}], " ", "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<reverse2\>\"", ",", "LinkObject"}], "]"}], ",", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<addTwo\>\"", ",", "LinkObject"}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<prodSum\>\"", ",", "LinkObject"}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<sqrtList\>\"", ",", "LinkObject"}], "]"}]}], 
+          "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"tensorClass", "[", "Real", "]"}], ",", "\[IndentingNewLine]", 
+       
+       RowBox[{"tensorClass", "[", "Integer", "]"}]}], "\[IndentingNewLine]", 
+      "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
 
 Cell[CellGroupData[{
 
@@ -194,6 +225,10 @@ LibraryResources/MacOSX-x86-64/LinkDemo.dylib\"\>"], "Output"]
 
 Cell[BoxData[
  RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Basics", "Subsubsection"],
 
 Cell[CellGroupData[{
 
@@ -368,6 +403,113 @@ Cell[BoxData[
   RowBox[{
   "1.`", ",", "1.4142135623730951`", ",", "1.7320508075688772`", ",", "2.`", 
    ",", "2.23606797749979`"}], "}"}]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Returning MTensors", "Subsubsection"],
+
+Cell["\<\
+mlstream.h supports directly returning Real and Integer Tensors.\
+\>", "Text"],
+
+Cell[TextData[{
+ "The following function creates a new instance of the RealTensor or \
+IntegerTensor class. These two were included in the template specification \
+using the helper function ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"tensorClass", "[", "]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". In C++, they share code using the template mechanism."
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeTensor", "[", 
+   RowBox[{"array_", ",", "type_"}], "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "ten", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"ten", "=", 
+      RowBox[{"Make", "[", 
+       RowBox[{
+        RowBox[{"<|", 
+         RowBox[{
+          RowBox[{"Real", "\[Rule]", "RealTensor"}], ",", 
+          RowBox[{"Integer", "\[Rule]", "IntegerTensor"}]}], "|>"}], "[", 
+        "type", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"ten", "@", 
+         RowBox[{"\"\<set\>\"", "[", "array", "]"}]}], "=!=", "Null"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Return", "[", "$Failed", "]"}]}], "\[IndentingNewLine]", 
+      "]"}], ";", "\[IndentingNewLine]", "ten"}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten1", "=", 
+  RowBox[{"makeTensor", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", "Integer"}], 
+   "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"IntegerTensor", "[", "1", "]"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten1", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1", ",", "2", ",", "3"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten2", "=", 
+  RowBox[{"makeTensor", "[", 
+   RowBox[{
+    RowBox[{"RandomReal", "[", 
+     RowBox[{"1", ",", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "3"}], "}"}]}], "]"}], ",", "Real"}], 
+   "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RealTensor", "[", "1", "]"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten2", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+    "0.8907613237342562`", ",", "0.7284841745035704`", ",", 
+     "0.23574357406811708`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.44447182733017754`", ",", "0.5552106009865929`", ",", 
+     "0.3104895151882623`"}], "}"}]}], "}"}]], "Output"]
+}, Open  ]]
 }, Open  ]]
 }, Open  ]]
 },
