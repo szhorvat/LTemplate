@@ -190,6 +190,24 @@ inline void disownString(const char *str) {
 }
 
 
+namespace detail {
+    template<typename LT>
+    class LTAutoFree {
+        LT ref;
+    public:
+        LTAutoFree(const LT &ref) : ref(ref) { }
+        ~LTAutoFree() { ref.free(); }
+
+        operator LT & () { return ref; }
+
+        LT & operator -> () { return ref; }
+    };
+
+    template<typename LT>
+    LTAutoFree<LT> AutoFree(const LT &ref) { return LTAutoFree<LT>(ref); }
+}
+
+
 /** \brief Get all instances of an LTemplate class
  *
  *  *Do not* use `delete` on the Class pointers in this collection or a crash may result later in the session.
@@ -747,9 +765,8 @@ public:
         *detail::getData<T>(it) = iv;
 
         err = libData->sparseLibraryFunctions->MSparseArray_resetImplicitValue(sa, it, &msa);
-        if (err) throw LibraryError("MSparseArray_resetImplicitValue() failed.", err);
-
         libData->MTensor_free(it);
+        if (err) throw LibraryError("MSparseArray_resetImplicitValue() failed.", err);
 
         return msa;
     }
@@ -953,9 +970,8 @@ template<typename T>
 inline SparseMatrixRef<T> makeSparseMatrix(IntMatrixRef pos, TensorRef<T> vals, mint nrow, mint ncol, T imp = 0) {
     massert(pos.cols() == 2);
 
-    IntTensorRef dims = makeVector<mint>({nrow, ncol});
+    auto dims = detail::AutoFree(makeVector<mint>({nrow, ncol}));
     SparseMatrixRef<T> sa = makeSparseArray(pos, vals, dims, imp);
-    dims.free();
 
     return sa;
 }
