@@ -240,38 +240,34 @@ inline mlStream & operator << (mlStream &ml, const char *s) {
 
 // TensorRef
 
-#define MLSTREAM_DEF_TENSOR_PUT_INTEGRAL(MTYPE, CTYPE) \
-    template<typename T, \
-             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
-    inline mlStream & operator << (mlStream &ml, mma::TensorRef<T> t) { \
-        const int maxrank  = 16; \
-        const int rank = t.rank(); \
-        const mint *mdims = t.dimensions(); \
-        int dims[maxrank]; \
-        massert(rank <= maxrank); \
-        std::copy(mdims, mdims + rank, dims); \
-        if (! MLPut ## MTYPE ## Array(ml.link(), reinterpret_cast<CTYPE *>(t.data()), dims, NULL, rank)) \
-            ml.error("Cannot return " #CTYPE " tensor"); \
-        return ml; \
-    }
+inline mlStream & operator << (mlStream &ml, mma::IntTensorRef t) {
+  const int maxrank  = 16;
+  const int rank = t.rank();
+  const mint *mdims = t.dimensions();
+  int dims[maxrank];
+  massert(rank <= maxrank);
+  std::copy(mdims, mdims + rank, dims);
+  #ifdef MINT_32
+  if (! MLPutInteger32Array(ml.link(), reinterpret_cast<int *>(t.data()), dims, NULL, rank))
+      ml.error("Cannot return Integer Tensor.");
+  #else
+  if (! MLPutInteger64Array(ml.link(), reinterpret_cast<mlint64 *>(t.data()), dims, NULL, rank))
+      ml.error("Cannot return Integer Tensor.");
+  #endif
+  return ml;
+}
 
-#define MLSTREAM_DEF_TENSOR_PUT(MTYPE, CTYPE) \
-    inline mlStream & operator << (mlStream &ml, mma::TensorRef<CTYPE> t) { \
-        const int maxrank  = 16; \
-        const int rank = t.rank(); \
-        const mint *mdims = t.dimensions(); \
-        int dims[maxrank]; \
-        massert(rank <= maxrank); \
-        std::copy(mdims, mdims + rank, dims); \
-        if (! MLPut ## MTYPE ## Array(ml.link(), t.data(), dims, NULL, rank)) \
-            ml.error("Cannot return " #CTYPE " tensor"); \
-        return ml; \
-    }
-
-// We need to define this for both Integer32 and Integer64 as mint could be either
-MLSTREAM_DEF_TENSOR_PUT_INTEGRAL(Integer32, int)
-MLSTREAM_DEF_TENSOR_PUT_INTEGRAL(Integer64, mlint64)
-MLSTREAM_DEF_TENSOR_PUT(Real64, double)
+inline mlStream & operator << (mlStream &ml, mma::RealTensorRef t) {
+    const int maxrank  = 16;
+    const int rank = t.rank();
+    const mint *mdims = t.dimensions();
+    int dims[maxrank];
+    massert(rank <= maxrank);
+    std::copy(mdims, mdims + rank, dims);
+    if (! MLPutReal64Array(ml.link(), t.data(), dims, NULL, rank))
+        ml.error("Cannot return Real Tensor");
+    return ml;
+}
 
 // TODO support complex tensors
 
