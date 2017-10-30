@@ -1192,6 +1192,27 @@ typedef float           im_real32_t;
 typedef double          im_real_t;
 /// @}
 
+/** \brief Returns the value representing "white" for the give pixel type
+ *
+ * For integer types, this is the highest value that can be stored.
+ *
+ * For floating point types, it is 1.0. Higher values can be stored, but will be
+ * clipped during display or conversion.
+ *
+ * The value representing "black" is always 0.
+ */
+template<typename T>
+T imageMax() { return std::numeric_limits<T>::max(); }
+
+template<>
+im_bit_t imageMax() { return 1; }
+
+template<>
+im_real32_t imageMax() { return 1.0f; }
+
+template<>
+im_real_t imageMax() { return 1.0; }
+
 namespace detail { // private
     template<typename T> inline imagedata_t libraryImageType() {
         static_assert(std::is_same<T, T&>::value,
