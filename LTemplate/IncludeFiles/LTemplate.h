@@ -44,13 +44,12 @@
 #undef P
 
 // Sanity check for the size of mint.
-/*
 #ifdef MINT_32
 static_assert(sizeof(mint) == 4, "MINT_32 defined but sizeof(mint) != 4.");
 #else
 static_assert(sizeof(mint) == 8, "MINT_32 is not defined but sizeof(mint) != 8. Define MINT_32 when compiling on 32-bit platforms.");
 #endif
-*/
+
 
 #include <cstdint>
 #include <complex>
@@ -62,6 +61,7 @@ static_assert(sizeof(mint) == 8, "MINT_32 is not defined but sizeof(mint) != 8. 
 #include <type_traits>
 #include <iterator>
 #include <initializer_list>
+#include <limits>
 
 /// The namespace used by LTemplate
 namespace mma {
