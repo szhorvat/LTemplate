@@ -1202,6 +1202,7 @@ typedef unsigned char   im_byte_t;
 typedef unsigned short  im_bit16_t;
 typedef float           im_real32_t;
 typedef double          im_real_t;
+typedef im_byte_t       im_bit8_t;   ///< Alias for \ref im_byte_t
 /// @}
 
 /** \brief Returns the value representing "white" for the give pixel type
