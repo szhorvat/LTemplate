@@ -1165,6 +1165,7 @@ inline RawArrayRef<T> makeRawVector(mint len) {
 /** \brief Creates a rank-1 RawArray of the given type from a C array of the corresponding type
  *
  *  \param len is the vector length
+ *  \param data will be copied into the raw vector
  *  \tparam T is the array type
  */
 template<typename T>
@@ -1197,11 +1198,11 @@ static_assert(sizeof(bool) == 1, "The bool type is expected to be of size 1.");
  * This is so that it will be distinct from im_byte_t.
  */
 /// @{
-typedef bool            im_bit_t;
-typedef unsigned char   im_byte_t;
-typedef unsigned short  im_bit16_t;
-typedef float           im_real32_t;
-typedef double          im_real_t;
+typedef bool            im_bit_t;    ///< `"Bit"`, `MImage_Type_Bit`
+typedef unsigned char   im_byte_t;   ///< `"Byte"`, `MImage_Type_Bit8`
+typedef unsigned short  im_bit16_t;  ///< `"Bit16"`, `MImage_Type_Bit16`
+typedef float           im_real32_t; ///< `"Real32"`, `MImage_Type_Real32`
+typedef double          im_real_t;   ///< `"Real"`, `MImage_Type_Real`
 typedef im_byte_t       im_bit8_t;   ///< Alias for \ref im_byte_t
 /// @}
 
@@ -1471,10 +1472,10 @@ public:
     /// Pointer to the image data
     T *data() const { return image_data; }
 
-    /// Returns an interator to the beginning of the image data
+    /// Returns an iterator to the beginning of the image data
     T *begin() const { return data(); }
 
-    /// Returns an interator to the end of the image data
+    /// Returns an iterator to the end of the image data
     T *end() const { return begin() + length(); }
 
     /// Returns a pixel iterator to the beginning of \p channel
@@ -1568,10 +1569,10 @@ public:
     /// Pointer to the image data
     T *data() const { return image_data; }
 
-    /// Returns an interator to the beginning of the image data
+    /// Returns an iterator to the beginning of the image data
     T *begin() const { return data(); }
 
-    /// Returns an interator to the end of the image data
+    /// Returns an iterator to the end of the image data
     T *end() const { return begin() + length(); }
 
     /// Returns a pixel iterator to the beginning of \p channel
