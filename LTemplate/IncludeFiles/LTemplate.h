@@ -1079,12 +1079,8 @@ template<typename T>
 class RawArrayRef : public GenericRawArrayRef {
     T * const array_data;
 
-public:
-    RawArrayRef(const MRawArray &mra) :
-        GenericRawArrayRef(mra),
-        array_data(reinterpret_cast<T *>(libData->rawarrayLibraryFunctions->MRawArray_getData(mra)))
-    {
-        rawarray_t received = libData->rawarrayLibraryFunctions->MRawArray_getType(mra);
+    void checkType() {
+        rawarray_t received = GenericRawArrayRef::type();
         rawarray_t expected = detail::libraryRawType<T>();
         if (received != expected) {
             std::ostringstream err;
@@ -1092,6 +1088,22 @@ public:
                 << detail::rawTypeMathematicaName(expected) << " expected.";
             throw LibraryError(err.str(), LIBRARY_TYPE_ERROR);
         }
+    }
+
+public:
+
+    RawArrayRef(const MRawArray &mra) :
+        GenericRawArrayRef(mra),
+        array_data(reinterpret_cast<T *>(libData->rawarrayLibraryFunctions->MRawArray_getData(mra)))
+    {
+        checkType();
+    }
+
+    RawArrayRef(const GenericRawArrayRef &gra) :
+        GenericRawArrayRef(gra),
+        array_data(reinterpret_cast<T *>(libData->rawarrayLibraryFunctions->MRawArray_getData(gra.rawArray())))
+    {
+        checkType();
     }
 
     /// Creates a copy of the referenced RawArray
