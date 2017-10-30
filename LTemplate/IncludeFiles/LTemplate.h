@@ -806,7 +806,7 @@ public:
 
     /// Bidirectional iterator for enumerating the explicitly stored values and positions of a sparse matrix.
     class iterator : public std::iterator<std::bidirectional_iterator_tag, T> {
-        const SparseMatrixRef &sm;
+        SparseMatrixRef &sm;
         mint row_index, index;
 
         friend class SparseMatrixRef;
@@ -1309,7 +1309,7 @@ public:
 template<typename T>
 class pixel_iterator : public std::iterator<std::random_access_iterator_tag, T> {
     T *ptr;
-    const ptrdiff_t step;
+    ptrdiff_t step;
 
     friend ImageRef<T>;
     friend Image3DRef<T>;
