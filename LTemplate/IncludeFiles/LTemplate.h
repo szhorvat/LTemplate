@@ -1069,6 +1069,8 @@ public:
         // TODO check error?
         return libData->rawarrayLibraryFunctions->MRawArray_convertType(ra, detail::libraryRawType<U>());
     }
+
+    rawarray_t type() const { return libData->rawarrayLibraryFunctions->MRawArray_getType(ra); }
 };
 
 
@@ -1303,6 +1305,11 @@ public:
     /// Convert the image to the given type of \ref ImageRef. The interleaving mode is preserved.
     template<typename U>
     ImageRef<U> convertTo() const { return convertTo<U>(interleavedQ()); }
+
+    /// Returns the image/pixel type
+    imagedata_t type() const {
+        return libData->imageLibraryFunctions->MImage_getDataType(im);
+    }
 };
 
 
