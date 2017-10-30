@@ -1,6 +1,8 @@
 
 #include <LTemplate.h>
 #include <complex>
+#include <algorithm>
+
 
 struct Img {
 
@@ -101,5 +103,51 @@ struct Img {
             }
 
         return im;
+    }
+
+    /* Adjusts each channel of an image so that the values span the whole available range (defined through top()).
+     *
+     * Demonstrated features:
+     *
+     *  - Dispatching to the correct function based on the type of the image
+     *  - Casting GenericImageRef to a type-specialized ImageRef
+     *
+     */
+    mma::GenericImageRef adjust(mma::GenericImageRef im) {
+        // Dispatch to the correct function based on the type of the image
+        switch (im.type()) {
+        case MImage_Type_Bit:
+            break;
+        case MImage_Type_Bit8:
+            iadjust(mma::ImageRef<mma::im_byte_t>(im));
+            break;
+        case MImage_Type_Bit16:
+            iadjust(mma::ImageRef<mma::im_bit16_t>(im));
+            break;
+        case MImage_Type_Real32:
+            iadjust(mma::ImageRef<mma::im_real32_t>(im));
+            break;
+        case MImage_Type_Real:
+            iadjust(mma::ImageRef<mma::im_real_t>(im));
+            break;
+        case MImage_Type_Undef:
+            throw mma::LibraryError("Invalid image.");
+        }
+        return im;
+    }
+
+private:
+
+    // Specialized version of adjust() for each image type
+    template<typename T> void iadjust(mma::ImageRef<T> im) {
+        for (int ch=0; ch < im.nonAlphaChannels(); ++ch) {
+            auto minmax = std::minmax_element(im.pixelBegin(ch), im.pixelEnd(ch));
+            T lo = *minmax.first, hi = *minmax.second;
+            T diff = hi - lo;
+            if (diff == 0)
+                diff = 1;
+            for (auto it = im.pixelBegin(ch); it != im.pixelEnd(ch); ++it)
+                *it = mma::imageMax<T>() * double(*it - lo) / diff;
+        }
     }
 };
