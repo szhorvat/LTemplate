@@ -1,6 +1,6 @@
 # LTemplate
 
-**Note:** If you plan to use LTemplate, please send me an email and let me know about your use case. If I know how people use it, I can be more careful with breaking changes. 
+**Note:** If you plan to use LTemplate, please send me an email and let me know about your use case. If I know how people use it, I can be more careful with breaking changes.
 
 ----
 
@@ -8,7 +8,7 @@ This is a package that simplifies extending [_Mathematica_][1] through [LibraryL
 
 To install, drop the `LTemplate` directory in the directory opened by `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`.
 
-See `Documentation/LTemplateTutorial.nb` for a short introduction through examples.
+See `Documentation/LTemplateTutorial.nb` for a short introduction, and `Documentation/Examples` for many additional examples.
 
 The `skeleton-project` directory contains a sample project that embeds LTemplate. Use this as a starting point for your own LTemplate-based package.
 

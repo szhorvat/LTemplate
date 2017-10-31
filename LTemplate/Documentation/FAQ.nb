@@ -1,0 +1,261 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["LTemplate FAQ", "Title",
+ ExpressionUUID -> "a5b9798d-8acb-4713-b51f-9f5a4097104d"],
+
+Cell[CellGroupData[{
+
+Cell["What is LTemplate?", "Subsection",
+ ExpressionUUID -> "e800e0bf-3d74-4a5b-be42-25cbbd33f0a3"],
+
+Cell[TextData[{
+ "LTemplate is a system that considerably speeds up ",
+ ButtonBox["LibraryLink",
+  BaseStyle->"Link",
+  ButtonData->"paclet:LibraryLink/tutorial/Overview"],
+ " development."
+}], "Text"],
+
+Cell[TextData[{
+ "LTemplate is a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " package that simplifies writing LibraryLink code by automatically \
+generating repetitive code based on \[OpenCurlyDoubleQuote]templates\
+\[CloseCurlyDoubleQuote] describing a C++ class interface. These are inspired \
+by ",
+ StyleBox["MathLink",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s .tm files. It also provides easy to use C++ wrapper \
+classes for the usual LibraryLink types, as well as a number of convenience \
+functions for faster development and debugging."
+}], "Text",
+ ExpressionUUID -> "5c9c4883-d28c-4484-a0dd-dbdec923af1b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["What is the best way to learn LTemplate?", "Subsection"],
+
+Cell[TextData[{
+ "It is recommended to understand the basics of the LibraryLink C API before \
+starting to use LTemplate. ",
+ ButtonBox["There is an excellent set of tutorials at Wolfram Community",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://community.wolfram.com/groups/-/m/t/189735/"], None},
+  ButtonNote->"http://community.wolfram.com/groups/-/m/t/189735/"],
+ ", written by Arnoud Buzing. These are much easier to follow than the User \
+Guide. Read them concurrently with ",
+ ButtonBox["the LibraryLink User Guide",
+  BaseStyle->"Link",
+  ButtonData->"paclet:LibraryLink/tutorial/Overview"],
+ " and learn at least about passing numerical arguments, returning results, \
+and basic handling of arrays."
+}], "Text"],
+
+Cell[TextData[{
+ "Once you have a grasp of the basics, start reading ",
+ ButtonBox["LTemplateTutorial",
+  BaseStyle->"Hyperlink",
+  ButtonData->{"LTemplateTutorial.nb", None}],
+ " while concurrently looking at the example programs in the \
+Documentation/Examples directory. Start with these two sets of examples: \
+Basics, Tensor."
+}], "Text"],
+
+Cell[TextData[{
+ "When working with array-like types, such as Tensors, SparseArray, Images \
+and RawArrays, it is important to understand memory management in \
+LibraryLink. This is discussed in the ",
+ ButtonBox["Memory Management of MTensors",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:LibraryLink/tutorial/InteractionWithMathematica#97446640"],
+ " section of the User Guide."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Do I need to learn LibraryLink before starting to use LTemplate?\
+\>", "Subsection",
+ ExpressionUUID -> "fe2694c6-98bb-4b52-9fee-1ff1b8bc7609"],
+
+Cell[TextData[{
+ "Yes, it is strongly recommended to learn at least the basics. Please take a \
+look at ",
+ ButtonBox["the LibraryLink user guide",
+  BaseStyle->"Link",
+  ButtonData->"paclet:LibraryLink/tutorial/Overview"],
+ " and understand the basic LibraryLink examples."
+}], "Text"],
+
+Cell["\<\
+While LTemplate makes it much easier and faster to set up a library, it is \
+necessary to understand certain concepts, such as the memory management of \
+MTensors, to be able to write correct code.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Can I use LTemplate to generate an interface to an existing class?\
+\>", "Subsection"],
+
+Cell["\<\
+No. Just like library functions, LTemplate classes must follow certain \
+conventions.\
+\>", "Text"],
+
+Cell["\<\
+To interface with another library, one would normally create conversion \
+functions to/from that library\[CloseCurlyQuote]s data types. See \
+Examples/Armadillo for an example.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Can I use C instead of C++?", "Subsection"],
+
+Cell["\<\
+LTemplate requires the use of C++. It is the features that C++ provides over \
+C that made it possible to construct an easier-to-use interface than the C \
+LibraryLink API.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Why do I need to create a class? I only need a few functions.\
+\>", "Subsection"],
+
+Cell["\<\
+Future versions of LTemplate may add support for free functions.\
+\>", "Text"],
+
+Cell["\<\
+Originally, LTemplate was created to make it easy to set up managed library \
+expressions, which map very well to classes.  If you only need free \
+functions, you can always create a single instance of a class, and keep \
+calling functions on it.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["How do I write library initialization and cleanup code?", "Subsection"],
+
+Cell[TextData[{
+ "Currently LTemplate doesn\[CloseCurlyQuote]t support injecting code into ",
+ StyleBox["WolframLibrary_initialize", "Program"],
+ " and ",
+ StyleBox["WolframLibrary_uninitialize", "Program"],
+ ". Add the initialization and cleanup code to the constructor and destructor \
+of a special class. The create a single instance of this class. The \
+destructor will be called when the library is unloaded."
+}], "Text"],
+
+Cell["\<\
+A drawback of this method is that it cannot be controlled which classes and \
+which objects will be destroyed last. This will be remedied in a future \
+versions of LTemplate.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Can I use the LibraryLink C API with LTemplate?", "Subsection"],
+
+Cell["\<\
+Yes, the C functions from WolframLibrary.h can be used in a library built \
+with LTemplate.\
+\>", "Text"],
+
+Cell[TextData[{
+ "Wrapper classes, such as ",
+ StyleBox["mma::TensorRef", "Program"],
+ ", always provide access to the underlying data structure, such as ",
+ StyleBox["MTensor", "Program"],
+ ".  See e.g. ",
+ StyleBox["mma::TensorRef::tensor()", "Program"],
+ "."
+}], "Text"],
+
+Cell[TextData[{
+ StyleBox["mma::libData", "Program"],
+ " provides access to the LibraryLink callback functions."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Can I use LTemplate in another package?", "Subsection"],
+
+Cell["\<\
+Yes, LTemplate is designed to be embeddable into other packages.\
+\>", "Text"],
+
+Cell["\<\
+Mathematica packages that rely on LTemplate should embed it instead of \
+requiring users to install LTemplate. This is to avoid compatibility problems.\
+\>", "Text"],
+
+Cell["\<\
+When LTemplate is embedded into another package, it supports a few \
+customization features:\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+The symbol that library messages are associated with can be customized.\
+\>", "Item"],
+
+Cell["\<\
+LTemplate can be set up for lazy loading, so that each function gets loaded \
+only when needed.\
+\>", "Item"]
+}, Open  ]],
+
+Cell["\<\
+See the skeleton-project directory for an example of embedding LTemplate.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Are there any published packages built on LTemplate?", "Subsection"],
+
+Cell[TextData[{
+ ButtonBox["IGraph/M",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://szhorvat.net/mathematica/IGraphM"], None},
+  ButtonNote->"http://szhorvat.net/mathematica/IGraphM"],
+ " is an interface to the ",
+ ButtonBox["igraph network analysis library",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://igraph.org/"], None},
+  ButtonNote->"http://igraph.org/"],
+ ". It is built on top of LTemplate, and it implements a wrapper class for \
+igraph graphs."
+}], "Text"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{641, 852},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+

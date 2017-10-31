@@ -42,9 +42,16 @@ BeginPackage["SkeletonProject`"]
 (* Privately load LTemplate. Note the leading ` character which ensures that the embedded LTemplate gets loaded. *)
 Get["`LTemplate`LTemplatePrivate`"];
 
-(* ConfigureLTemplate[] *must* be called at this point. You should also supply a symbol from the SkeletonProject`
-   context (called SkeletonProject here) to associate LTemplate's standard ::error, ::warning, etc. messages with. *)
-ConfigureLTemplate["MessageSymbol" -> SkeletonProject];
+(* ConfigureLTemplate[] *must* be called at this point. *)
+ConfigureLTemplate[
+  (* You should also supply a symbol from the SkeletonProject` context (called SkeletonProject here) 
+     to associate LTemplate's standard ::error, ::warning, etc. messages with. *)
+  "MessageSymbol" -> SkeletonProject,
+  (* If lazy loading is enabled, functions are loaded only on first use.
+     This improves package loading performance, but it is not convenient
+     during development and debugging. *)
+  "LazyLoading" -> True
+];
 
 (* Public package symbols go here: *)
 
@@ -112,7 +119,6 @@ Recompile[] :=
       ];
       (* compile code *)
       SetDirectory[$sourceDirectory];
-      Quiet@UnloadTemplate[template];
       CompileTemplate[template, { (* TODO add any extra .cpp source files to be included in the compilation *) },
         "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
         "TargetDirectory" -> $libraryDirectory,

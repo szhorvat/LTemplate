@@ -14,9 +14,8 @@
  * feel free to remove it from your project.  mlstream.h is not meant as a general
  * MathLink interface.  It is specifically designed for handling arguments and return
  * values in conjunction with LTemplate and `LinkObject` based functions.
- *
- * On platforms where `int` and `long` are both 32-bit, define `MLSTREAM_32BIT_INT_AND_LONG`
- * before including this header.
+ * To do this, mlstream functions are usually called in a specific sequence, as
+ * illustrated below.
  *
  * Example usage:
  * \code
@@ -43,10 +42,22 @@
 
 #include "LTemplate.h"
 
+#ifndef LTEMPLATE_USE_CXX11
+#error C++11 compiler required for  mlstream.h
+#endif
+
 #include <vector>
 #include <list>
 #include <string>
 #include <sstream>
+#include <type_traits>
+
+
+// Sanity checks for the sizes of MathLink integer types.
+static_assert(sizeof(short) == 2,   "MathLink type size mismatch: sizeof(short) != 2.");
+static_assert(sizeof(int) == 4 ,    "MathLink type size mismatch: sizeof(int) != 4.");
+static_assert(sizeof(mlint64) == 8, "MathLink type size mismatch: sizeof(mlint64) != 8.");
+
 
 /// Wrapper for `MLINK` to allow using extractors and inserters
 class mlStream {
@@ -59,8 +70,8 @@ public:
 
     MLINK link() { return lp; }
 
-    /// Throws a \ref LibraryError with a given message.
-    void error(const std::string err) {
+    /// Throws a \ref mma::LibraryError with a given message.
+    [[ noreturn ]] void error(const std::string err) {
         std::ostringstream msg;
         if (! context.empty())
             msg << context << ": ";
@@ -138,7 +149,7 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 /// Used for discarding a given number of expressions from an mlStream
 struct mlDiscard {
     const int count;
-    explicit mlDiscard(int count_ = 1) : count(count_) {}
+    explicit mlDiscard(int count_ = 1) : count(count_) { }
 };
 
 inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
@@ -151,6 +162,20 @@ inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
 
 // Basic types (integer and floating point)
 
+#define MLSTREAM_DEF_BASIC_GET_INTEGRAL(MTYPE, CTYPE) \
+    template<typename T, \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
+    inline mlStream & operator >> (mlStream &ml, T &x) { \
+        if (! MLGet ## MTYPE(ml.link(), reinterpret_cast<CTYPE *>(&x))) \
+            ml.error(#MTYPE " expected"); \
+        return ml; \
+    }
+
+MLSTREAM_DEF_BASIC_GET_INTEGRAL(Integer16, short)
+MLSTREAM_DEF_BASIC_GET_INTEGRAL(Integer32, int)
+MLSTREAM_DEF_BASIC_GET_INTEGRAL(Integer64, mlint64)
+
+
 #define MLSTREAM_DEF_BASIC_GET(MTYPE, CTYPE) \
     inline mlStream & operator >> (mlStream &ml, CTYPE &x) { \
         if (! MLGet ## MTYPE(ml.link(), &x)) \
@@ -158,16 +183,23 @@ inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
         return ml; \
     }
 
-MLSTREAM_DEF_BASIC_GET(Integer16, short)
-MLSTREAM_DEF_BASIC_GET(Integer32, int)
-MLSTREAM_DEF_BASIC_GET(Integer64, mlint64)
 MLSTREAM_DEF_BASIC_GET(Real32, float)
 MLSTREAM_DEF_BASIC_GET(Real64, double)
 MLSTREAM_DEF_BASIC_GET(Real128, mlextended_double)
 
-#ifdef MLSTREAM_32BIT_INT_AND_LONG
-inline mlStream & operator >> (mlStream &ml, long &x) { ml >> reinterpret_cast<int &>(x); }
-#endif
+
+#define MLSTREAM_DEF_BASIC_PUT_INTEGRAL(MTYPE, CTYPE) \
+    template<typename T, \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
+    inline mlStream & operator << (mlStream &ml, T x) { \
+        if (! MLPut ## MTYPE(ml.link(), static_cast<CTYPE>(x))) \
+            ml.error("Cannot return " #MTYPE); \
+        return ml; \
+    }
+
+MLSTREAM_DEF_BASIC_PUT_INTEGRAL(Integer16, short)
+MLSTREAM_DEF_BASIC_PUT_INTEGRAL(Integer32, int)
+MLSTREAM_DEF_BASIC_PUT_INTEGRAL(Integer64, mlint64)
 
 
 #define MLSTREAM_DEF_BASIC_PUT(MTYPE, CTYPE) \
@@ -177,16 +209,9 @@ inline mlStream & operator >> (mlStream &ml, long &x) { ml >> reinterpret_cast<i
         return ml; \
     }
 
-MLSTREAM_DEF_BASIC_PUT(Integer16, short)
-MLSTREAM_DEF_BASIC_PUT(Integer32, int)
-MLSTREAM_DEF_BASIC_PUT(Integer64, mlint64)
 MLSTREAM_DEF_BASIC_PUT(Real32, float)
 MLSTREAM_DEF_BASIC_PUT(Real64, double)
 MLSTREAM_DEF_BASIC_PUT(Real128, mlextended_double)
-
-#ifdef MLSTREAM_32BIT_INT_AND_LONG
-inline mlStream & operator << (mlStream &ml, long x) { ml << static_cast<int>(x); }
-#endif
 
 
 // Strings
@@ -215,25 +240,37 @@ inline mlStream & operator << (mlStream &ml, const char *s) {
 
 // TensorRef
 
-#define MLSTREAM_DEF_TENSOR_PUT(MTYPE, CTYPE) \
-    inline mlStream & operator << (mlStream &ml, mma::TensorRef<CTYPE> t) { \
-        const int maxrank  = 16; \
-        const int rank = t.rank(); \
-        const mint *mdims = t.dimensions(); \
-        int dims[maxrank]; \
-        massert(rank <= maxrank); \
-        std::copy(mdims, mdims + rank, dims); \
-        if (! MLPut ## MTYPE ## Array(ml.link(), t.data(), dims, NULL, rank)) \
-            ml.error("Cannot return " #CTYPE " tensor"); \
-        return ml; \
-    }
+inline mlStream & operator << (mlStream &ml, mma::IntTensorRef t) {
+  const int maxrank  = 16;
+  const int rank = t.rank();
+  const mint *mdims = t.dimensions();
+  int dims[maxrank];
+  massert(rank <= maxrank);
+  std::copy(mdims, mdims + rank, dims);
+  #ifdef MINT_32
+  if (! MLPutInteger32Array(ml.link(), reinterpret_cast<int *>(t.data()), dims, NULL, rank))
+      ml.error("Cannot return Integer Tensor.");
+  #else
+  if (! MLPutInteger64Array(ml.link(), reinterpret_cast<mlint64 *>(t.data()), dims, NULL, rank))
+      ml.error("Cannot return Integer Tensor.");
+  #endif
+  return ml;
+}
 
-// we need to define this for both Integer32 and Integer64 as mint could be either
-MLSTREAM_DEF_TENSOR_PUT(Integer32, int)
-MLSTREAM_DEF_TENSOR_PUT(Integer64, mlint64)
-MLSTREAM_DEF_TENSOR_PUT(Real64, double)
+inline mlStream & operator << (mlStream &ml, mma::RealTensorRef t) {
+    const int maxrank  = 16;
+    const int rank = t.rank();
+    const mint *mdims = t.dimensions();
+    int dims[maxrank];
+    massert(rank <= maxrank);
+    std::copy(mdims, mdims + rank, dims);
+    if (! MLPutReal64Array(ml.link(), t.data(), dims, NULL, rank))
+        ml.error("Cannot return Real Tensor");
+    return ml;
+}
 
-// TODO support complex
+// TODO support complex tensors
+
 
 // Standard containers -- list
 
@@ -248,7 +285,37 @@ inline mlStream & operator << (mlStream &ml, const std::list<T> &ls) {
 
 // Standard containers -- vector
 
-template<typename T>
+// Put signed integer element types, 16, 32 and 64 bits.
+#define MLSTREAM_DEF_VEC_PUT_INTEGRAL(MTYPE, CTYPE) \
+    template<typename T, \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
+    inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) { \
+        const CTYPE *data = vec.size() == 0 ? NULL : reinterpret_cast<const CTYPE *>(vec.data()); \
+        if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
+            ml.error("Cannot return vector of " #MTYPE); \
+        return ml; \
+    }
+
+MLSTREAM_DEF_VEC_PUT_INTEGRAL(Integer16, short)
+MLSTREAM_DEF_VEC_PUT_INTEGRAL(Integer32, int)
+MLSTREAM_DEF_VEC_PUT_INTEGRAL(Integer64, mlint64)
+
+// Put floating point element types
+#define MLSTREAM_DEF_VEC_PUT(MTYPE, CTYPE) \
+    inline mlStream & operator << (mlStream &ml, const std::vector<CTYPE> &vec) { \
+        const CTYPE *data = vec.size() == 0 ? NULL : vec.data(); \
+        if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
+            ml.error("Cannot return vector of " #MTYPE); \
+        return ml; \
+    }
+
+MLSTREAM_DEF_VEC_PUT(Real32, float)
+MLSTREAM_DEF_VEC_PUT(Real64, double)
+MLSTREAM_DEF_VEC_PUT(Real128, mlextended_double)
+
+// Put all other types
+template<typename T,
+         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlextended_double)) ), int>::type = 0 >
 inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
     ml << mlHead("List", vec.size());
     for (typename std::vector<T>::const_iterator i = vec.begin(); i != vec.end(); ++i)
@@ -256,27 +323,26 @@ inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
     return ml;
 }
 
-#define MLSTREAM_DEF_VEC_PUT(MTYPE, CTYPE) \
-    inline mlStream & operator << (mlStream &ml, const std::vector<CTYPE> &vec) { \
-        const CTYPE *data = vec.size() == 0 ? NULL : &vec[0]; \
-        if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
-            ml.error("Cannot return vector of " #MTYPE); \
+// Get signed integer element types
+#define MLSTREAM_DEF_VEC_GET_INTEGRAL(MTYPE, CTYPE) \
+    template<typename T, \
+             typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0> \
+    inline mlStream & operator >> (mlStream &ml, std::vector<CTYPE> &vec) { \
+        CTYPE *data; \
+        int count; \
+        if (! MLGet ## MTYPE ## List(ml.link(), &data, &count)) \
+            ml.error(#MTYPE " list expected"); \
+        vec.resize(count); \
+        std::copy(data, data+count, vec.begin()); \
+        MLRelease ## MTYPE ## List(ml.link(), data, count); \
         return ml; \
     }
 
-MLSTREAM_DEF_VEC_PUT(Integer16, short)
-MLSTREAM_DEF_VEC_PUT(Integer32, int)
-MLSTREAM_DEF_VEC_PUT(Integer64, mlint64)
-MLSTREAM_DEF_VEC_PUT(Real32, float)
-MLSTREAM_DEF_VEC_PUT(Real64, double)
-MLSTREAM_DEF_VEC_PUT(Real128, mlextended_double)
+MLSTREAM_DEF_VEC_GET_INTEGRAL(Integer16, short)
+MLSTREAM_DEF_VEC_GET_INTEGRAL(Integer32, int)
+MLSTREAM_DEF_VEC_GET_INTEGRAL(Integer64, mlint64)
 
-#ifdef MLSTREAM_32BIT_INT_AND_LONG
-inline mlStream & operator << (mlStream &ml, const std::vector<long> &vec) {
-    ml << reinterpret_cast<const std::vector<int> &>(vec);
-}
-#endif
-
+// Get floating point element types
 #define MLSTREAM_DEF_VEC_GET(MTYPE, CTYPE) \
     inline mlStream & operator >> (mlStream &ml, std::vector<CTYPE> &vec) { \
         CTYPE *data; \
@@ -289,19 +355,9 @@ inline mlStream & operator << (mlStream &ml, const std::vector<long> &vec) {
         return ml; \
     }
 
-MLSTREAM_DEF_VEC_GET(Integer16, short)
-MLSTREAM_DEF_VEC_GET(Integer32, int)
-MLSTREAM_DEF_VEC_GET(Integer64, mlint64)
 MLSTREAM_DEF_VEC_GET(Real32, float)
 MLSTREAM_DEF_VEC_GET(Real64, double)
 MLSTREAM_DEF_VEC_GET(Real128, mlextended_double)
 
-#ifdef MLSTREAM_32BIT_INT_AND_LONG
-inline mlStream & operator >> (mlStream &ml, std::vector<long> &vec) {
-  ml >> reinterpret_cast<std::vector<int> &>(vec);
-}
-#endif
-
 
 #endif // MLSTREAM_H
-

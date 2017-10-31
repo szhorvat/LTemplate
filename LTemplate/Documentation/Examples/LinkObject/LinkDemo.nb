@@ -1,0 +1,524 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["LinkObject based passing", "Section"],
+
+Cell["\<\
+LinkObject-based passing provides much more flexibility than using the \
+standard LibraryLink type. However, it is also much slower.  See a benchmark \
+here:\
+\>", "Text"],
+
+Cell[TextData[ButtonBox["https://mathematica.stackexchange.com/questions/\
+91887/mathlink-wstp-vs-librarylink-performance",
+ BaseStyle->"Hyperlink",
+ ButtonData->{
+   URL["https://mathematica.stackexchange.com/questions/91887/mathlink-wstp-\
+vs-librarylink-performance"], None},
+ ButtonNote->
+  "https://mathematica.stackexchange.com/questions/91887/mathlink-wstp-vs-\
+librarylink-performance"]], "Item"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"tensorClass", "[", "type_", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"ToString", "[", "type", "]"}], "<>", "\"\<Tensor\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<set\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"type", ",", "_", ",", "\"\<Manual\>\""}], "}"}], "}"}], 
+         ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<value\>\"", ",", "LinkObject"}], "]"}]}], 
+      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LTemplate", "[", 
+    RowBox[{"\"\<LinkDemo\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LClass", "[", "\[IndentingNewLine]", 
+        RowBox[{"\"\<LinkDemo\>\"", ",", "\[IndentingNewLine]", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{"(*", " ", 
+           RowBox[{
+           "LinkObject", " ", "based", " ", "passing", " ", "can", " ", "be", 
+            " ", "specified", " ", "in", " ", "the", " ", "same", " ", "was", 
+            " ", "as", " ", "in", " ", 
+            RowBox[{"LibraryFunctionLoad", ":"}]}], " ", "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<reverse\>\"", ",", "LinkObject", ",", "LinkObject"}],
+             "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+             RowBox[{"when", " ", "using", " ", "LinkObject"}], "-", 
+             RowBox[{
+             "based", " ", "passing", " ", "the", " ", "\"\<return type\>\"", 
+              " ", "may", " ", "be", " ", 
+              RowBox[{"omitted", ":"}]}]}], " ", "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<reverse2\>\"", ",", "LinkObject"}], "]"}], ",", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<addTwo\>\"", ",", "LinkObject"}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<prodSum\>\"", ",", "LinkObject"}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<sqrtList\>\"", ",", "LinkObject"}], "]"}]}], 
+          "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"tensorClass", "[", "Real", "]"}], ",", "\[IndentingNewLine]", 
+       
+       RowBox[{"tensorClass", "[", "Integer", "]"}]}], "\[IndentingNewLine]", 
+      "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
+Examples/LinkObject\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
+LinkObject", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"LinkDemo\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["LinkDemo", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/LinkDemo.dylib\"\>"], "Output"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Basics", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "=", 
+  RowBox[{"Make", "[", "LinkDemo", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"LinkDemo", "[", "1", "]"}]], "Output"]
+}, Open  ]],
+
+Cell["Reverse a string.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<reverse\>\"", "[", "\"\<Dennis sinned.\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData["\<\".dennis sinneD\"\>"], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"reverse2", "[", "]"}], TraditionalForm]]],
+ " is a simpler implementation of the same using mlstream.h."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{
+  "\"\<reverse2\>\"", "[", "\"\<Dennis sinned.\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData["\<\".dennis sinneD\"\>"], "Output"]
+}, Open  ]],
+
+Cell["Error checking is included.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<reverse2\>\"", "[", 
+   RowBox[{"\"\<foo\>\"", ",", "\"\<bar\>\""}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"reverse2: 1 \
+arguments expected, 2 received.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], \
+"Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+Note that any type that can be converted to a string can be read off the link \
+as a string. Passing a number of a symbol to the function won\
+\[CloseCurlyQuote]t result in an error.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<reverse2\>\"", "[", "123", "]"}]}]], "Input"],
+
+Cell[BoxData["\<\"321\"\>"], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<reverse2\>\"", "[", "symbol", "]"}]}]], "Input"],
+
+Cell[BoxData["\<\"lobmys\"\>"], "Output"]
+}, Open  ]],
+
+Cell["Add two numbers.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<addTwo\>\"", "[", 
+   RowBox[{"4", ",", "5"}], "]"}]}]], "Input"],
+
+Cell[BoxData["9"], "Output"]
+}, Open  ]],
+
+Cell["\<\
+This function tried to read integers from the link. Strings are not \
+convertible to integers, thus with string arguments an error occurs.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<addTwo\>\"", "[", 
+   RowBox[{"\"\<a\>\"", ",", "\"\<b\>\""}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Integer64 expected.\
+\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+Compute both the produce and sum of an arbitrary-length real list:\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<prodSum\>\"", "[", 
+   RowBox[{"Range", "[", "5", "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"15.`", ",", "120.`"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell["Error checking is always available.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<prodSum\>\"", "[", "12", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"prodSum: Real64 \
+list expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+}, Open  ]],
+
+Cell["Compute the square root of each element in a list.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<sqrtList\>\"", "[", 
+   RowBox[{"Range", "[", "5", "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "1.`", ",", "1.4142135623730951`", ",", "1.7320508075688772`", ",", "2.`", 
+   ",", "2.23606797749979`"}], "}"}]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Returning MTensors", "Subsubsection"],
+
+Cell["\<\
+mlstream.h supports directly returning Real and Integer Tensors.\
+\>", "Text"],
+
+Cell[TextData[{
+ "The following function creates a new instance of the RealTensor or \
+IntegerTensor class. These two were included in the template specification \
+using the helper function ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"tensorClass", "[", "]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". In C++, they share code using the template mechanism."
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeTensor", "[", 
+   RowBox[{"array_", ",", "type_"}], "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "ten", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"ten", "=", 
+      RowBox[{"Make", "[", 
+       RowBox[{
+        RowBox[{"<|", 
+         RowBox[{
+          RowBox[{"Real", "\[Rule]", "RealTensor"}], ",", 
+          RowBox[{"Integer", "\[Rule]", "IntegerTensor"}]}], "|>"}], "[", 
+        "type", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"ten", "@", 
+         RowBox[{"\"\<set\>\"", "[", "array", "]"}]}], "=!=", "Null"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Return", "[", "$Failed", "]"}]}], "\[IndentingNewLine]", 
+      "]"}], ";", "\[IndentingNewLine]", "ten"}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten1", "=", 
+  RowBox[{"makeTensor", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", "Integer"}], 
+   "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"IntegerTensor", "[", "1", "]"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten1", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1", ",", "2", ",", "3"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten2", "=", 
+  RowBox[{"makeTensor", "[", 
+   RowBox[{
+    RowBox[{"RandomReal", "[", 
+     RowBox[{"1", ",", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "3"}], "}"}]}], "]"}], ",", "Real"}], 
+   "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RealTensor", "[", "1", "]"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ten2", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+    "0.8907613237342562`", ",", "0.7284841745035704`", ",", 
+     "0.23574357406811708`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.44447182733017754`", ",", "0.5552106009865929`", ",", 
+     "0.3104895151882623`"}], "}"}]}], "}"}]], "Output"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 751},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+

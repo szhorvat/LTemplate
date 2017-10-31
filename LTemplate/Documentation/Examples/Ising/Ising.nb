@@ -1,0 +1,198 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Two-dimensional Ising model", "Section",
+ ExpressionUUID -> "10c6cfd6-9e82-43f5-a390-f895753bc07f"],
+
+Cell[TextData[{
+ "This example shows how to simulate a two-dimensional ",
+ ButtonBox["Ising model",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://en.wikipedia.org/wiki/Ising_model"], None},
+  ButtonNote->"https://en.wikipedia.org/wiki/Ising_model"],
+ " in C++ and visualize it in real time in Mathematica."
+}], "Text",
+ ExpressionUUID -> "76cdc71d-e64b-4770-8661-fd72ae6b7780"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]}], "Input",
+ ExpressionUUID -> "742d9654-8e42-415c-8976-dcce157c587c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<Ising\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<seed\>\"", ",", 
+         RowBox[{"{", "Integer", "}"}], ",", "\"\<Void\>\""}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<getState\>\"", ",", 
+         RowBox[{"{", "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "2"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<setState\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Integer", ",", "2", ",", "\"\<Constant\>\""}], "}"}], 
+          "}"}], ",", "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<energy\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "Integer"}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<magnetization\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "Integer"}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<simulate\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "Real"}], "}"}], ",", "\"\<Void\>\""}], 
+        "]"}]}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+    "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "74ae851f-272f-4653-9816-f1c3194402de"],
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "ffbc1822-22e9-47c4-be40-57db4f4eb58d"],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "add3ebe9-db11-4e9c-932e-6825b7a1836c"],
+
+Cell[BoxData[
+ RowBox[{"ising", "=", 
+  RowBox[{"Make", "[", "Ising", "]"}]}]], "Input",
+ ExpressionUUID -> "238aa2cf-9058-40f5-8230-9c9f71652ca1"],
+
+Cell[TextData[{
+ "The state must be set before the ",
+ Cell[BoxData["ising"],
+  ExpressionUUID -> "1082ab58-96d7-4dc4-a21c-1971dfaa4685"],
+ " object can be used:"
+}], "Text",
+ ExpressionUUID -> "cf0f3dce-51aa-4efa-87b2-61fc61b49c09"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ising", "@", 
+   RowBox[{"\"\<setState\>\"", "[", 
+    RowBox[{"RandomInteger", "[", 
+     RowBox[{"1", ",", 
+      RowBox[{"{", 
+       RowBox[{"40", ",", "40"}], "}"}]}], "]"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"state", "=", 
+   RowBox[{"ising", "@", 
+    RowBox[{"\"\<getState\>\"", "[", "]"}]}]}], ";"}]}], "Input",
+ ExpressionUUID -> "732764c4-9e22-41c5-8271-53a1ecaf3c95"],
+
+Cell["\<\
+Control sliders for the temperature and simulation speed. Try using them \
+while the simulation is running.\
+\>", "Text",
+ ExpressionUUID -> "bb8b1248-3180-4132-bfc9-664523f0b223"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\"\<temp\>\"", ",", 
+   RowBox[{"Control", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"temp", ",", "2"}], "}"}], ",", "0.01", ",", "20"}], "}"}], 
+    "]"}], ",", 
+   RowBox[{"Dynamic", "[", "temp", "]"}]}], "}"}]], "Input",
+ ExpressionUUID -> "60f3866b-788c-4462-91dc-70b167cb8f84"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\"\<speed\>\"", ",", 
+   RowBox[{"Control", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"step", ",", "300"}], "}"}], ",", "1", ",", "10000", ",", 
+      "1"}], "}"}], "]"}], ",", 
+   RowBox[{"Dynamic", "[", "step", "]"}]}], "}"}]], "Input",
+ ExpressionUUID -> "82de69c3-d667-4447-874f-e58320aa4df3"],
+
+Cell["Set up dynamic visualizations.", "Text",
+ ExpressionUUID -> "37962e41-50d0-4648-9fa0-5fda053fa3e2"],
+
+Cell[BoxData[
+ RowBox[{"Dynamic", "@", 
+  RowBox[{"Row", "[", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"ArrayPlot", "[", 
+      RowBox[{"state", ",", 
+       RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}], ",", 
+     RowBox[{"VerticalGauge", "[", 
+      RowBox[{
+       RowBox[{"ising", "@", 
+        RowBox[{"\"\<energy\>\"", "[", "]"}]}], ",", 
+       RowBox[{"2", " ", 
+        RowBox[{"40", "^", "2"}], 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+       RowBox[{"GaugeLabels", "\[Rule]", "\"\<energy\>\""}]}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"VerticalGauge", "[", 
+      RowBox[{
+       RowBox[{"ising", "@", 
+        RowBox[{"\"\<magnetization\>\"", "[", "]"}]}], ",", 
+       RowBox[{
+        RowBox[{"40", "^", "2"}], 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+       RowBox[{"GaugeLabels", "\[Rule]", "\"\<magnetization\>\""}]}], "]"}]}],
+     "}"}], "]"}]}]], "Input",
+ ExpressionUUID -> "73fd3f39-b896-4ae1-a4cc-115272b9e9af"],
+
+Cell["Start the simulation.", "Text",
+ ExpressionUUID -> "8f9ec8ef-ea0b-4024-ba82-1f22cae42506"],
+
+Cell[BoxData[
+ RowBox[{"While", "[", 
+  RowBox[{"True", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ising", "@", 
+     RowBox[{"\"\<simulate\>\"", "[", 
+      RowBox[{"step", ",", "temp"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"state", "=", 
+     RowBox[{"ising", "@", 
+      RowBox[{"\"\<getState\>\"", "[", "]"}]}]}], ";", "\[IndentingNewLine]", 
+    
+    RowBox[{"Pause", "[", "0.05", "]"}]}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ ExpressionUUID -> "c7758668-cab3-47ee-a816-125c948085c4"],
+
+Cell["\<\
+Simply abort the calculation (Evaluation menu, Abort Evaluation) to stop the \
+simulation.\
+\>", "Text",
+ ExpressionUUID -> "897d8457-ad83-4800-a4b2-33c18a32e805"]
+}, Open  ]]
+},
+WindowSize->{808, 824},
+WindowMargins->{{Automatic, 169}, {Automatic, 10}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+CommonDefaultFormatTypes->{"TextInline"->StandardForm},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+

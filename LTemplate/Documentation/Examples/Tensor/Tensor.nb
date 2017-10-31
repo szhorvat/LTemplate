@@ -1,0 +1,965 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Working with arrays", "Section",
+ ExpressionUUID -> "89046541-ecb9-4571-a6e2-02bc16e11ecd"],
+
+Cell["\<\
+These examples demonstrate the basics of working with multidimensional \
+arrays, the meat-and-potatoes of LibraryLink programming.\
+\>", "Text",
+ ExpressionUUID -> "9c75b65d-6319-43d0-add4-e5a2f62865ec"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]}], "Input",
+ ExpressionUUID -> "ebe6207a-a36c-43fc-81c0-301563a98729"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<Tensor\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "properties", " ", "and", " ", "basic", " ", "argument", " ", 
+        "passing"}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<identity\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "_"}], "}"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Real", ",", "_"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<depth\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "_"}], "}"}], "}"}], ",", "Integer"}], "]"}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<dimensions\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "_"}], "}"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "1"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<length\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "_"}], "}"}], "}"}], ",", "Integer"}], "]"}], 
+       ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{"iteration", " ", "and", " ", "element", " ", "access"}], " ",
+         "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<sum\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "_"}], "}"}], "}"}], ",", "Real"}], "]"}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<printVector\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "1"}], "}"}], "}"}], ",", "\"\<Void\>\""}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<printMatrix\>\"", ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "\"\<Void\>\""}], 
+        "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+        "creating", " ", "Tensors", " ", "of", " ", "various", " ", 
+         "dimensions"}], " ", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<createVector\>\"", ",", 
+         RowBox[{"{", "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Complex", ",", "1"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<createMatrix\>\"", ",", 
+         RowBox[{"{", "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Real", ",", "2"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<createCube\>\"", ",", 
+         RowBox[{"{", "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "3"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<ones2345\>\"", ",", 
+         RowBox[{"{", "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Real", ",", "4"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<zeros\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"Integer", ",", "1"}], "}"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Real", ",", "_"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<range\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "Integer"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "1"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<randomReal\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", 
+           RowBox[{"(*", " ", "n", " ", "*)"}], ",", "Real", " ", 
+           RowBox[{"(*", " ", 
+            RowBox[{"lower", " ", "bound"}], " ", "*)"}], ",", " ", "Real"}], 
+          " ", 
+          RowBox[{"(*", " ", 
+           RowBox[{"upper", " ", "bound"}], " ", "*)"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Real", ",", "1"}], "}"}]}], "]"}]}], "\[IndentingNewLine]",
+       "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "76f0bd2a-001c-4b12-8ada-339aada23a1d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "84627654-cf87-45b8-b889-a53a94794b73"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
+Examples/Tensor\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
+Tensor", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "ffd01111-03d8-4e49-b831-cfea5b37552d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"Tensor\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["Tensor", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "ffd01111-03d8-4e49-b831-cfea5b37552d"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "ffd01111-03d8-4e49-b831-cfea5b37552d"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "ffd01111-03d8-4e49-b831-cfea5b37552d"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/Tensor.dylib\"\>"], "Output",
+ ExpressionUUID -> "4839bed5-e820-4d57-aabf-7e39d7d71cf1"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "22e04a97-b178-46db-b9c6-393d8485b3ad"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "=", 
+  RowBox[{"Make", "[", "Tensor", "]"}]}]], "Input",
+ ExpressionUUID -> "e8609779-55a3-4886-ab0a-3b1298e9938a"],
+
+Cell[BoxData[
+ RowBox[{"Tensor", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "15ca9e05-e17b-4bc9-b925-1c62fd666605"]
+}, Open  ]],
+
+Cell["We will use this random matrix for testing:", "Text",
+ ExpressionUUID -> "6be0909a-caa7-4fa1-9ca0-a7d71004caf5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"arr", "=", 
+  RowBox[{"RandomReal", "[", 
+   RowBox[{"1", ",", 
+    RowBox[{"{", 
+     RowBox[{"2", ",", "3"}], "}"}]}], "]"}]}]], "Input",
+ ExpressionUUID -> "b0dba48f-7746-4b27-a93a-045ed7352c17"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+    "0.9767403851946457`", ",", "0.8014184943182645`", ",", 
+     "0.002464315214107282`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.1900878718712009`", ",", "0.7464296128121861`", ",", 
+     "0.6097863713918001`"}], "}"}]}], "}"}]], "Output",
+ ExpressionUUID -> "f205a1d3-46ed-47ee-b7be-8697ded518f2"]
+}, Open  ]],
+
+Cell["Get the depth of the array:", "Text",
+ ExpressionUUID -> "da12df11-3248-4919-ade3-7eddea2ac6dd"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<depth\>\"", "[", "arr", "]"}]}]], "Input",
+ ExpressionUUID -> "5acca3fc-f44d-4bb4-9d72-b76bde62a457"],
+
+Cell[BoxData["2"], "Output",
+ ExpressionUUID -> "ff9fdb6e-becf-4ceb-ae1c-c2e6a38f64f0"]
+}, Open  ]],
+
+Cell["Get its dimensions:", "Text",
+ ExpressionUUID -> "6469be75-7e43-410e-a6ec-1f1d537a8956"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<dimensions\>\"", "[", "arr", "]"}]}]], "Input",
+ ExpressionUUID -> "6ebb3959-c0d2-4c5c-a960-59195955cb2c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2", ",", "3"}], "}"}]], "Output",
+ ExpressionUUID -> "c5ecd901-afbc-4f33-9010-597035936bf4"]
+}, Open  ]],
+
+Cell["Get the total number of elements:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<length\>\"", "[", "arr", "]"}]}]], "Input"],
+
+Cell[BoxData["6"], "Output"]
+}, Open  ]],
+
+Cell["\<\
+A trivial function that returns a real-valued arbitrary dimensional array \
+as-is:\
+\>", "Text",
+ ExpressionUUID -> "ed64c68b-1c78-4d8a-9777-a1059cc09345"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<identity\>\"", "[", "arr", "]"}]}]], "Input",
+ ExpressionUUID -> "41d120e5-5fcf-4b0d-82ce-6d95c2c6242c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+    "0.9767403851946457`", ",", "0.8014184943182645`", ",", 
+     "0.002464315214107282`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.1900878718712009`", ",", "0.7464296128121861`", ",", 
+     "0.6097863713918001`"}], "}"}]}], "}"}]], "Output",
+ ExpressionUUID -> "48408d7c-01f2-4fab-a51c-5bfd29ef1b39"]
+}, Open  ]],
+
+Cell["Sum the elements of an array:", "Text",
+ ExpressionUUID -> "02b45b96-3bbe-43d3-84e1-a1c3ca9a7848"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<sum\>\"", "[", "arr", "]"}]}]], "Input",
+ ExpressionUUID -> "641e3ed1-74b6-44a3-9737-c530fb156673"],
+
+Cell[BoxData["3.3269270508022046`"], "Output",
+ ExpressionUUID -> "df28ec17-9f54-4832-826c-bb397e31a9bc"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Total", "[", 
+  RowBox[{"arr", ",", "Infinity"}], "]"}]], "Input",
+ ExpressionUUID -> "628e794d-7f15-4689-8403-900a0c71664e"],
+
+Cell[BoxData["3.3269270508022046`"], "Output",
+ ExpressionUUID -> "f10bf4c9-76a6-4787-93eb-ed2634520e02"]
+}, Open  ]],
+
+Cell["\<\
+This function demonstrates iterating through the elements of a matrix, and \
+printing them to the notebook:\
+\>", "Text",
+ ExpressionUUID -> "78452fda-9dd0-47a4-a0a3-35ba17a928f2"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<printMatrix\>\"", "[", "arr", "]"}]}]], "Input",
+ ExpressionUUID -> "b743607a-3b07-4620-b727-8eaf04f652c8"],
+
+Cell[BoxData["\<\"  0.97674 0.8014180.00246432\\n 0.190088  0.74643 \
+0.609786\"\>"], "Print",
+ ExpressionUUID -> "8ecfd94f-7d7d-4c33-9778-368a6c87f256"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"MatrixForm", "[", "arr", "]"}]], "Input",
+ ExpressionUUID -> "f0be799a-5da5-4440-8d0a-7a5fd80798bb"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"0.9767403851946457`", "0.8014184943182645`", "0.002464315214107282`"},
+     {"0.1900878718712009`", "0.7464296128121861`", "0.6097863713918001`"}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ ExpressionUUID -> "03272424-4977-45d9-8e77-6a9c369c770c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<printVector\>\"", "[", 
+   RowBox[{"{", 
+    RowBox[{"E", ",", "Pi", ",", "EulerGamma"}], "}"}], "]"}]}]], "Input"],
+
+Cell[BoxData["\<\"   1:   2.71828\\n   2:   3.14159\\n   3:  0.577216\"\>"], \
+"Print"]
+}, Open  ]],
+
+Cell["\<\
+Create vectors, matrices or cubes (3D arrays) directly. Also demonstrates \
+Complex, Real and Integer tensors.\
+\>", "Text",
+ ExpressionUUID -> "248f6a25-7cb6-411e-8131-0c6d0e1fc4ad"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<createVector\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "9d335f32-8d83-40aa-993e-63eb86d0d3ab"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"2.`", "\[VeryThinSpace]", "-", 
+    RowBox[{"1.`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"2.5`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"6.`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.`", " ", "\[ImaginaryI]"}]}]}], "}"}]], "Output",
+ ExpressionUUID -> "f08f788f-54f0-4360-b650-f70491393107"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<createMatrix\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "6c796ef8-0b4a-4e18-91c9-c3b28d930e1d"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1.5`", ",", "0.7`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3.9`", ",", "4.`"}], "}"}]}], "}"}]], "Output",
+ ExpressionUUID -> "c594d8aa-541c-4887-b52a-cecbe9c837c7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<createCube\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "80811547-218b-4994-9296-a52bd69d5a18"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "4"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"5", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "8"}], "}"}]}], "}"}]}], "}"}]], "Output",
+ ExpressionUUID -> "2195c631-51c7-4985-ae01-1f5fc2927435"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Directly create an array of ones of dimensions ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3", ",", "4", ",", "5"}], "}"}], TraditionalForm]]],
+ "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<ones2345\>\"", "[", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}]}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.`", ",", "1.`", ",", "1.`", ",", "1.`", ",", "1.`"}], 
+        "}"}]}], "}"}]}], "}"}]}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Dimensions", "[", "%", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2", ",", "3", ",", "4", ",", "5"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<zeros\>\"", "[", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "2", ",", "2"}], "}"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`"}], "}"}]}], "}"}]}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Dimensions", "[", "%", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"3", ",", "2", ",", "2"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell["Create an array of arbitrary dimensions, filled with zeros:", "Text"],
+
+Cell["Create integer ranges:", "Text",
+ ExpressionUUID -> "2cb9e4db-6866-4601-8588-697007e22adc"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<range\>\"", "[", 
+   RowBox[{"3", ",", "7"}], "]"}]}]], "Input",
+ ExpressionUUID -> "8394e275-4553-426b-82b5-d2402e369267"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"3", ",", "4", ",", "5", ",", "6", ",", "7"}], "}"}]], "Output",
+ ExpressionUUID -> "8da9db06-6a75-46e1-b723-289393a60607"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<range\>\"", "[", 
+   RowBox[{"1", ",", "0"}], "]"}]}]], "Input",
+ ExpressionUUID -> "9fdf257a-00fc-4a15-beb0-496056e630fb"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ ExpressionUUID -> "1aa7edbb-b61f-4158-96ae-9b00990af0a4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<range\>\"", "[", 
+   RowBox[{"1", ",", "1"}], "]"}]}]], "Input",
+ ExpressionUUID -> "de1d9044-84ee-49c2-91a8-e2213ece219e"],
+
+Cell[BoxData[
+ RowBox[{"{", "1", "}"}]], "Output",
+ ExpressionUUID -> "feecdea2-f8a2-4f82-9f35-66fe7046dc3c"]
+}, Open  ]],
+
+Cell["Generate 1000 random numbers between 0 and 10:", "Text",
+ ExpressionUUID -> "d80ae80b-b1db-4137-89d7-59d272a5ab77"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"obj", "@", 
+   RowBox[{"\"\<randomReal\>\"", "[", 
+    RowBox[{"1000", ",", "0", ",", "10"}], "]"}]}], "//", 
+  "Histogram"}]], "Input",
+ ExpressionUUID -> "dc1549e3-4320-4f36-ab93-954603f5a072"],
+
+Cell[BoxData[
+ GraphicsBox[{
+   {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], EdgeForm[{
+    Opacity[0.616], Thickness[Small]}], {}, 
+    {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], EdgeForm[{
+     Opacity[0.616], Thickness[Small]}], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{0., 0}, {1., 105}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{26.254403522818258`, 
+          59.27642113690953}, {-94.43067428763764, 91.93456273819321}}],
+        StatusArea[#, 105]& ,
+        TagBoxNote->"105"],
+       StyleBox["105", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[105, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{1., 0}, {2., 101}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{58.77642113690953, 
+          91.79843875100082}, {-87.35009382951075, 91.93456273819321}}],
+        StatusArea[#, 101]& ,
+        TagBoxNote->"101"],
+       StyleBox["101", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[101, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{2., 0}, {3., 110}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{91.29843875100082, 
+          124.32045636509207`}, {-103.28139986029625`, 91.93456273819321}}],
+        StatusArea[#, 110]& ,
+        TagBoxNote->"110"],
+       StyleBox["110", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[110, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{3., 0}, {4., 100}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{123.82045636509207`, 
+          156.84247397918335`}, {-85.57994871497904, 91.93456273819321}}],
+        StatusArea[#, 100]& ,
+        TagBoxNote->"100"],
+       StyleBox["100", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[100, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{4., 0}, {5., 98}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{156.34247397918335`, 
+          189.36449159327464`}, {-82.03965848591558, 91.93456273819321}}],
+        StatusArea[#, 98]& ,
+        TagBoxNote->"98"],
+       StyleBox["98", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[98, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{5., 0}, {6., 84}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{188.86449159327464`, 
+          221.8865092073659}, {-57.257626882471484`, 91.93456273819321}}],
+        StatusArea[#, 84]& ,
+        TagBoxNote->"84"],
+       StyleBox["84", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[84, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{6., 0}, {7., 104}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{221.3865092073659, 
+          254.40852682145717`}, {-92.66052917310593, 91.93456273819321}}],
+        StatusArea[#, 104]& ,
+        TagBoxNote->"104"],
+       StyleBox["104", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[104, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{7., 0}, {8., 93}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{253.90852682145717`, 
+          286.9305444355485}, {-73.18893291325698, 91.93456273819321}}],
+        StatusArea[#, 93]& ,
+        TagBoxNote->"93"],
+       StyleBox["93", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[93, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{8., 0}, {9., 104}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{286.4305444355485, 
+          319.45256204963977`}, {-92.66052917310593, 91.93456273819321}}],
+        StatusArea[#, 104]& ,
+        TagBoxNote->"104"],
+       StyleBox["104", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[104, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{9., 0}, {10., 101}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{318.95256204963977`, 
+          351.97457966373105`}, {-87.35009382951075, 91.93456273819321}}],
+        StatusArea[#, 101]& ,
+        TagBoxNote->"101"],
+       StyleBox["101", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[101, {}], 
+       "Tooltip"]& ]}, {}, {}}, {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{-0.2, 0},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  PlotRange->{{0., 10.}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ ExpressionUUID -> "00030c6d-66e9-4869-b5ac-1f17488c7fd2"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 751},
+WindowMargins->{{68, Automatic}, {Automatic, 44}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+

@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-(* :Package Version: 0.4dev *)
+(* :Package Version: 0.5 *)
 (* :Copyright: (c) 2017 Szabolcs Horvát *)
 (* :License: MIT license, see LICENSE.txt *)
 

@@ -1,0 +1,703 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Managed Library Expressions", "Section",
+ ExpressionUUID -> "cd2d3f18-e46f-4d9c-adac-d36ea52104dd"],
+
+Cell[TextData[{
+ "This example demonstrates various operations on ",
+ ButtonBox["managed library expressions",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:paclet:LibraryLink/tutorial/InteractionWithMathematica#353220453"],\
+
+ ". It shows the implementation of a real-valued vector class, ",
+ Cell[BoxData[
+  FormBox["VecExpr", TraditionalForm]],
+  ExpressionUUID -> "54d425c9-3fb5-4ffc-87c3-e4a57edcb78c"],
+ "."
+}], "Text",
+ ExpressionUUID -> "63587299-0a81-4c30-a2c3-d05440e19b72"],
+
+Cell["\<\
+LTemplate was originally created to simplify working with managed library \
+expressions. All LTemplate classes correspond to library expressions with the \
+same manager name.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]}], "Input",
+ ExpressionUUID -> "3c1bcca1-fd1e-487c-a227-5eebf7de8e12"],
+
+Cell["\<\
+This library has two classes, each having its own header file.\
+\>", "Text",
+ ExpressionUUID -> "b611e1bd-c606-4faa-b805-87bd28e021a6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", 
+   RowBox[{"LTemplate", "[", 
+    RowBox[{"\"\<LibraryExpressions\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "Functions", " ", "that", " ", "are", " ", "not", " ", "attached", " ",
+         "to", " ", "any", " ", "VecExpr", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"i", ".", "e", ".", " ", "could"}], " ", "also", " ", "be", 
+          " ", "free"}], ")"}], " ", "will", " ", "be", " ", "members", " ", 
+        "of", " ", "this", " ", 
+        RowBox[{"class", ".", " ", "There"}], " ", "will", " ", "be", " ", 
+        "only", " ", "once", " ", "instance", " ", "of", " ", "this", " ", 
+        RowBox[{"class", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LClass", "[", 
+        RowBox[{"\"\<Manager\>\"", ",", "\[IndentingNewLine]", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{"LFun", "[", 
+           RowBox[{"\"\<releaseVecExpr\>\"", ",", 
+            RowBox[{"{", "Integer", "}"}], ",", "\"\<Void\>\""}], "]"}], 
+          "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{"The", " ", "vector", " ", 
+         RowBox[{"class", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"LClass", "[", 
+        RowBox[{"\"\<VecExpr\>\"", ",", "\[IndentingNewLine]", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<set\>\"", ",", 
+             RowBox[{"{", 
+              RowBox[{"{", 
+               RowBox[{"Real", ",", "1"}], "}"}], "}"}], ",", 
+             "\"\<Void\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<value\>\"", ",", 
+             RowBox[{"{", "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"Real", ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<inner\>\"", ",", 
+             RowBox[{"{", 
+              RowBox[{"LExpressionID", "[", "\"\<VecExpr\>\"", "]"}], "}"}], 
+             ",", "Real"}], "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<setToSum\>\"", ",", 
+             RowBox[{"{", 
+              RowBox[{"{", 
+               RowBox[{"Integer", ",", "1"}], "}"}], "}"}], ",", 
+             "\"\<Void\>\""}], "]"}]}], "\[IndentingNewLine]", "}"}]}], 
+        "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "}"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "5dd1cf3f-d485-4693-8d58-975a44fa935e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "0991b970-8180-4faa-af96-aa4996111648"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
+Examples/LibraryExpressions\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
+LibraryExpressions", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "d9d4032f-0322-40d3-9f57-d95e3b99b3a5"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"LibraryExpressions\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["LibraryExpressions", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "d9d4032f-0322-40d3-9f57-d95e3b99b3a5"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "d9d4032f-0322-40d3-9f57-d95e3b99b3a5"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "d9d4032f-0322-40d3-9f57-d95e3b99b3a5"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/LibraryExpressions.dylib\"\>"], "Output",
+ ExpressionUUID -> "ec9a1924-6a42-40af-b5df-ea4965aa360a"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "86a63d4d-0b65-4d65-87ff-14e55df6b2bb"],
+
+Cell["\<\
+We start by turning off history tracking, to be able to demonstrate automatic \
+freeing of managed library expressions later.\
+\>", "Text",
+ ExpressionUUID -> "603fbe90-66bf-43bf-be7b-9110da8bc154"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$HistoryLength", "=", "0"}], ";"}]], "Input",
+ ExpressionUUID -> "117a414b-6cad-44aa-bbf5-f226c089520d"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"toVecExpr", "[", "]"}], TraditionalForm]],
+  ExpressionUUID -> "7f181341-43b8-4312-b5e2-8fc05fa57338"],
+ " converts to a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list to a ",
+ Cell[BoxData[
+  FormBox["VecExpr", TraditionalForm]],
+  ExpressionUUID -> "b66620f0-ec83-49aa-95f2-855e7c1cd587"],
+ " vector. We define ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"toVecExpr", "[", "]"}], TraditionalForm]],
+  ExpressionUUID -> "c432be49-3b6a-4455-8461-7c215d3ad655"],
+ " in such a way that it will bot accept any symbolic arguments, and use ",
+ Cell[BoxData[
+  FormBox["Block", TraditionalForm]],
+  ExpressionUUID -> "d2cf1e57-06de-4cb4-926a-d34e2562e95c"],
+ " for localization. This is slightly faster than ",
+ Cell[BoxData[
+  FormBox["Module", TraditionalForm]],
+  ExpressionUUID -> "e3a3e20f-ac1f-42fd-8d03-412a92876bdd"],
+ ". While this performance difference is not normally noticeable in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", library functions are so fast that it is measurable in this case."
+}], "Text",
+ ExpressionUUID -> "09264c44-3a23-4454-b579-e768a6a14f46"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"toVecExpr", "[", 
+   RowBox[{"v_", "?", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"VectorQ", "[", 
+       RowBox[{"#", ",", "NumericQ"}], "]"}], "&"}], ")"}]}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"vec", "=", 
+      RowBox[{"Make", "[", "VecExpr", "]"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"vec", "@", 
+      RowBox[{"\"\<set\>\"", "[", "v", "]"}]}], ";", "\[IndentingNewLine]", 
+     "vec"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
+ ExpressionUUID -> "7f5298e4-7c8f-4c34-acc3-ecaacdec40dc"],
+
+Cell["Let us create two vectors:", "Text",
+ ExpressionUUID -> "c0748e4f-e445-435a-9d80-a008a9e867b1"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v1", "=", 
+  RowBox[{"toVecExpr", "[", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3", ",", "4"}], "}"}], "]"}]}]], "Input",
+ ExpressionUUID -> "3305886a-0a00-4b43-adf5-f3d3fc544331"],
+
+Cell[BoxData[
+ RowBox[{"VecExpr", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "e306bbdf-65d1-4a4a-8a55-020b9625051d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v2", "=", 
+  RowBox[{"toVecExpr", "[", 
+   RowBox[{"{", 
+    RowBox[{"4", ",", "3", ",", "2", ",", "1"}], "}"}], "]"}]}]], "Input",
+ ExpressionUUID -> "aea78f2a-ffdb-4519-9afb-a9cf8794a14c"],
+
+Cell[BoxData[
+ RowBox[{"VecExpr", "[", "2", "]"}]], "Output",
+ ExpressionUUID -> "023dda62-c25a-461d-9815-b7915b4f68a9"]
+}, Open  ]],
+
+Cell["Retrieve their value:", "Text",
+ ExpressionUUID -> "83f0efc4-afba-4130-93b8-ab20869e3cdb"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v1", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "336a42a3-538d-4694-a496-73874b0e9eed"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1.`", ",", "2.`", ",", "3.`", ",", "4.`"}], "}"}]], "Output",
+ ExpressionUUID -> "f9a27d1e-e6e5-4737-b63c-124ae123eee0"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Compute their inner product. Notice that we must pass the managed library \
+expression ID (i.e. an integer) of a VecExpr. While LTemplate could in \
+principle detect when ",
+ ButtonBox["ManagedLibraryExpressionID",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/ManagedLibraryExpressionID"],
+ " needs to be applied, this is left to the user so that better performance \
+can be achieved."
+}], "Text",
+ ExpressionUUID -> "8b4aa657-1a23-417a-9231-9bffbc50de16"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v1", "@", 
+  RowBox[{"\"\<inner\>\"", "[", 
+   RowBox[{"ManagedLibraryExpressionID", "[", "v2", "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "22cca200-8d33-4b30-a1c9-5cb06dd6bef4"],
+
+Cell[BoxData["20.`"], "Output",
+ ExpressionUUID -> "ad417a0b-38c6-476c-bdd1-5b96bc6e7926"]
+}, Open  ]],
+
+Cell["Verify the result:", "Text",
+ ExpressionUUID -> "56fcadd6-a1a0-4e58-9cfe-282ba5d072e2"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"v1", "@", 
+   RowBox[{"\"\<value\>\"", "[", "]"}]}], ".", 
+  RowBox[{"v2", "@", 
+   RowBox[{"\"\<value\>\"", "[", "]"}]}]}]], "Input",
+ ExpressionUUID -> "4a458cca-6c38-47ca-a63b-986694f0a950"],
+
+Cell[BoxData["20.`"], "Output",
+ ExpressionUUID -> "938f5fab-15f5-4195-8281-1b90b5fa2071"]
+}, Open  ]],
+
+Cell[TextData[{
+ "The following function creates a new ",
+ Cell[BoxData[
+  FormBox["VecExpr", TraditionalForm]],
+  ExpressionUUID -> "4cfc5c43-dd6c-4bba-8f0f-ead68ebccca6"],
+ " from the sum of multiple other vectors:"
+}], "Text",
+ ExpressionUUID -> "37e823c2-302b-4dac-a693-5310f70edd0f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"vecSum", "[", "vecs__VecExpr", "]"}], ":=", "\[IndentingNewLine]", 
+  
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"vec", "=", 
+      RowBox[{"Make", "[", "VecExpr", "]"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"vec", "@", 
+      RowBox[{"\"\<setToSum\>\"", "[", 
+       RowBox[{"ManagedLibraryExpressionID", "/@", 
+        RowBox[{"{", "vecs", "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+     "vec"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
+ ExpressionUUID -> "5b07c542-8f3a-450a-9156-ff190821a399"],
+
+Cell["Let\[CloseCurlyQuote]s try it:", "Text",
+ ExpressionUUID -> "0a2cd7a7-82a9-4352-9e06-d3f2ab108119"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v3", "=", 
+  RowBox[{"vecSum", "[", 
+   RowBox[{"v1", ",", "v2"}], "]"}]}]], "Input",
+ ExpressionUUID -> "a431b93b-fafd-468f-89fd-cbb590eda6c8"],
+
+Cell[BoxData[
+ RowBox[{"VecExpr", "[", "3", "]"}]], "Output",
+ ExpressionUUID -> "4e38e6ef-a73e-4f5c-b007-963974729189"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v3", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "2bc5057f-aadc-4c0f-aee0-057f922410ae"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"5.`", ",", "5.`", ",", "5.`", ",", "5.`"}], "}"}]], "Output",
+ ExpressionUUID -> "3e36e89b-5ed2-47a1-82c5-7a544e8fc7f2"]
+}, Open  ]],
+
+Cell["At this point we have three managed library expressions", "Text",
+ ExpressionUUID -> "ae1326ce-2cbf-4e37-8780-c9340fc6fa10"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LExpressionList", "[", "VecExpr", "]"}]], "Input",
+ ExpressionUUID -> "b26ae979-7b2f-4398-870f-bc6de7d63a4c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"VecExpr", "[", "1", "]"}], ",", 
+   RowBox[{"VecExpr", "[", "2", "]"}], ",", 
+   RowBox[{"VecExpr", "[", "3", "]"}]}], "}"}]], "Output",
+ ExpressionUUID -> "67ec54a6-67c2-4213-b7a5-358ac73d97b5"]
+}, Open  ]],
+
+Cell["Let us now sum three vectors:", "Text",
+ ExpressionUUID -> "2f4da39c-222c-4f38-bd63-1fb09cd9782d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v3", "=", 
+  RowBox[{"vecSum", "[", 
+   RowBox[{"v1", ",", "v2", ",", "v1"}], "]"}]}]], "Input",
+ ExpressionUUID -> "ca0daf5a-201b-4edd-a667-dd4d1de7efe5"],
+
+Cell[BoxData[
+ RowBox[{"VecExpr", "[", "4", "]"}]], "Output",
+ ExpressionUUID -> "582d2dec-c63f-44de-9e6b-a54104bc1f48"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v3", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "2d90fd89-59c8-4b99-94e3-d21a769593fe"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"6.`", ",", "7.`", ",", "8.`", ",", "9.`"}], "}"}]], "Output",
+ ExpressionUUID -> "bebf8d06-f688-4185-b32a-d834e1cd51bd"]
+}, Open  ]],
+
+Cell[TextData[{
+ "When we gave the symbol ",
+ Cell[BoxData[
+  FormBox["v3", TraditionalForm]]],
+ " a new value, its old value (a ",
+ Cell[BoxData[
+  FormBox["VecExpr", TraditionalForm]]],
+ ") no longer had any references to it. Thus ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " has automatically released the corresponding managed library expression. \
+Notice that ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"VecExpr", "[", "3", "]"}], TraditionalForm]],
+  ExpressionUUID -> "ceca620d-5ac9-4ca9-a9bc-a9a3d5d22da7"],
+ " no longer exists."
+}], "Text",
+ ExpressionUUID -> "80718511-b739-4bdb-9356-f2e06507efcb"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LExpressionList", "[", "VecExpr", "]"}]], "Input",
+ ExpressionUUID -> "ecc5986c-7ad5-4149-bd6d-4336b1616946"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"VecExpr", "[", "1", "]"}], ",", 
+   RowBox[{"VecExpr", "[", "2", "]"}], ",", 
+   RowBox[{"VecExpr", "[", "4", "]"}]}], "}"}]], "Output",
+ ExpressionUUID -> "f92b408f-6f24-469d-a10c-f2c66e363fdc"]
+}, Open  ]],
+
+Cell[TextData[{
+ "However, if ",
+ ButtonBox["$HistoryLength",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/$HistoryLength"],
+ " had not been set to 0, Out would have been keeping a reference to ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"VecExpr", "[", "3", "]"}], TraditionalForm]],
+  ExpressionUUID -> "8c83c4ed-4a84-4699-bb05-3e80f48bbdf3"],
+ ", preventing its release."
+}], "Text",
+ ExpressionUUID -> "38285429-55e5-4415-bb9a-5999782a86ec"],
+
+Cell[TextData[{
+ "Since library expressions are automatically managed by ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", there is normally no need to release them manually. Thus LTemplate (or ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " itself) does not currently provide a function to do this. Should you want \
+to do this anyway for some reason, you can use the LibraryLink C API function \
+",
+ ButtonBox["releaseManagedLibraryExpression",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:LibraryLink/ref/callback/releaseManagedLibraryExpression"],
+ ", and expose it to ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ". This is how e.g. the ",
+ ButtonBox["TriangleDelete",
+  BaseStyle->"Link",
+  ButtonData->"paclet:TriangleLink/ref/TriangleDelete"],
+ " functions of ",
+ ButtonBox["TriangleLink",
+  BaseStyle->"Link",
+  ButtonData->"paclet:TriangleLink/guide/TriangleLink"],
+ " works. An example is shown below."
+}], "Text",
+ ExpressionUUID -> "67beb8c0-7739-42a0-ae14-5d9690809294"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ManagedLibraryExpressionQ", "[", "v3", "]"}]], "Input",
+ ExpressionUUID -> "489039f5-2f2d-418c-9776-8b3adc53afd5"],
+
+Cell[BoxData["True"], "Output",
+ ExpressionUUID -> "f7039d15-cdb0-4d95-9622-147c5f3c38a3"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"manager", "=", 
+   RowBox[{"Make", "[", "Manager", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "6e71477f-6c3b-4768-bc8e-ee292fc77262"],
+
+Cell[BoxData[
+ RowBox[{"manager", "@", 
+  RowBox[{"\"\<releaseVecExpr\>\"", "[", 
+   RowBox[{"ManagedLibraryExpressionID", "[", "v3", "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "22bfe2c8-8279-4e30-8d3b-2f8152cecda3"],
+
+Cell["\<\
+The problem with allowing explicit deletions is that it makes it easy to \
+create expressions which look like they are pointing to a library expression, \
+but in fact they aren\[CloseCurlyQuote]t (as the library expression was \
+already released).\
+\>", "Text",
+ ExpressionUUID -> "7bba95eb-45d5-432b-8599-c96392d83558"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["v3"], "Input",
+ ExpressionUUID -> "3da604e0-ba9f-47b4-b203-36895cc93536"],
+
+Cell[BoxData[
+ RowBox[{"VecExpr", "[", "4", "]"}]], "Output",
+ ExpressionUUID -> "fb71ea5a-a9d5-4449-8f4e-233ea6c12c03"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"v3", "@", 
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "89a9dd05-4d44-405b-b1ac-acaee0720f68"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"LibraryFunction", "::", "noinst"}], "MessageName"], ":", 
+  " ", "\<\"Managed library expression instance does not exist. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote \
+-> \\\"LibraryFunction::noinst\\\"]\\)\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "60e15e21-1284-4ec8-a7d0-024e642d2f55"],
+
+Cell[BoxData[
+ RowBox[{"LibraryFunctionError", "[", 
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "6abe0f62-8086-427e-961b-8a1290bb3790"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ManagedLibraryExpressionQ", "[", "v3", "]"}]], "Input",
+ ExpressionUUID -> "a8d02726-8b03-4c2e-a76b-3384c0da588a"],
+
+Cell[BoxData["False"], "Output",
+ ExpressionUUID -> "b38befe8-49ab-424f-9870-1781db4ec5ce"]
+}, Open  ]],
+
+Cell["Now there are only two VecExpr left:", "Text",
+ ExpressionUUID -> "eae3d927-cae9-4c84-8ba3-fdea45f77701"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LExpressionList", "[", "VecExpr", "]"}]], "Input",
+ ExpressionUUID -> "799d2977-f1f8-44b8-9d6f-41984193daa7"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"VecExpr", "[", "1", "]"}], ",", 
+   RowBox[{"VecExpr", "[", "2", "]"}]}], "}"}]], "Output",
+ ExpressionUUID -> "80c4584b-6ba6-4031-9c3a-423379551aca"]
+}, Open  ]],
+
+Cell["Let us release those too:", "Text",
+ ExpressionUUID -> "7a1bb01e-1cb6-4845-bf28-8f93e2f1b7a6"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"manager", "@", 
+    RowBox[{"\"\<releaseVecExpr\>\"", "[", "#", "]"}]}], "&"}], "/@", 
+  RowBox[{"ManagedLibraryExpressionID", "/@", 
+   RowBox[{"LExpressionList", "[", "VecExpr", "]"}]}]}]], "Input",
+ ExpressionUUID -> "2c77a682-236c-40fe-9ddf-c4968958628c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"Null", ",", "Null"}], "}"}]], "Output",
+ ExpressionUUID -> "e2adcb84-213d-4cac-9e68-b30e25dd99d3"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LExpressionList", "[", "VecExpr", "]"}]], "Input",
+ ExpressionUUID -> "9edfb5c5-1e4c-4e40-b263-6ebab0206733"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ ExpressionUUID -> "cfcac460-d9f2-4c84-a1bf-00a65dac3867"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 751},
+WindowMargins->{{12, Automatic}, {Automatic, 24}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+

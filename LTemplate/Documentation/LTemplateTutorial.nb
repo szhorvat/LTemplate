@@ -1,13 +1,16 @@
 Notebook[{
 
 Cell[CellGroupData[{
-Cell["LTemplate Tutorial", "Title"],
+Cell["LTemplate Tutorial", "Title",
+ ExpressionUUID -> "579c08eb-12a3-4dfb-85ea-3ece2204ccfa"],
 
-Cell["write LibraryLink code with ease", "Subtitle"],
+Cell["write LibraryLink code with ease", "Subtitle",
+ ExpressionUUID -> "fc7ce1d2-cf55-4be4-92bb-9ce05a429522"],
 
 Cell[CellGroupData[{
 
-Cell["What is LTemplate?", "Section"],
+Cell["What is LTemplate?", "Section",
+ ExpressionUUID -> "2fb725b0-0ac2-4dc3-aba5-4043dac2d797"],
 
 Cell[TextData[{
  "LTemplate is a ",
@@ -15,10 +18,25 @@ Cell[TextData[{
   FontSlant->"Italic"],
  " package that simplifies writing LibraryLink code by automatically \
 generating repetitive code based on \[OpenCurlyDoubleQuote]templates\
-\[CloseCurlyDoubleQuote] describing a class interface. These are insipred by ",
+\[CloseCurlyDoubleQuote] describing a C++ class interface. These are inspired \
+by ",
  StyleBox["MathLink",
   FontSlant->"Italic"],
- "\[CloseCurlyQuote]s .tm files."
+ "\[CloseCurlyQuote]s .tm files. It also provides easy to use C++ wrapper \
+classes for the usual LibraryLink types."
+}], "Text",
+ ExpressionUUID -> "5c9c4883-d28c-4484-a0dd-dbdec923af1b"],
+
+Cell[TextData[{
+ "LTemplate is designed to be used either stand-alone, for interactive \
+experimentation, or to be embedded into a Mathematica package built on top of \
+it. ",
+ ButtonBox["IGraph/M",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://szhorvat.net/mathematica/IGraphM"], None},
+  ButtonNote->"http://szhorvat.net/mathematica/IGraphM"],
+ " is built on LTemplate."
 }], "Text"],
 
 Cell[TextData[{
@@ -28,47 +46,58 @@ Cell[TextData[{
   ButtonData->{
     URL["https://github.com/szhorvat/LTemplate"], None},
   ButtonNote->"https://github.com/szhorvat/LTemplate"]
-}], "Text"]
+}], "Text",
+ ExpressionUUID -> "19589646-3724-4a43-a144-8253721954a2"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["An introduction through examples", "Section"],
+Cell["An introduction through examples", "Section",
+ ExpressionUUID -> "97e5013b-b06c-4fe7-8670-bad5e758a460"],
 
-Cell["Let\[CloseCurlyQuote]s load the package first.", "Text"],
+Cell["Let\[CloseCurlyQuote]s load the package first.", "Text",
+ ExpressionUUID -> "9c12008f-2f87-4153-9273-2d87c8f2f0f4"],
 
 Cell[BoxData[
- RowBox[{"<<", "LTemplate`"}]], "Input"],
+ RowBox[{"<<", "LTemplate`"}]], "Input",
+ ExpressionUUID -> "719bf4e1-25f8-4619-bfe1-bd0b8a27a881"],
 
 Cell[CellGroupData[{
 
-Cell["A basic example", "Subsection"],
+Cell["A basic example", "Subsection",
+ ExpressionUUID -> "ad5c0356-c20c-4d2e-8f0a-cc9e18122d3e"],
 
 Cell["\<\
-LTemplate needs the current directory to contain the user written code.  For \
-this example, we will create these files in the operating system\
+LTemplate always looks for the C++ source files in the current directory.  \
+For this example, we will create these files in the operating system\
 \[CloseCurlyQuote]s temporary directory.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "a55cd016-4f3f-4ee4-bc12-ee20ccc03b49"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input",
+ ExpressionUUID -> "32386343-6c6b-481f-a8fa-b0c064e62e40"],
 
 Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
 "], "Output"]
 }, Open  ]],
 
 Cell[TextData[{
- "LTemplate uses C++ and requires working with classes instead of top level \
-functions.  After compiling and loading a template, classes can be \
-instantiated as ",
+ "LTemplate works with C++ classes instead of top-level functions. ",
+ "After compiling and loading a template, classes can be instantiated as ",
  ButtonBox["managed library expressions",
   BaseStyle->"Link",
   ButtonData->
    "paclet:LibraryLink/tutorial/InteractionWithMathematica#353220453"],
  "."
 }], "Text"],
+
+Cell["\<\
+Let\[CloseCurlyQuote]s start by implementing a simple class. Notice the use \
+of LTemplate types for handling array arguments.\
+\>", "Text"],
 
 Cell[BoxData[
  RowBox[{
@@ -80,31 +109,47 @@ matrix\n\tdouble trace(mma::RealMatrixRef mat) {\n\t\tif (mat.rows() != \
 mat.cols())\n\t\t\tthrow mma::LibraryError(\\\"trace: Square matrix expected.\
 \\\");\n\t\tdouble sum = 0.0;\n\t\tfor (mint i=0; i < mat.rows(); ++i) {\n\t\t\
 \tsum += mat(i,i);\n\t\t\tmma::check_abort(); // allow for user aborts\n\t\t}\
-\n\t\treturn sum;\n\t}\n};\n\>\""}], ";"}]], "Input"],
+\n\t\treturn sum;\n\t}\n};\n\>\""}], ";"}]], "Input",
+ ExpressionUUID -> "1b0a18d0-59f8-459d-a9be-6e16413672ce"],
+
+Cell["\<\
+Each LTemplate class must be declared in its own header file, named \
+identically to the class itself.\
+\>", "Text"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"Export", "[", 
   RowBox[{"\"\<Demo1.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
-  "]"}]], "Input"],
+  "]"}]], "Input",
+ ExpressionUUID -> "711bc87f-4589-4487-80c0-98aed45aa212"],
 
-Cell[BoxData["\<\"Demo1.h\"\>"], "Output"]
+Cell[BoxData["\<\"Demo1.h\"\>"], "Output",
+ ExpressionUUID -> "94c8f29c-8439-4329-bee2-d83c709ffb8c"]
 }, Open  ]],
 
 Cell["\<\
 Let us now define a template which mirrors the structure of this class:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "c5727887-d10a-4fd6-9d3b-605834c43911"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"template", "=", "\[IndentingNewLine]", 
    RowBox[{"LTemplate", "[", 
-    RowBox[{"\"\<DemoLib\>\"", ",", "\[IndentingNewLine]", 
+    RowBox[{"\"\<DemoLib\>\"", ",", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"library", " ", "name"}], " ", "*)"}], "\[IndentingNewLine]", 
      RowBox[{"{", "\[IndentingNewLine]", 
       RowBox[{"LClass", "[", 
-       RowBox[{"\"\<Demo1\>\"", ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<Demo1\>\"", ",", " ", 
+        RowBox[{"(*", " ", 
+         RowBox[{"class", " ", "name"}], " ", "*)"}], "\[IndentingNewLine]", 
         RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{"member", " ", "functions"}], " ", "*)"}], 
+         "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"LFun", "[", 
            RowBox[{"\"\<addTwo\>\"", ",", 
@@ -118,36 +163,52 @@ Cell[BoxData[
               RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "Real"}], 
            "]"}]}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
        "]"}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
-  ";"}]], "Input"],
+  ";"}]], "Input",
+ ExpressionUUID -> "15fe1131-9244-491a-82c9-9edb6bd59122"],
 
 Cell[TextData[{
- "The type specifications are identical to the ones used in ",
+ "The argument and return type specifications are similar to the ones used in \
+",
  ButtonBox["LibraryFunctionLoad",
   BaseStyle->"Link",
   ButtonData->"paclet:ref/LibraryFunctionLoad"],
- ", except for tensors with arbitrary element types (",
+ ", with a few minor restrictions and extensions. The most important \
+difference is that LTemplate requries specifying the element type of arrays. \
+The general ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"{", 
-    RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]]],
- "), which are disallowed."
-}], "Text"],
+  RowBox[{"{", 
+   RowBox[{"_", ",", "_"}], "}"}]]],
+ " array specification is disallowed."
+}], "Text",
+ ExpressionUUID -> "6453a1af-3ed8-42c0-95dd-3eb56bc71306"],
 
-Cell["Templates can be formatted for readability:", "Text"],
+Cell["Templates can be formatted for readability:", "Text",
+ ExpressionUUID -> "4b7c78af-72fb-41b8-9257-96872d5bb1f6"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"template", "//", "FormatTemplate"}]], "Input"],
+ RowBox[{"template", "//", "FormatTemplate"}]], "Input",
+ ExpressionUUID -> "955f8273-de47-49b8-a2b8-315e430b1bc1"],
 
 Cell[BoxData["\<\"template DemoLib\\n\\nclass Demo1:\\n    Integer \
-addTwo(Integer, Integer)\\n    Real trace({Real, 2})\"\>"], "Output"]
+addTwo(Integer, Integer)\\n    Real trace(List<Real, 2>)\"\>"], "Output",
+ ExpressionUUID -> "e0d7745c-51d3-4357-8952-34dbe1f69d18"]
 }, Open  ]],
 
-Cell["\<\
-Let\[CloseCurlyQuote]s generate code from the template and compile it.  \
-CompileTemplate takes the same options as CreateLibrary.\
-\>", "Text"],
+Cell[TextData[{
+ "Let\[CloseCurlyQuote]s generate code from the template and compile it using \
+the ",
+ Cell[BoxData["CompileTemplate"]],
+ " function.  ",
+ Cell[BoxData["CompileTemplate"]],
+ " takes the same options as ",
+ ButtonBox["CreateLibrary",
+  BaseStyle->"Link",
+  ButtonData->"paclet:CCompilerDriver/ref/CreateLibrary"],
+ "."
+}], "Text",
+ ExpressionUUID -> "4183b18a-6ec4-40bf-aa4d-9c572eddcc88"],
 
 Cell[CellGroupData[{
 
@@ -158,7 +219,8 @@ Cell[BoxData[
     RowBox[{"\"\<ShellCommandFunction\>\"", " ", "\[Rule]", " ", "Print"}], 
     ",", " ", 
     RowBox[{"\"\<ShellOutputFunction\>\"", "\[Rule]", "Print"}]}], "*)"}], 
-  "\[IndentingNewLine]", "]"}]], "Input"],
+  "\[IndentingNewLine]", "]"}]], "Input",
+ ExpressionUUID -> "0f284a25-9bcc-49c1-a4e4-f4c8d0e35ee3"],
 
 Cell[CellGroupData[{
 
@@ -196,7 +258,8 @@ Cell[BoxData[
    Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "f9aecda8-df43-49f5-884e-855fa7c89315"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -247,7 +310,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "f9aecda8-df43-49f5-884e-855fa7c89315"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -261,7 +325,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "f9aecda8-df43-49f5-884e-855fa7c89315"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -275,92 +340,119 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "f9aecda8-df43-49f5-884e-855fa7c89315"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/DemoLib.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/DemoLib.dylib\"\>"], "Output",
+ ExpressionUUID -> "7758a54e-235e-4b4c-b04b-788d10016702"]
 }, Open  ]],
 
-Cell["You can inspect the generated code:", "Text"],
+Cell["You can inspect the generated code:", "Text",
+ ExpressionUUID -> "8b1889e4-5f32-4327-9de9-0a0cd650ccbc"],
 
 Cell[BoxData[
- RowBox[{"SystemOpen", "[", "\"\<LTemplate-DemoLib.cpp\>\"", "]"}]], "Input"],
+ RowBox[{"SystemOpen", "[", "\"\<LTemplate-DemoLib.cpp\>\"", "]"}]], "Input",
+ ExpressionUUID -> "ff734a40-8ed4-439e-a471-dd90307a37a2"],
 
 Cell[TextData[{
- Cell[BoxData[
-  FormBox["CompileTemplate", TraditionalForm]]],
+ Cell[BoxData["CompileTemplate"]],
  " uses the function ",
+ Cell[BoxData["TranslateTemplate"]],
+ " to generate the code and writes it to a file in the current directory. ",
  Cell[BoxData[
-  FormBox["TranslateTemplate", TraditionalForm]]],
- " to generate the code. ",
- Cell[BoxData[
-  FormBox[
-   RowBox[{"TranslateTemplate", "[", "template", "]"}], TraditionalForm]]],
+  RowBox[{"TranslateTemplate", "[", "template", "]"}]]],
  " returns the generated code as a string."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "48df7fa6-e8b9-419e-8b77-863d069a9521"],
 
-Cell["Automatically load the functions defined in the template:", "Text"],
+Cell["Automatically load the functions defined in the template:", "Text",
+ ExpressionUUID -> "ad90b31d-ca7a-4a77-9697-50b66d0cf839"],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "983f4efe-ee70-4925-a3e4-e12a6279fba3"],
 
 Cell[TextData[{
- "This creates a ",
- StyleBox["Demo1", "Program"],
- " symbol within ",
- StyleBox["LTemplate`Classes`", "Program"],
- ", which has associated definitions that allow calling member functions and \
-is also the base symbol for managed library expressions."
-}], "Text"],
+ "This creates the ",
+ Cell[BoxData["Demo1"]],
+ " symbol within the ",
+ Cell[BoxData["LTemplate`Classes`"]],
+ " context. This symbol has associated definitions that allow calling member \
+functions, and is also the base symbol for managed library expressions."
+}], "Text",
+ ExpressionUUID -> "0dab2804-48ca-43c3-bc71-f2b7f65fb4d8"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LTemplate`Classes`*"}]], "Input"],
+ RowBox[{"Names", "[", "\"\<LTemplate`Classes`*\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", "\<\"Demo1\"\>", "}"}]], "Output"]
+}, Open  ]],
+
+Cell["Its usage message described the class interface:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "Demo1"}]], "Input",
+ ExpressionUUID -> "d3eed4ac-ba2e-4f7a-a45a-ed02ac664833"],
 
 Cell[BoxData[
  StyleBox["\<\"class Demo1:\\n    Integer addTwo(Integer, Integer)\\n    Real \
-trace({Real, 2})\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info103673265252-9972199"]
+trace(List<Real, 2>)\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info103717406654-4019821"]
 }, Open  ]],
 
 Cell["\<\
 Before we proceed, let us disable input/output history tracking to be able to \
 demonstrate how managed library expressions get automatically destroyed:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "a522fd41-a3dc-40f3-a5ea-32681335e436"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"$HistoryLength", "=", "0"}], ";"}]], "Input"],
+  RowBox[{"$HistoryLength", "=", "0"}], ";"}]], "Input",
+ ExpressionUUID -> "bb27ef75-e906-4e36-9a1a-8ae03f0ec4e6"],
 
-Cell["Now we are ready to create an instance of the class ...", "Text"],
+Cell["Now we are ready to create an instance of the class ...", "Text",
+ ExpressionUUID -> "3392dc10-7f7a-4874-b812-769d56718ea4"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"demo1", "=", 
-  RowBox[{"Make", "[", "\"\<Demo1\>\"", "]"}]}]], "Input"],
+  RowBox[{"Make", "[", "\"\<Demo1\>\"", "]"}]}]], "Input",
+ ExpressionUUID -> "dc1ef4e7-b680-4c56-9b01-f479cc5fd578"],
 
 Cell[BoxData[
- RowBox[{"Demo1", "[", "1", "]"}]], "Output"]
+ RowBox[{"Demo1", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "2262625d-9950-45a8-8d35-4f24b4962bb4"]
 }, Open  ]],
 
-Cell["... and call the defined member functions:", "Text"],
+Cell["... and call the defined member functions:", "Text",
+ ExpressionUUID -> "c8a532da-275e-447b-87d3-915b60dfab1c"],
 
-Cell["Add two numbers:", "Text"],
+Cell["Add two numbers:", "Text",
+ ExpressionUUID -> "8bd3bbf2-6480-41f5-bb88-04907fd13aa6"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"demo1", "@", 
   RowBox[{"\"\<addTwo\>\"", "[", 
-   RowBox[{"123", ",", "234"}], "]"}]}]], "Input"],
+   RowBox[{"123", ",", "234"}], "]"}]}]], "Input",
+ ExpressionUUID -> "dd7dfa17-0cbb-483f-acd7-50905374cbe7"],
 
-Cell[BoxData["357"], "Output"]
+Cell[BoxData["357"], "Output",
+ ExpressionUUID -> "ee9e5e9a-8cac-466f-a65e-438ae0d9857d"]
 }, Open  ]],
 
-Cell["Trace of a real matrix:", "Text"],
+Cell["Trace of a real matrix:", "Text",
+ ExpressionUUID -> "6f462ebd-dae5-40eb-8ce0-67913c2a9d66"],
 
 Cell[CellGroupData[{
 
@@ -370,9 +462,11 @@ Cell[BoxData[
    RowBox[{"RandomReal", "[", 
     RowBox[{"1", ",", 
      RowBox[{"{", 
-      RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input"],
+      RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "c359428e-f4fc-44ea-a2c6-9b8de312d1b3"],
 
-Cell[BoxData["2.9708251048158285`"], "Output"]
+Cell[BoxData["2.583120776527476`"], "Output",
+ ExpressionUUID -> "c13fa8fa-3f46-4269-a071-2cf724290580"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -388,7 +482,8 @@ Cell[TextData[{
  " and the output stream ",
  StyleBox["mma::mout", "Program"],
  " can be used for printing to the notebook."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "c69a90ec-1307-4305-a722-5771afb4f5ab"],
 
 Cell[CellGroupData[{
 
@@ -398,56 +493,66 @@ Cell[BoxData[
    RowBox[{"RandomReal", "[", 
     RowBox[{"1", ",", 
      RowBox[{"{", 
-      RowBox[{"5", ",", "6"}], "}"}]}], "]"}], "]"}]}]], "Input"],
+      RowBox[{"5", ",", "6"}], "}"}]}], "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "68c3087e-52be-4f26-9fd4-9fbed1acd114"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"trace: Square \
-matrix expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"trace: Square matrix \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "89f1b593-180d-43e6-b2ba-20f921e05c52"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "a0fcbeee-53bd-4d43-859c-6a5d8a5568bf"]
 }, Open  ]],
 
 Cell["\<\
 We can list all instances of a class. This is mainly useful for debugging \
 leaks.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "0a03429a-59fb-4460-97f0-32ad66ba9101"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"LExpressionList", "[", "\"\<Demo1\>\"", "]"}]], "Input"],
+ RowBox[{"LExpressionList", "[", "\"\<Demo1\>\"", "]"}]], "Input",
+ ExpressionUUID -> "9bc63c50-6369-4744-a14d-4aeeb340d14b"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"Demo1", "[", "1", "]"}], "}"}]], "Output"]
+  RowBox[{"Demo1", "[", "1", "]"}], "}"}]], "Output",
+ ExpressionUUID -> "6538ef84-2bf3-4fd4-88b0-32ca901c95e4"]
 }, Open  ]],
 
 Cell["\<\
 Once all references to an object are gone, it automatically gets destroyed.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "bd8064d8-68ba-4973-b66b-438267b80e32"],
 
 Cell[BoxData[
- RowBox[{"demo1", "=."}]], "Input"],
+ RowBox[{"demo1", "=."}]], "Input",
+ ExpressionUUID -> "294923de-cdbf-43be-af3d-1bce86297dc7"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"LExpressionList", "[", "\"\<Demo1\>\"", "]"}]], "Input"],
+ RowBox[{"LExpressionList", "[", "\"\<Demo1\>\"", "]"}]], "Input",
+ ExpressionUUID -> "de29213a-9fd9-4f4b-a44c-cde396b63675"],
 
 Cell[BoxData[
- RowBox[{"{", "}"}]], "Output"]
+ RowBox[{"{", "}"}]], "Output",
+ ExpressionUUID -> "9dc977ee-92a4-4d1e-aa0a-7ced01abeeff"]
 }, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["A solution for returning multiple values", "Subsection"],
+Cell["A solution for returning multiple values", "Subsection",
+ ExpressionUUID -> "d811284f-23fa-472a-bd75-4f182654cbeb"],
 
 Cell[TextData[{
  "LibraryLink doesn\[CloseCurlyQuote]t support returning multiple \
@@ -459,7 +564,8 @@ using a ",
 initialization/computation, retrieving each piece of result and finally \
 freeing data structures (cleanup).  Doing all this manually is very tedious, \
 but LTemplate makes it quite easy."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "bb3c4b1e-ad3d-461f-b363-e23e64e9414c"],
 
 Cell["\<\
 Let\[CloseCurlyQuote]s look at a simple example which computes the mean and \
@@ -470,18 +576,24 @@ space would normally need to be cleaned up manually, but since LTemplate uses \
 managed library expressions, this will be taken care of automatically.  We \
 include a constructor and destructor that report when they are called, to \
 demonstrate automatic cleanup.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "d250736b-401b-4c70-92d8-43bc62cadc91"],
 
 Cell[CellGroupData[{
 
-Cell[BoxData[
- RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]}], "Input",
+ ExpressionUUID -> "6ec85836-12d2-4ed8-a4df-07e1cf0fd0ea"],
 
 Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
-"], "Output"]
+"], "Output",
+ ExpressionUUID -> "a4ad8761-f865-4db3-8f84-d2dd7e04f25c"]
 }, Open  ]],
 
-Cell[BoxData[
+Cell[CellGroupData[{
+
+Cell[BoxData[{
  RowBox[{
   RowBox[{
   "code", "=", 
@@ -492,23 +604,23 @@ vec) {\n\t\tdouble sum = 0.0, sum2 = 0.0;\n\t\tfor (mint i=0; i < \
 vec.length(); ++i) {\n\t\t\tsum  += vec[i];\n\t\t\tsum2 += vec[i]*vec[i];\n\t\
 \t}\n\t\tm = sum / vec.length();\n\t\tv = sum2 / vec.length() - m*m;\n\t}\n\n\
 \tdouble mean() { return m; }\n\tdouble variance() { return v; }\n};\n\>\""}],
-   ";"}]], "Input"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
+   ";"}], "\n", 
  RowBox[{"Export", "[", 
   RowBox[{"\"\<MeanVariance.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
-  "]"}]], "Input"],
+  "]"}]}], "Input",
+ ExpressionUUID -> "565ed80b-845d-4bf4-a849-4e7b01a11b71"],
 
-Cell[BoxData["\<\"MeanVariance.h\"\>"], "Output"]
+Cell[BoxData["\<\"MeanVariance.h\"\>"], "Output",
+ ExpressionUUID -> "d3fb8c96-bf16-4d32-95a0-f9a4abf0088d"]
 }, Open  ]],
 
 Cell[TextData[{
  "If a template contains only a single class, ",
- StyleBox["LTemplate[\[Ellipsis]]", "Program"],
+ Cell[BoxData[
+  RowBox[{"LTemplate", "[", "\[Ellipsis]", "]"}]]],
  " can be omitted."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "7f0952d3-7119-4732-bae7-56f57556d42a"],
 
 Cell[BoxData[
  RowBox[{
@@ -529,12 +641,14 @@ Cell[BoxData[
        RowBox[{"LFun", "[", 
         RowBox[{"\"\<variance\>\"", ",", 
          RowBox[{"{", "}"}], ",", "Real"}], "]"}]}], "\[IndentingNewLine]", 
-      "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+      "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "acba6932-9711-4171-9773-e377061394b5"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "07e5944f-8434-4ee1-ad5b-7ee85d9b096a"],
 
 Cell[CellGroupData[{
 
@@ -572,7 +686,8 @@ Cell[BoxData[
    Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "5f73b9d9-f516-4d57-a481-778a0489bcbe"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -623,7 +738,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "5f73b9d9-f516-4d57-a481-778a0489bcbe"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -637,7 +753,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "5f73b9d9-f516-4d57-a481-778a0489bcbe"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -651,18 +768,21 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "5f73b9d9-f516-4d57-a481-778a0489bcbe"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/MeanVariance.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/MeanVariance.dylib\"\>"], "Output",
+ ExpressionUUID -> "8ff90b6b-9fd1-490a-af32-43f89a2feed9"]
 }, Open  ]],
 
 Cell["\<\
 Setting up all of this manually would have taken a lot of time and a lot of \
 boilerplate code.  This class with only three functions required 119 lines of \
 boilerplate:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "9d0fcbe6-d6fc-49bb-8f8a-bb66bc32aa49"],
 
 Cell[CellGroupData[{
 
@@ -672,15 +792,19 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"Import", "[", 
      RowBox[{"\"\<LTemplate-MeanVariance.cpp\>\"", ",", "\"\<String\>\""}], 
-     "]"}], ",", "\"\<\\n\>\""}], "]"}]}]], "Input"],
+     "]"}], ",", "\"\<\\n\>\""}], "]"}]}]], "Input",
+ ExpressionUUID -> "e3180d95-a0a6-4d13-8fcf-6f02b286ea76"],
 
-Cell[BoxData["113"], "Output"]
+Cell[BoxData["151"], "Output",
+ ExpressionUUID -> "3ec1ea1d-4aa3-470d-8520-94543fa5ec10"]
 }, Open  ]],
 
-Cell["Let us load the library and create a wrapper for using it.", "Text"],
+Cell["Let us load the library and create a wrapper for using it.", "Text",
+ ExpressionUUID -> "e7607ac0-d36a-46fd-a374-1273c3912087"],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "050ec291-2129-4ce8-8a8f-02adf7b0d4f4"],
 
 Cell[TextData[{
  "On the ",
@@ -689,7 +813,8 @@ Cell[TextData[{
  " side, we use ",
  StyleBox["Block", "Program"],
  " to create temporary objects that live only until all results are retrieved."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "6f85e676-ca65-4054-8bd0-e6127413d380"],
 
 Cell[BoxData[
  RowBox[{
@@ -710,82 +835,109 @@ Cell[BoxData[
         RowBox[{"\"\<mean\>\"", "[", "]"}]}], ",", 
        RowBox[{"obj", "@", 
         RowBox[{"\"\<variance\>\"", "[", "]"}]}]}], "}"}]}]}], 
-   "\[IndentingNewLine]", "]"}]}]], "Input"],
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ ExpressionUUID -> "6f9081f5-7062-4805-ba76-161bc920ec54"],
 
 Cell[TextData[{
  StyleBox["Side note:",
   FontWeight->"Bold"],
- " Block performs slightly better than Module, and in this particular \
-application this performance difference can be noticeable. Make sure you \
-understand ",
+ " ",
+ Cell[BoxData["Block"]],
+ " performs slightly better than ",
+ Cell[BoxData["Module"]],
+ ", and in this particular application this performance difference can be \
+noticeable. Make sure you understand ",
  ButtonBox["the caveats of Block",
   BaseStyle->"Hyperlink",
   ButtonData->{
     URL["http://mathematica.stackexchange.com/a/633/12"], None},
   ButtonNote->"http://mathematica.stackexchange.com/a/633/12"],
  " before using it. A rule of thumb is that a function like this can safely \
-use Block is no symbols will ever be passed into it. "
-}], "Text"],
+use ",
+ Cell[BoxData["Block"]],
+ " is no symbols will ever be passed into it. "
+}], "Text",
+ ExpressionUUID -> "227218c7-a825-42e3-9efa-37ed67b43e81"],
 
-Cell["Let\[CloseCurlyQuote]s test it:", "Text"],
+Cell["Let\[CloseCurlyQuote]s test it:", "Text",
+ ExpressionUUID -> "85e4f25c-355b-4e8f-a44f-64fc33739ed8"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"list", "=", 
    RowBox[{"RandomReal", "[", 
-    RowBox[{"1", ",", "100"}], "]"}]}], ";"}]], "Input"],
+    RowBox[{"1", ",", "100"}], "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "937aad71-dab5-4215-ba46-796413db8d57"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"meanVariance", "[", "list", "]"}]], "Input"],
+ RowBox[{"meanVariance", "[", "list", "]"}]], "Input",
+ ExpressionUUID -> "5c22ba06-475a-4a25-9111-729a087e568b"],
 
 Cell[CellGroupData[{
 
-Cell[BoxData["\<\"constructor called\"\>"], "Print"],
+Cell[BoxData["\<\"constructor called\"\>"], "Print",
+ ExpressionUUID -> "c24fa86a-455e-48d0-8786-d1457c56922e"],
 
-Cell[BoxData["\<\"destructor called\"\>"], "Print"]
+Cell[BoxData["\<\"destructor called\"\>"], "Print",
+ ExpressionUUID -> "c24fa86a-455e-48d0-8786-d1457c56922e"]
 }, Open  ]],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.5240606101622379`", ",", "0.0879661286695555`"}], 
-  "}"}]], "Output"]
+  RowBox[{"0.5666192163107039`", ",", "0.08355863326298674`"}], 
+  "}"}]], "Output",
+ ExpressionUUID -> "7584bab0-bf75-4993-a6ff-d3f243960a46"]
 }, Open  ]],
 
 Cell["\<\
 We can also verify directly that no more instance of the class exist:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "4d9c23b1-7380-4c4e-9f43-16496c6537e0"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"LExpressionList", "[", "MeanVariance", "]"}]], "Input"],
+ RowBox[{"LExpressionList", "[", "MeanVariance", "]"}]], "Input",
+ ExpressionUUID -> "93cf7cda-d54c-4e4c-99a7-2573ea7a0b67"],
 
 Cell[BoxData[
- RowBox[{"{", "}"}]], "Output"]
+ RowBox[{"{", "}"}]], "Output",
+ ExpressionUUID -> "ca26d5b0-da3e-46fd-ade0-a014b2990f60"]
 }, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Additional examples", "Subsection"],
-
-Cell[CellGroupData[{
-
-Cell["User aborts and returning tensors", "Subsubsection"],
+Cell["Additional examples", "Subsection",
+ ExpressionUUID -> "44e210ec-f9eb-461d-8ce6-9472a8a32829"],
 
 Cell["\<\
-The following example demonstrate user aborts and returning tensors.\
+More commented examples are available in the LTemplate/Documentation/Examples \
+subdirectory.\
 \>", "Text"],
 
 Cell[CellGroupData[{
 
-Cell[BoxData[
- RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input"],
+Cell["User aborts and returning tensors", "Subsubsection",
+ ExpressionUUID -> "f04df755-f4c9-4dfa-a0ee-64942a0bbb9d"],
+
+Cell["\<\
+The following example demonstrate user aborts and returning tensors.\
+\>", "Text",
+ ExpressionUUID -> "5ed5ded0-55c1-42a7-9514-3668f079ff7d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]}], "Input",
+ ExpressionUUID -> "fb98e377-30af-4608-9673-6327115ef332"],
 
 Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
-"], "Output"]
+"], "Output",
+ ExpressionUUID -> "7678d161-a04c-4693-a710-198cd9699ff9"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -794,19 +946,19 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
   "code", "=", 
-   "\"\<\n#if ! defined(_WIN32) && ! defined (_WIN64)\n#include <unistd.h>\n\
-#endif\n\nclass Demo2 {\npublic:\n\t// demo for user abort\n\tvoid hang() { \n\
-\t\tmma::mout << \\\"Going into infinite loop ... try aborting now.\\\" << \
-std::endl;\n\t\twhile(true) {\n#if defined(_WIN32) || defined (_WIN64)\n\t\t\t\
-Sleep(100); // sleep 0.1 s on Windows\n#else \n\t\t\tusleep(100000);   // \
-sleep 0.1 s on POSIX\n#endif\n\t\t\tmma::check_abort(); \n\t\t} \n\t}\n\n\t// \
-demo for returning tensors\n\tmma::IntTensorRef range(mint a, mint b) {\n\t\t\
-mma::IntTensorRef vec = mma::makeVector<mint>(b-a+1);\n\t\tfor (int i=0; i <= \
-b-a; ++i)\n\t\t\tvec[i] = a+i;\n\t\treturn vec;\n\t}\n};\n\>\""}], 
-  ";"}], "\[IndentingNewLine]", 
+   "\"\<\n#include <chrono>\n#include <thread>\n\nclass Demo2 {\npublic:\n\t\
+// demo for user abort\n\tvoid hang() { \n\t\tmma::mout << \\\"Going into \
+infinite loop ... try aborting now.\\\" << std::endl;\n\t\twhile(true) {\n\t\t\
+\t// sleep for 0.1 seconds\n\t\t\t\
+std::this_thread::sleep_for(std::chrono::milliseconds(100));\n\t\t\t\
+mma::check_abort(); \n\t\t} \n\t}\n\n\t// demo for returning tensors\n\t\
+mma::IntTensorRef range(mint a, mint b) {\n\t\tmma::IntTensorRef vec = \
+mma::makeVector<mint>(b-a+1);\n\t\tfor (int i=0; i <= b-a; ++i)\n\t\t\tvec[i] \
+= a+i;\n\t\treturn vec;\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
  RowBox[{"Export", "[", 
   RowBox[{"\"\<Demo2.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
-  "]"}]}], "Input"],
+  "]"}]}], "Input",
+ ExpressionUUID -> "6da06b22-8c47-4605-b648-47f8214c8462"],
 
 Cell[BoxData["\<\"Demo2.h\"\>"], "Output"]
 }, Open  ]],
@@ -829,12 +981,14 @@ Cell[BoxData[
          RowBox[{"{", 
           RowBox[{"Integer", ",", "1"}], "}"}]}], "]"}]}], 
       "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
-  ";"}]], "Input"],
+  ";"}]], "Input",
+ ExpressionUUID -> "44f7517d-57f2-4cca-8644-162bc52c66bd"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "12dbb76d-fc79-46f4-b545-760e2225d636"],
 
 Cell[CellGroupData[{
 
@@ -872,7 +1026,8 @@ Cell[BoxData[
    Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "e4cebc49-b27b-4633-874c-f446431fb880"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -923,7 +1078,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "e4cebc49-b27b-4633-874c-f446431fb880"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -937,43 +1093,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
-
-Cell[BoxData[
- InterpretationBox[
-  RowBox[{
-   StyleBox["\<\"LTemplate-Demo2.cpp\"\>",
-    StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]], "\[InvisibleSpace]", 
-   StyleBox["\<\" already exists and will be overwritten.\"\>",
-    StripOnInput->False,
-    LineColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FrontFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    BackFaceColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    GraphicsColor->RGBColor[0, 0, 
-      Rational[2, 3]],
-    FontColor->RGBColor[0, 0, 
-      Rational[2, 3]]]}],
-  SequenceForm[
-   Style["LTemplate-Demo2.cpp", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]], 
-   Style[" already exists and will be overwritten.", 
-    RGBColor[0, 0, 
-     Rational[2, 3]]]],
-  Editable->False]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "e4cebc49-b27b-4633-874c-f446431fb880"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -987,59 +1108,71 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "e4cebc49-b27b-4633-874c-f446431fb880"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/Demo2.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/Demo2.dylib\"\>"], "Output",
+ ExpressionUUID -> "bb851d74-574b-4d56-9589-46712d233cbc"]
 }, Open  ]],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "2ffb1521-1bbb-4315-8704-475341137216"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"demo2", "=", 
-   RowBox[{"Make", "[", "Demo2", "]"}]}], ";"}]], "Input"],
+   RowBox[{"Make", "[", "Demo2", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "a717d5ec-9a7b-4782-b3db-b9c75644ec4c"],
 
 Cell["\<\
 User aborts are supported though mma::check_abort().  This function will \
 never return so you\[CloseCurlyQuote]ll need to use Evaluation \[Rule] Abort \
 Evaluation to stop it.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "a78515fc-f832-4d39-9b54-0de673f381d5"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"demo2", "@", 
-  RowBox[{"\"\<hang\>\"", "[", "]"}]}]], "Input"],
+  RowBox[{"\"\<hang\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "3cb54937-e561-4df8-b406-0d0c9fee68fd"],
 
 Cell[BoxData["\<\"Going into infinite loop ... try aborting now.\"\>"], \
-"Print"],
+"Print",
+ ExpressionUUID -> "97989c04-febd-4d99-8b66-e14324f543e9"],
 
-Cell[BoxData["$Aborted"], "Output"]
+Cell[BoxData["$Aborted"], "Output",
+ ExpressionUUID -> "71dae483-eb55-497a-a947-906245fc2f9d"]
 }, Open  ]],
 
-Cell["This functions returns an integer vector:", "Text"],
+Cell["This functions returns an integer vector:", "Text",
+ ExpressionUUID -> "d100c2be-9e90-47f8-a0a4-c8b7b1496567"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"demo2", "@", 
   RowBox[{"\"\<range\>\"", "[", 
-   RowBox[{"10", ",", "20"}], "]"}]}]], "Input"],
+   RowBox[{"10", ",", "20"}], "]"}]}]], "Input",
+ ExpressionUUID -> "d6fb7db9-0946-426d-96bb-06c5e9a83e20"],
 
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
   "10", ",", "11", ",", "12", ",", "13", ",", "14", ",", "15", ",", "16", ",",
-    "17", ",", "18", ",", "19", ",", "20"}], "}"}]], "Output"]
+    "17", ",", "18", ",", "19", ",", "20"}], "}"}]], "Output",
+ ExpressionUUID -> "82e5a239-f4d1-4026-98c8-b22530599b05"]
 }, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Working with strings", "Subsubsection"],
+Cell["Working with strings", "Subsubsection",
+ ExpressionUUID -> "7fa275f1-ce89-4a9e-b235-b29c70127057"],
 
 Cell[TextData[{
  "Returning strings from LibraryLink without resorting to ",
@@ -1050,12 +1183,14 @@ data in the library.  This is because it is the library\[CloseCurlyQuote]s \
 responsibility to allocate memory for the string and to free it.  Generally, \
 freeing the string must be done in a separate function call from the one \
 returning the string."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "8f8add6a-c7c7-48c8-a152-b9fde1c2cda9"],
 
 Cell["\<\
 Since LTemplate always creates managed library expressions, freeing the \
 string can be made part of releasing the expression.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "2ae1c819-cbd0-4223-b936-ab826e9d12db"],
 
 Cell[TextData[{
  "More information on returning strings from LibraryLink: ",
@@ -1064,28 +1199,35 @@ Cell[TextData[{
   ButtonData->{
     URL["http://mathematica.stackexchange.com/q/55171/12"], None},
   ButtonNote->"http://mathematica.stackexchange.com/q/55171/12"]
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "7edff6b7-067b-4adb-a508-4862baf0e5e1"],
 
-Cell["The following example reverses a string:", "Text"],
+Cell["The following example reverses a string:", "Text",
+ ExpressionUUID -> "e8d14d1a-cd6b-436d-9fc7-19aed42dbd9f"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], ";"}]}], "Input"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], ";"}], "\n", 
- RowBox[{
   RowBox[{
   "code", "=", 
    "\"\<\n#include <string>\n#include <algorithm>\n\nclass ReverseString {\n\t\
 std::string str;\n\npublic:\n\tconst char *reverse(const char *in) {\n\t\tstr \
-= in;\t\t\n\t\tmma::disownString(in); // release the string that Mathematica \
-passes in\n\t\tstd::reverse(str.begin(), str.end());\n\t\treturn str.c_str();\
-\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
+= in; // make a copy\n\t\tmma::disownString(in); // release the string that \
+Mathematica passes in\n\t\tstd::reverse(str.begin(), str.end());\n\t\treturn \
+str.c_str();\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
  RowBox[{"Export", "[", 
   RowBox[{"\"\<ReverseString.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
-  "]"}]}], "Input"],
+  "]"}]}], "Input",
+ ExpressionUUID -> "da1ef44d-6a00-4feb-a1fb-6dc6e9f39a42"],
 
-Cell[BoxData["\<\"ReverseString.h\"\>"], "Output"]
+Cell[BoxData["\<\"ReverseString.h\"\>"], "Output",
+ ExpressionUUID -> "f98b4fef-4083-44df-b452-ef82a1681846"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1097,12 +1239,14 @@ Cell[BoxData[
       RowBox[{"LFun", "[", 
        RowBox[{"\"\<reverse\>\"", ",", 
         RowBox[{"{", "\"\<UTF8String\>\"", "}"}], ",", "\"\<UTF8String\>\""}],
-        "]"}], "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+        "]"}], "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "252d9d44-330e-43d2-8eed-238afd2391f2"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "faaff8ea-bb09-4045-9a8b-85ca3d36219c"],
 
 Cell[CellGroupData[{
 
@@ -1140,7 +1284,8 @@ Cell[BoxData[
    Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "61a0daad-4e6a-4947-b3df-c5f00ba61898"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -1191,7 +1336,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "61a0daad-4e6a-4947-b3df-c5f00ba61898"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -1205,7 +1351,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "61a0daad-4e6a-4947-b3df-c5f00ba61898"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -1219,15 +1366,18 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "61a0daad-4e6a-4947-b3df-c5f00ba61898"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/ReverseString.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/ReverseString.dylib\"\>"], "Output",
+ ExpressionUUID -> "201b1d7f-8389-49a0-b72f-e459fbf2306a"]
 }, Open  ]],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "76de3ce9-528e-4807-9cf9-0510e5c03fa5"],
 
 Cell[BoxData[
  RowBox[{
@@ -1240,20 +1390,24 @@ Cell[BoxData[
     "\[IndentingNewLine]", 
     RowBox[{"rs", "@", 
      RowBox[{"\"\<reverse\>\"", "[", "str", "]"}]}]}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input"],
+   "]"}]}]], "Input",
+ ExpressionUUID -> "49c63041-4865-4143-bd8c-ed48d5253c48"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"reverse", "[", "\"\<Dennis sinned.\>\"", "]"}]], "Input"],
+ RowBox[{"reverse", "[", "\"\<Dennis sinned.\>\"", "]"}]], "Input",
+ ExpressionUUID -> "9b037624-510b-43dc-86c4-d4b57611fb4a"],
 
-Cell[BoxData["\<\".dennis sinneD\"\>"], "Output"]
+Cell[BoxData["\<\".dennis sinneD\"\>"], "Output",
+ ExpressionUUID -> "1b3a7254-681c-4eb6-885d-ae14b806d8cc"]
 }, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Using LinkObject based passing", "Subsubsection"],
+Cell["Using LinkObject based passing", "Subsubsection",
+ ExpressionUUID -> "b49d5a88-c11c-41bf-b318-0531ca09dd41"],
 
 Cell[TextData[{
  "LibraryLink functions can use LinkObject-based argument passing and return, \
@@ -1263,31 +1417,37 @@ Cell[TextData[{
   ButtonData->"paclet:LibraryLink/tutorial/LibraryStructure#606935091"],
  ". This is supported by LTemplate as well. The argument type specification \
 in LFun follows the LibraryLink convention again:"
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "f0fc619f-7b3f-49f4-84b6-86fd6b273876"],
 
 Cell[BoxData[
  RowBox[{"LFun", "[", 
   RowBox[{"\"\<functionName\>\"", ",", "LinkObject", ",", "LinkObject"}], 
   "]"}]], "Input",
- Evaluatable->False],
+ Evaluatable->False,
+ ExpressionUUID -> "3120b12f-908b-468d-bd8c-3a4162f90197"],
 
-Cell["This can be shortened for convenience:", "Text"],
+Cell["This can be shortened for convenience:", "Text",
+ ExpressionUUID -> "25560ef9-1abd-45e1-b5ea-c38408743caa"],
 
 Cell[BoxData[
  RowBox[{"LFun", "[", 
   RowBox[{"\"\<functionName\>\"", ",", "LinkObject"}], "]"}]], "Input",
- Evaluatable->False],
+ Evaluatable->False,
+ ExpressionUUID -> "90a0ec50-01d9-45c8-b2e4-f593abee191e"],
 
 Cell["\<\
 The corresponding C++ member function takes a single MLINK argument and has \
 void return type.  Here\[CloseCurlyQuote]s a full example:\
-\>", "Text"],
-
-Cell[CellGroupData[{
+\>", "Text",
+ ExpressionUUID -> "02c93c98-a68c-40e3-a5df-858858fea2eb"],
 
 Cell[BoxData[{
- RowBox[{"SetDirectory", "[", "$TemporaryDirectory", 
-  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], ";"}]}], "Input"],
+
+Cell[BoxData[{
  RowBox[{
   RowBox[{
   "code", "=", 
@@ -1303,11 +1463,8 @@ return result\n\t\tMLNewPacket(link);\n\t\tMLPutInteger32(link, result);\n    \
  RowBox[{
   RowBox[{"Export", "[", 
    RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
-   "]"}], ";"}]}], "Input"],
-
-Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
-"], "Output"]
-}, Open  ]],
+   "]"}], ";"}]}], "Input",
+ ExpressionUUID -> "08df6db8-8b2e-4520-b262-81d1a71a1bbc"],
 
 Cell[BoxData[
  RowBox[{
@@ -1317,12 +1474,14 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"LFun", "[", 
        RowBox[{"\"\<addTwo\>\"", ",", "LinkObject"}], "]"}], "}"}]}], 
-    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "99c75970-4c33-4297-bdec-0c9bce3893b4"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "091b9889-ed3a-4b35-8da1-502b2f2e54f6"],
 
 Cell[CellGroupData[{
 
@@ -1360,7 +1519,8 @@ Cell[BoxData[
    Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "06dd9198-efd9-4724-893f-3dbf5ece92c3"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -1411,7 +1571,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "06dd9198-efd9-4724-893f-3dbf5ece92c3"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -1425,7 +1586,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "06dd9198-efd9-4724-893f-3dbf5ece92c3"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -1439,47 +1601,56 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "06dd9198-efd9-4724-893f-3dbf5ece92c3"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/LinkObjDemo.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/LinkObjDemo.dylib\"\>"], "Output",
+ ExpressionUUID -> "bbb96f2a-9147-4f3b-970f-d02757073a73"]
 }, Open  ]],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "833a328d-8944-4a72-9200-9cc25df05446"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"obj", "=", 
-   RowBox[{"Make", "[", "LinkObjDemo", "]"}]}], ";"}]], "Input"],
+   RowBox[{"Make", "[", "LinkObjDemo", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "bbcf8484-c69c-424f-a6c5-36d807e14102"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addTwo\>\"", "[", 
-   RowBox[{"5", ",", "7"}], "]"}]}]], "Input"],
+   RowBox[{"5", ",", "7"}], "]"}]}]], "Input",
+ ExpressionUUID -> "222ca460-7471-4b5f-9f20-9809b1144885"],
 
-Cell[BoxData["12"], "Output"]
+Cell[BoxData["12"], "Output",
+ ExpressionUUID -> "09a82ab8-0fbe-40b2-912e-a89893778714"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
-  RowBox[{"\"\<addTwo\>\"", "[", "1", "]"}]}]], "Input"],
+  RowBox[{"\"\<addTwo\>\"", "[", "1", "]"}]}]], "Input",
+ ExpressionUUID -> "214d1e7f-79d8-42c7-ab89-dd32927c91c8"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
    RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\\"addTwo: two arguments expected.\\\"\\)\
-\[NoBreak]\"\>"}]], "Message", "MSG"],
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addTwo: two arguments \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "dbc9b21d-798b-410b-a1f8-100999044295"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "e4cd97d1-47b6-45af-a0e9-5fe9e0dbcc31"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1487,18 +1658,21 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addTwo\>\"", "[", 
-   RowBox[{"a", ",", "2"}], "]"}]}]], "Input"],
+   RowBox[{"a", ",", "2"}], "]"}]}]], "Input",
+ ExpressionUUID -> "5d6efb82-2a31-455d-a835-1555ec81f948"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
    RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\\"addTwo: integer arguments expected.\\\"\\)\
-\[NoBreak]\"\>"}]], "Message", "MSG"],
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addTwo: integer arguments \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "4038c918-1d41-46b5-af96-64dbe53cf8dc"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "e83a484b-132c-4c6c-9e60-7f75c7e2eb61"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -1513,7 +1687,8 @@ Cell[TextData[{
  "/WSTP development kit: one that uses ML prefixed function names and one \
 that uses WS prefixed ones.  At this point it is recommended to use the \
 ML-prefixed names with LTemplate."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "98f62205-26e2-4fcf-bc16-5192cda67cd3"],
 
 Cell[TextData[{
  "An auxiliary header, ",
@@ -1523,7 +1698,8 @@ Cell[TextData[{
   FontSlant->"Italic"],
  " based argument passing and return using stream inserter and extractor \
 syntax. Here\[CloseCurlyQuote]s an example:"
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "819a8258-1e51-4738-9faf-3136d5fdc1eb"],
 
 Cell[CellGroupData[{
 
@@ -1544,10 +1720,12 @@ elements on the link\n    }\n};\n\>\""}], ";"}], "\[IndentingNewLine]",
  RowBox[{
   RowBox[{"Export", "[", 
    RowBox[{"\"\<LinkObjDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
-   "]"}], ";"}]}], "Input"],
+   "]"}], ";"}]}], "Input",
+ ExpressionUUID -> "30f03d14-9eb7-4cb6-852d-046f5b4dd275"],
 
 Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
-"], "Output"]
+"], "Output",
+ ExpressionUUID -> "8b69fa43-bef1-4920-9452-1db7b044f183"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1558,12 +1736,14 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"LFun", "[", 
        RowBox[{"\"\<addMultTwo\>\"", ",", "LinkObject"}], "]"}], "}"}]}], 
-    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "43557515-b270-43ce-8627-073f70d29fa8"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "720ab6b0-06ca-4526-92bc-ae7954d8c73c"],
 
 Cell[CellGroupData[{
 
@@ -1601,7 +1781,8 @@ Cell[BoxData[
    Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "42675158-5a18-4ef4-a0e9-5afa776a42ac"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -1652,7 +1833,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "42675158-5a18-4ef4-a0e9-5afa776a42ac"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -1666,7 +1848,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "42675158-5a18-4ef4-a0e9-5afa776a42ac"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -1702,7 +1885,8 @@ Cell[BoxData[
    Style[" already exists and will be overwritten.", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "42675158-5a18-4ef4-a0e9-5afa776a42ac"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -1716,52 +1900,62 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "42675158-5a18-4ef4-a0e9-5afa776a42ac"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/LinkObjDemo.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/LinkObjDemo.dylib\"\>"], "Output",
+ ExpressionUUID -> "a66de08a-89c9-4942-88f3-820c2f86aa63"]
 }, Open  ]],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "4d32643c-c788-4753-8829-aeba84bbffc0"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"obj", "=", 
-   RowBox[{"Make", "[", "LinkObjDemo", "]"}]}], ";"}]], "Input"],
+   RowBox[{"Make", "[", "LinkObjDemo", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "732ff527-d9c9-4813-bdda-f4b107493b16"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addMultTwo\>\"", "[", 
-   RowBox[{"2", ",", "3"}], "]"}]}]], "Input"],
+   RowBox[{"2", ",", "3"}], "]"}]}]], "Input",
+ ExpressionUUID -> "01540737-05c4-4931-bd99-66c41d9134ff"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"5", ",", "6"}], "}"}]], "Output"]
+  RowBox[{"5", ",", "6"}], "}"}]], "Output",
+ ExpressionUUID -> "8f53779e-d53c-4215-a14d-6842d18880fb"]
 }, Open  ]],
 
-Cell["mlstream provides some basic error checking:", "Text"],
+Cell["mlstream provides some basic error checking:", "Text",
+ ExpressionUUID -> "6ccc0963-0df3-43da-8f6f-e0128d234047"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addMultTwo\>\"", "[", 
-   RowBox[{"2", ",", "3", ",", "4"}], "]"}]}]], "Input"],
+   RowBox[{"2", ",", "3", ",", "4"}], "]"}]}]], "Input",
+ ExpressionUUID -> "41c8e906-87c0-4b86-adba-a6440eff2d44"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
    RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\\"addMultTwo: 2 arguments expected, 3 received.\
-\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addMultTwo: 2 arguments \
+expected, 3 received.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "55732318-f879-402c-b054-ea657b3eff3c"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "3d1bccb6-0a82-45c2-aceb-f0d8699b7342"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1769,18 +1963,21 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addMultTwo\>\"", "[", 
-   RowBox[{"\"\<a\>\"", ",", "2"}], "]"}]}]], "Input"],
+   RowBox[{"\"\<a\>\"", ",", "2"}], "]"}]}]], "Input",
+ ExpressionUUID -> "d8e77370-fc3e-4cfb-ae16-f1ad00984b9a"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
    RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\\"addMultTwo: Integer32 expected.\\\"\\)\
-\[NoBreak]\"\>"}]], "Message", "MSG"],
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"addMultTwo: Integer32 \
+expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "d67f9c06-2049-4f08-9299-9ac47829b1ec"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "5dbfaf0d-c675-443c-95fd-2cef158dbf83"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -1788,52 +1985,63 @@ Cell[TextData[{
  StyleBox["MathLink",
   FontSlant->"Italic"],
  "."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "66cf8cc0-013f-4f68-91ea-6ff89be711ab"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addMultTwo\>\"", "[", 
-   RowBox[{"2.3", ",", "3"}], "]"}]}]], "Input"],
+   RowBox[{"2.3", ",", "3"}], "]"}]}]], "Input",
+ ExpressionUUID -> "0cce3e75-748d-405c-99e0-9f810ce53947"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"5", ",", "6"}], "}"}]], "Output"]
+  RowBox[{"5", ",", "6"}], "}"}]], "Output",
+ ExpressionUUID -> "69df83ff-f8f1-4d29-b03a-a0649b11ffbd"]
 }, Open  ]],
 
 Cell["\<\
 The floating point number 2.3 was automatically rounded to the integer 2.\
-\>", "Text"]
+\>", "Text",
+ ExpressionUUID -> "491b5fbf-5967-4af5-8dea-f0a304f77e8d"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Accessing other library expressions", "Subsubsection"],
+Cell["Accessing other library expressions", "Subsubsection",
+ ExpressionUUID -> "e803a452-ef5d-432f-85d5-d609dd5500a9"],
 
 Cell["\<\
 Other library expression can be passed to library functions using the type \
 specification\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "9dc76a8e-1f27-498c-9e8e-f012387a2ec6"],
 
 Cell[BoxData[
  RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}]], "Input",
- Evaluatable->False],
+ Evaluatable->False,
+ ExpressionUUID -> "d021c75a-33f9-46f2-b40a-8481ccd1f0ff"],
 
 Cell[TextData[{
  "In the following we implement a \[OpenCurlyDoubleQuote]vector\
 \[CloseCurlyDoubleQuote] class with a dot product member function. The ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"dot", "(", ")"}], TraditionalForm]]],
+   RowBox[{"dot", "(", ")"}], TraditionalForm]],
+  ExpressionUUID -> "7f8bfe86-b2d2-40d8-b297-bcf819468b06"],
  " member function will take another instance of the same class as its \
 argument."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "999d03e9-7046-4039-b4ea-40a78d104182"],
 
 Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}], ";"}]}], "Input"],
+
+Cell[BoxData[{
  RowBox[{
   RowBox[{
   "code", "=", 
@@ -1848,7 +2056,8 @@ sizes\\\");\n\t\treturn std::inner_product(v.begin(), v.end(), vec.v.begin(), \
  RowBox[{
   RowBox[{"Export", "[", 
    RowBox[{"\"\<VectorDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
-   "]"}], ";"}]}], "Input"],
+   "]"}], ";"}]}], "Input",
+ ExpressionUUID -> "85ff7f6a-d4b1-4dfe-b6a9-0b4e14a512b5"],
 
 Cell[BoxData[
  RowBox[{
@@ -1868,12 +2077,14 @@ Cell[BoxData[
          RowBox[{"{", 
           RowBox[{"LExpressionID", "[", "\"\<VectorDemo\>\"", "]"}], "}"}], 
          ",", "Real"}], "]"}]}], "\[IndentingNewLine]", "}"}]}], 
-    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "9a11c1da-795c-40ca-9141-90b6f8576cf9"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "6c51f745-4277-4cde-a1ce-72652bc2dc4f"],
 
 Cell[CellGroupData[{
 
@@ -1911,7 +2122,8 @@ Cell[BoxData[
    Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "904a478c-cb9a-4b6c-8bca-a67df2631cd0"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -1962,7 +2174,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "904a478c-cb9a-4b6c-8bca-a67df2631cd0"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -1976,7 +2189,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "904a478c-cb9a-4b6c-8bca-a67df2631cd0"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -1990,15 +2204,18 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "904a478c-cb9a-4b6c-8bca-a67df2631cd0"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/VectorDemo.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/VectorDemo.dylib\"\>"], "Output",
+ ExpressionUUID -> "16cd4f68-8a8a-4aed-8005-b630feb15d19"]
 }, Open  ]],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "ee8a2536-86a3-400e-a35f-8e028d22d4de"],
 
 Cell[BoxData[
  RowBox[{
@@ -2011,17 +2228,20 @@ Cell[BoxData[
     RowBox[{
      RowBox[{"v", "@", 
       RowBox[{"\"\<set\>\"", "[", "arr", "]"}]}], ";", "v"}]}], 
-   "]"}]}]], "Input"],
+   "]"}]}]], "Input",
+ ExpressionUUID -> "b5c501ee-cf0e-47ac-a88c-740dd4f4975f"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"v1", "=", 
   RowBox[{"makeVector", "[", 
-   RowBox[{"Range", "[", "10", "]"}], "]"}]}]], "Input"],
+   RowBox[{"Range", "[", "10", "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "daf056cb-d325-49da-a09e-98f958fcdd05"],
 
 Cell[BoxData[
- RowBox[{"VectorDemo", "[", "1", "]"}]], "Output"]
+ RowBox[{"VectorDemo", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "8bd28a48-ac7e-4f0e-a91e-849094d99812"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2031,38 +2251,46 @@ Cell[BoxData[
   RowBox[{"makeVector", "[", 
    RowBox[{"Range", "[", 
     RowBox[{"10", ",", "1", ",", 
-     RowBox[{"-", "1"}]}], "]"}], "]"}]}]], "Input"],
+     RowBox[{"-", "1"}]}], "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "19f16615-6c89-4327-a155-a9e2f21afcc7"],
 
 Cell[BoxData[
- RowBox[{"VectorDemo", "[", "2", "]"}]], "Output"]
+ RowBox[{"VectorDemo", "[", "2", "]"}]], "Output",
+ ExpressionUUID -> "6b56de74-51c4-4d20-93e3-78fbd333c923"]
 }, Open  ]],
 
 Cell[TextData[{
  "When calling ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"dot", "(", ")"}], TraditionalForm]]],
+   RowBox[{"dot", "(", ")"}], TraditionalForm]],
+  ExpressionUUID -> "b2a09398-f086-4bc3-abf2-d63c0a8c127d"],
  " from ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  ", we cannot simply pass ",
  Cell[BoxData[
-  FormBox["v2", TraditionalForm]]],
+  FormBox["v2", TraditionalForm]],
+  ExpressionUUID -> "679d2667-b77f-4d7d-a994-bcf9d3b387fd"],
  " to it. Instead we must pass its managed library expression ID. The reason \
 for not translating ",
  Cell[BoxData[
-  FormBox["v2", TraditionalForm]]],
+  FormBox["v2", TraditionalForm]],
+  ExpressionUUID -> "853d0601-ce6c-44b4-bb38-b46c4ddce04f"],
  " to an expression ID automatically is to maintain runtime performance."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "7c0fd0fd-a606-4ff9-be4b-7cf9dea03cef"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"v1", "@", 
   RowBox[{"\"\<dot\>\"", "[", 
-   RowBox[{"ManagedLibraryExpressionID", "[", "v2", "]"}], "]"}]}]], "Input"],
+   RowBox[{"ManagedLibraryExpressionID", "[", "v2", "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "40d74022-768e-4dbc-9d89-015a8a9349a2"],
 
-Cell[BoxData["220.`"], "Output"]
+Cell[BoxData["220.`"], "Output",
+ ExpressionUUID -> "21b914d5-840d-4fa9-968c-e58b26da08f0"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2072,17 +2300,20 @@ Cell[BoxData[
   RowBox[{"Range", "[", "10", "]"}], ".", 
   RowBox[{"Range", "[", 
    RowBox[{"10", ",", "1", ",", 
-    RowBox[{"-", "1"}]}], "]"}]}]], "Input"],
+    RowBox[{"-", "1"}]}], "]"}]}]], "Input",
+ ExpressionUUID -> "a1e1a2db-4713-4cf3-b8b8-01c9fe7ec170"],
 
-Cell[BoxData["220"], "Output"]
+Cell[BoxData["220"], "Output",
+ ExpressionUUID -> "930117c4-0219-4c19-a5e9-edf96d5f0e51"]
 }, Open  ]]
 }, Closed]]
-}, Open  ]]
+}, Closed]]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Deployment", "Section"],
+Cell["Deployment", "Section",
+ ExpressionUUID -> "5e41a972-e3e2-4611-9a2d-0bae26e3d2e5"],
 
 Cell[TextData[{
  "LTemplate can either be used as a standalone package or it can be embedded \
@@ -2090,12 +2321,14 @@ in a ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " application. When used as standalone package, it can be loaded using ",
- StyleBox["<<LTemplate`", "Program"],
+ Cell[BoxData[
+  RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]]],
  ". However, when building a package using LTemplate, it is best to embed \
 LTemplate directly into the package. This is to avoid users having to install \
 LTemplate in order for the package to work, and also to avoid breaking the \
 package if LTemplate is upgraded to a new version."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "aeeeeb2b-e329-4588-9fc8-25dc105f3e09"],
 
 Cell[TextData[{
  "LTemplate can be embedded as follows. Suppose the package is called MyApp. \
@@ -2104,7 +2337,8 @@ Then it should have the following directory hierarchy, conforming to standard \
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " application structure:"
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "a8ebe927-3394-4428-a87e-220c14723451"],
 
 Cell["\<\
 MyApp
@@ -2123,53 +2357,182 @@ Get[\"MyApp`MyApp`\"])
    |       | ...  (directories for other supported $SystemID values)
    |
    |--- MyApp.m (main package file)\
-\>", "Program"],
+\>", "Program",
+ ExpressionUUID -> "ec5fa7a8-87c4-442a-bb0d-1510bb110fc1"],
 
 Cell[TextData[{
  "The ",
  StyleBox["MyApp.m", "Program"],
  " package file must then load LTemplate like this:"
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "1e1a3b7b-42cc-40ea-89d3-404daf250109"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<MyApp`\>\"", "]"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SomeSymbol", "::", "usage"}], " ", "=", " ", 
+   "\"\<SomeSymbol is a symbol to which MyApp messages are associated.\>\""}],
+   "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Privately", " ", "load", " ", 
+    RowBox[{"LTemplate", ".", " ", "Note"}], " ", "the", " ", "leading", " ", 
+    "`", " ", 
+    RowBox[{"character", "!!"}]}], " ", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"Get", "[", "\"\<`LTemplate`LTemplatePrivate`\>\"", "]"}], "\n", 
+  "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"ConfigureLTemplate", "[", "]"}], " ", 
+    StyleBox["must",
+     FontSlant->"Italic"], " ", "be", " ", "called", " ", "at", " ", "this", 
+    " ", 
+    RowBox[{"point", "."}]}], " ", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"ConfigureLTemplate", "[", "\n", "\t", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+     "You", " ", "should", " ", "also", " ", "supply", " ", "a", " ", 
+      "symbol", " ", "from", " ", "the", " ", "MyApp`", " ", "context", " ", 
+      RowBox[{"(", 
+       RowBox[{"called", " ", "SomeSymbol", " ", "here"}], ")"}], " ", "to", 
+      "\n", "       ", "associate", " ", 
+      RowBox[{"LTemplate", "'"}], "s", " ", 
+      RowBox[{"standard", " ", "::", "error"}]}], ",", " ", 
+     RowBox[{"::", "warning"}], ",", " ", 
+     RowBox[{
+      RowBox[{"etc", ".", " ", "messages"}], " ", 
+      RowBox[{"with", "."}]}]}], " ", "*)"}], "\n", "\t", 
+   RowBox[{
+    RowBox[{"\"\<MessageSymbol\>\"", " ", "->", " ", "SomeSymbol"}], ",", " ",
+     "\n", "\t", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"If", " ", "lazy", " ", "loading", " ", "is", " ", "enabled"}], 
+      ",", " ", 
+      RowBox[{
+      "functions", " ", "are", " ", "loaded", " ", "only", " ", "on", " ", 
+       "first", " ", 
+       RowBox[{"use", ".", "\n", "\t   ", "This"}], " ", "improves", " ", 
+       "package", " ", "loading", " ", "performance"}], ",", " ", 
+      RowBox[{
+      "but", " ", "it", " ", "is", " ", "not", " ", "convenient", "\n", 
+       "\t   ", "during", " ", "development", " ", "and", " ", 
+       RowBox[{"debugging", "."}]}]}], " ", "*)"}], "\n", "\t", 
+    RowBox[{"\"\<LazyLoading\>\"", " ", "\[Rule]", " ", "True"}]}], "\n", 
+   "]"}], "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Public", " ", "MyApp", " ", "package", " ", "symbols", " ", "go", " ", 
+    "here"}], " ", "*)"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "What", " ", "follows", " ", "is", " ", "a", " ", "recommended", " ", 
+     "package", " ", "structure"}], ",", "\n", "   ", 
+    RowBox[{
+    "but", " ", "it", " ", "is", " ", "not", " ", "required", " ", "to", " ", 
+     "follow", " ", "this", " ", 
+     RowBox[{"pattern", "."}]}]}], "\n", " ", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"$packageDirectory", "  ", "=", " ", 
+   RowBox[{"DirectoryName", "[", "$InputFileName", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"$libraryDirectory", "  ", "=", " ", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "$packageDirectory", ",", " ", "\"\<LibraryResources\>\"", ",", " ", 
+      "$SystemID"}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"$sourceDirectory", "   ", "=", " ", 
+    RowBox[{"FileNameJoin", "[", 
+     RowBox[{"{", 
+      RowBox[{
+      "$packageDirectory", ",", " ", "\"\<LibraryResources\>\"", ",", " ", 
+       "\"\<Source\>\""}], "}"}], "]"}]}], ";"}], "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Add", " ", "$libraryDirectory", " ", "to", " ", "$LibraryPath", " ", "in",
+     " ", "case", " ", "the", " ", "package", " ", "\n", "   ", "is", " ", 
+    "not", " ", "installed", " ", "in", " ", 
+    RowBox[{"$UserBaseDirectory", "/", 
+     RowBox[{"Applications", "."}]}]}], " ", "\n", " ", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"Not", "@", 
+     RowBox[{"MemberQ", "[", 
+      RowBox[{"$LibraryPath", ",", " ", "$libraryDirectory"}], "]"}]}], ",", 
+    "\n", "  ", 
+    RowBox[{"AppendTo", "[", 
+     RowBox[{"$LibraryPath", ",", " ", "$libraryDirectory"}], "]"}]}], "\n", 
+   "]"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"template", " ", "=", " ", 
+    RowBox[{"LTemplate", "[", "...", "]"}]}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"template", " ", "specification"}], " ", "*)"}], "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "These", " ", "two", " ", "functions", " ", "will", " ", "probably", " ", 
+    "incorporate", " ", "additional", " ", "checks", " ", "and", " ", 
+    RowBox[{"options", ":"}]}], " ", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"loadMyApp", "[", "]"}], " ", ":=", " ", 
+  RowBox[{"LoadTemplate", "[", "template", "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"compileMyApp", "[", "]"}], " ", ":=", " ", "\n", "\t", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "res", "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"SetDirectory", "[", "$sourceDirectory", "]"}], ";", "\n", 
+      "\t\t", 
+      RowBox[{"res", " ", "=", " ", 
+       RowBox[{"CompileTemplate", "[", 
+        RowBox[{"template", ",", " ", 
+         RowBox[{
+         "\"\<TargetDirectory\>\"", " ", "->", " ", "$libraryDirectory"}]}], 
+        "]"}]}], ";", "\n", "\t\t", 
+      RowBox[{"ResetDirectory", "[", "]"}], ";", "\n", "\t\t", "res"}]}], 
+    "\n", "\t", "]"}]}], "\n", "\t ", "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"loadMyApp", "[", "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"load", " ", "template"}], " ", "*)"}], "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "MyApp", " ", "function", " ", "definitions", " ", "and", " ", "private", 
+    " ", "symbols", " ", "go", " ", "here"}], " ", "*)"}], "\n"}], "\n", 
+ RowBox[{"End", "[", "]"}], "\n", 
+ RowBox[{"EndPackage", "[", "]"}]}], "Code",
+ Evaluatable->False,
+ ExpressionUUID -> "4681cf02-8723-4199-accd-9ceb39f9842f"],
 
 Cell[TextData[{
- "BeginPackage[\"MyApp`\"]\n\nSomeSymbol::usage = \"SomeSymbol is a symbol to \
-which MyApp messages are associated.\"\n\n(* Privately load LTemplate. Note \
-the leading ` character!! *)\nGet[\"`LTemplate`LTemplatePrivate`\"]\n\n(* \
-ConfigureLTemplate[] ",
- StyleBox["must",
-  FontSlant->"Italic"],
- " be called at this point.\n   You should also supply a symbol from the \
-MyApp` context (called SomeSymbol here) to\n   associate LTemplate's standard \
-::error, ::warning, etc. messages with.\n *)\n\
-ConfigureLTemplate[\"MessageSymbol\" -> SomeSymbol]\n\n(* Public MyApp \
-package symbols go here *)\n\nBegin[\"`Private`\"]\n\n(* What follows is a \
-recommended package structure,\n   but it is not required to follow this \
-pattern.\n *)\n$packageDirectory  = DirectoryName[$InputFileName];\n\
-$libraryDirectory  = FileNameJoin[{$packageDirectory, \"LibraryResources\", \
-$SystemID}];\n$sourceDirectory   = FileNameJoin[{$packageDirectory, \
-\"LibraryResources\", \"Source\"}];\n\n(* Add $libraryDirectory to \
-$LibraryPath in case the package \n   is not installed in \
-$UserBaseDirectory/Applications. \n *)\nIf[Not@MemberQ[$LibraryPath, \
-$libraryDirectory],\n  AppendTo[$LibraryPath, $libraryDirectory]\n]\n\n\
-template = LTemplate[...]; (* template specification *)\n\n(* These two \
-functions will probably incorporate additional checks and options: *)\n\
-loadMyApp[] := LoadTemplate[template]\ncompileMyApp[] := \
-CompileTemplate[template, \"TargetDirectory\" -> $libraryDirectory]\n\n\
-loadMyApp[] (* load template *)\n\n(* MyApp function definitions and private \
-symbols go here *)\n\nEnd[]\nEndPackage[]\n"
-}], "Program"],
-
-Cell["\<\
-LTemplate functions will now reside in the MyApp`LTemplate` context, and will \
-not be visible to the users of your package. This also avoids conflicts \
-between multiple applications using various versions of LTemplate.\
-\>", "Text"],
+ "LTemplate functions will now reside in the ",
+ Cell[BoxData["MyApp`LTemplate`"]],
+ " context, and will not be visible to the users of your package. This also \
+avoids conflicts between multiple applications using various versions of \
+LTemplate."
+}], "Text",
+ ExpressionUUID -> "58f0e761-1fa9-466a-aa71-b79688d41ccb"],
 
 Cell["\<\
 The LTemplate repository contains a skeleton-project directory with an \
 example package that can be used as the basis of a complex multiplatform \
 LTemplate-based Mathematica application.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "9478ea5b-5947-4d00-b103-06159d19f5a4"],
 
 Cell[TextData[{
  "For an example of a project that uses LTemplate see IGraph/M at ",
@@ -2178,23 +2541,28 @@ Cell[TextData[{
   ButtonData->{
     URL["https://github.com/szhorvat/IGraphM"], None},
   ButtonNote->"https://github.com/szhorvat/IGraphM"]
-}], "Text"]
+}], "Text",
+ ExpressionUUID -> "d30f0879-c30b-4dda-a653-088c8c426a31"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Reference", "Section"],
+Cell["Reference", "Section",
+ ExpressionUUID -> "5bfcab86-90f0-4004-9eed-444fb0f36516"],
 
 Cell[CellGroupData[{
 
-Cell["Mathematica", "Subsection"],
+Cell["Mathematica", "Subsection",
+ ExpressionUUID -> "ca68bf6a-cbff-4417-9e7b-f7daf37b1399"],
 
-Cell["Refer to usage messages until this section is finished.", "Text"],
+Cell["Refer to usage messages until this section is finished.", "Text",
+ ExpressionUUID -> "6a4954ff-8973-4698-9335-b01082e388c0"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LTemplate`*"}]], "Input"],
+ RowBox[{"?", "LTemplate`*"}]], "Input",
+ ExpressionUUID -> "7f4082c4-be31-4ee4-bc19-32019465f3dd"],
 
 Cell[BoxData[
  DynamicModuleBox[{Typeset`open$$ = True}, 
@@ -2214,106 +2582,97 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "CompileTemplate", "LTemplate`"}},
+           "Info913717407495-9227688", {"CompileTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LClass",
+         ButtonBox["LClassContext",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "LClass", "LTemplate`"}},
+           "Info913717407495-9227688", {"LClassContext", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LExpressionList",
+         ButtonBox["LoadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "LExpressionList", "LTemplate`"}},
+           "Info913717407495-9227688", {"LoadTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LTemplate",
+         ButtonBox["NormalizeTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "LTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["UnloadTemplate",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "UnloadTemplate", "LTemplate`"}},
+           "Info913717407495-9227688", {"NormalizeTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
         {
          ButtonBox["ConfigureLTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "ConfigureLTemplate", "LTemplate`"}},
+           "Info913717407495-9227688", {"ConfigureLTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LClassContext",
+         ButtonBox["LExpressionID",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "LClassContext", "LTemplate`"}},
+           "Info913717407495-9227688", {"LExpressionID", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LFun",
+         ButtonBox["LTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "LFun", "LTemplate`"}},
+           "Info913717407495-9227688", {"LTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["Make",
+         ButtonBox["TranslateTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "Make", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], 
-         ButtonBox["ValidTemplateQ",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "ValidTemplateQ", "LTemplate`"}},
+           "Info913717407495-9227688", {"TranslateTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
         {
          ButtonBox["FormatTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "FormatTemplate", "LTemplate`"}},
+           "Info913717407495-9227688", {"FormatTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LExpressionID",
+         ButtonBox["LExpressionList",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "LExpressionID", "LTemplate`"}},
+           "Info913717407495-9227688", {"LExpressionList", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["LoadTemplate",
+         ButtonBox["LType",
+          BaseStyle->"InformationLink",
+          ButtonData:>{"Info913717407495-9227688", {"LType", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["UnloadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "LoadTemplate", "LTemplate`"}},
+           "Info913717407495-9227688", {"UnloadTemplate", "LTemplate`"}},
+          ButtonNote->"LTemplate`"]},
+        {
+         ButtonBox["LClass",
+          BaseStyle->"InformationLink",
+          ButtonData:>{"Info913717407495-9227688", {"LClass", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
-         ButtonBox["TranslateTemplate",
+         ButtonBox["LFun",
+          BaseStyle->"InformationLink",
+          ButtonData:>{"Info913717407495-9227688", {"LFun", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["Make",
+          BaseStyle->"InformationLink",
+          ButtonData:>{"Info913717407495-9227688", {"Make", "LTemplate`"}},
+          ButtonNote->"LTemplate`"], 
+         ButtonBox["ValidTemplateQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b1050bb8-b948-47cd-be6e-89d2c6247521", {
-            "TranslateTemplate", "LTemplate`"}},
-          ButtonNote->"LTemplate`"], ""}
+           "Info913717407495-9227688", {"ValidTemplateQ", "LTemplate`"}},
+          ButtonNote->"LTemplate`"]}
        },
        DefaultBaseStyle->"InfoGrid",
        GridBoxItemSize->{"Columns" -> {{
-            Scaled[0.19]}}}]}
+            Scaled[0.2375]}}}]}
     },
     GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
    Dynamic[Typeset`open$$],
@@ -2322,35 +2681,39 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["Template elements", "Subsubsection"],
+Cell["Template elements", "Subsubsection",
+ ExpressionUUID -> "053d683b-8f10-4062-9aff-71e119f94e81"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LTemplate"}]], "Input"],
+ RowBox[{"?", "LTemplate"}]], "Input",
+ ExpressionUUID -> "1791389f-e32f-44bb-ad49-dfb47981ad9b"],
 
 Cell[BoxData[
  StyleBox["\<\"LTemplate[name, {LClass[\[Ellipsis]], LClass[\[Ellipsis]], \
 \[Ellipsis]}] represents a library template.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-47561812-6052-4351-be59-0d1da93bf6e0"]
+ CellTags->"Info933717407593-9227688"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LClass"}]], "Input"],
+ RowBox[{"?", "LClass"}]], "Input",
+ ExpressionUUID -> "5fa1e7df-6733-46c5-8df5-f20ddc632b53"],
 
 Cell[BoxData[
  StyleBox["\<\"LClass[name, {fun1, fun2, \[Ellipsis]}] represents a class \
 within a template.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-57eaf585-6c37-4f1a-9f23-cd04780d63a9"]
+ CellTags->"Info943717407594-9227688"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LFun"}]], "Input"],
+ RowBox[{"?", "LFun"}]], "Input",
+ ExpressionUUID -> "842a1106-5f25-489c-8369-69160d3d738f"],
 
 Cell[BoxData[
  StyleBox["\<\"LFun[name, {arg1, arg2, \[Ellipsis]}, ret] represents a class \
@@ -2358,77 +2721,233 @@ member function with the given name, argument types and return \
 type.\\nLFun[name, LinkObject, LinkObject] represents a function that uses \
 MathLink/WSTP based passing. The shorthand LFun[name, LinkObject] can also be \
 used.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-2270a8bc-e754-4733-a52e-221956b62d2d"]
+ CellTags->"Info953717407595-9227688"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LExpressionID"}]], "Input"],
+ RowBox[{"?", "LExpressionID"}]], "Input",
+ ExpressionUUID -> "d6912a38-7f57-4f27-ba39-3829fb95ec2f"],
 
 Cell[BoxData[
  StyleBox["\<\"LExpressionID[name] represents the data type corresponding to \
 LClass[name, \[Ellipsis]] in templates.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-b27e2e89-8e80-452f-9c66-6c7e984d3022"]
+ CellTags->"Info963717407596-9227688"]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData["LType"]],
+ " is mostly equivalent to ",
+ Cell[BoxData["LibraryDataType"]],
+ ", but shorter to type. It also supports element type specifications for \
+RawArrays."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LType"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"LType[head] represents an array library type corresponding to \
+head.\\nLType[head, etype] represents an array library corresponding to head, \
+with element type etype.\\nLType[head, etype, d] represents an array library \
+corresponding to head, with element type etype and depth/rank d.\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info973717407600-9227688"]
 }, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["FormatTemplate", "Subsubsection"],
+Cell["A note on type conversions", "Subsubsection"],
+
+Cell["\<\
+Arguments passed to library functions are generally converted to the \
+indicated type, when possible. If the conversion is not possible, an error \
+will be shown.\
+\>", "Text"],
+
+Cell["\<\
+The one exception to this rule is RawArray. If the type of the RawArray does \
+not match the indicated type, an error will be thrown immediately. No \
+conversion will be attempted.\
+\>", "Text"],
+
+Cell["Examples of conversions:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "If ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1", ",", 
+    RowBox[{"2", "/", "3"}], ",", "Pi"}], "}"}]]],
+ " is passed as a ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"Real", ",", "1"}], "}"}]]],
+ " argument, it will be automatically numericised to ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1.`", ",", "0.6666666666666666`", ",", "3.141592653589793`"}], 
+   "}"}]]]
+}], "Item"],
+
+Cell[TextData[{
+ "If ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1.0", ",", "2.0", ",", "3.0"}], "}"}]]],
+ " is passed as an ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"Integer", ",", "1"}], "}"}]]],
+ " argument, it will be converted to ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1", ",", "2", ",", "3"}], "}"}]]],
+ ". If ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"1.0", ",", "2.5", ",", "3.0"}], "}"}]]],
+ " is passed, an error will be thrown because ",
+ Cell[BoxData["2.5"]],
+ " is not mathematically an integer."
+}], "Item"],
+
+Cell[TextData[{
+ "If a dense array is passed to a function that expects a sparse argument, \
+e.g. ",
+ Cell[BoxData[
+  RowBox[{"LType", "[", 
+   RowBox[{"SparseArray", ",", "Real"}], "]"}]]],
+ ", it will be converted to a sparse array automatically. The reverse, \
+however, is not done. Sparse arrays cannot be passed to functions that expect \
+a dense array."
+}], "Item"],
+
+Cell[TextData[{
+ "Images are automatically converted to the expected pixel type, if the pixel \
+type is specified (e.g. ",
+ Cell[BoxData[
+  RowBox[{"LType", "[", 
+   RowBox[{"Image", ",", "\"\<Byte\>\""}], "]"}]]],
+ "). If the pixel type is not specified, i.e. ",
+ Cell[BoxData[
+  RowBox[{"LType", "[", "Image", "]"}]]],
+ ", no conversion is done."
+}], "Item"]
+}, Open  ]],
+
+Cell["", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["FormatTemplate", "Subsubsection",
+ ExpressionUUID -> "b831652a-618e-4249-a19c-151996426f4e"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "FormatTemplate"}]], "Input"],
+ RowBox[{"?", "FormatTemplate"}]], "Input",
+ ExpressionUUID -> "38e160ea-1982-4f66-808b-4ca8b693fd76"],
 
 Cell[BoxData[
  StyleBox["\<\"FormatTemplate[template] formats the template in an easy to \
 read way.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-68226ed2-d2da-43e8-85d4-7aed542c528d"]
-}, Open  ]]
+ CellTags->"Info983717407611-9227688"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Prints a template specification in an easily readable mannher. ",
+ Cell[BoxData["FormatTemplate"]],
+ " attempts to format even syntactically incorrect templates to aid debugging."
+}], "Text"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["ValidTemplateQ", "Subsubsection"],
+Cell["ValidTemplateQ", "Subsubsection",
+ ExpressionUUID -> "75873b3c-ecd7-4936-804d-fd690e66f284"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "ValidTemplateQ"}]], "Input"],
+ RowBox[{"?", "ValidTemplateQ"}]], "Input",
+ ExpressionUUID -> "9d9581a0-7610-47fa-a504-e7afe7cb3e1f"],
 
 Cell[BoxData[
  StyleBox["\<\"ValidTemplateQ[template] returns True if the template syntax \
 is valid.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-f4dd3ff1-c370-4c52-a58f-69bcbf970267"]
-}, Open  ]]
+ CellTags->"Info-f4dd3ff1-c370-4c52-a58f-69bcbf970267",
+ ExpressionUUID -> "a3c4045e-0da7-40aa-a695-b24e39b3d32e"]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData["ValidTemplateQ"]],
+ " is effectively used by most other LTemplate functions, to verify that \
+template specifications are correct."
+}], "Text"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["TranslateTemplate", "Subsubsection"],
+Cell["NormalizeTemplate", "Subsubsection"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "TranslateTemplate"}]], "Input"],
+ RowBox[{"?", "NormalizeTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"NormalizeTemplate[template] brings the template and the type \
+specifications within to the canonical form used internally by other \
+LTemplate functions.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info1053717408446-9227688"]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData["NormalizeTemplate"]],
+ " brings a template to a canonical form used internally by LTemplate. \
+Shorthands are expanded and all array-like type specifications use the ",
+ Cell[BoxData["LType"]],
+ " form."
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["TranslateTemplate", "Subsubsection",
+ ExpressionUUID -> "af0d4a1e-e513-4eb6-acf4-5d876f7fa9ca"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "TranslateTemplate"}]], "Input",
+ ExpressionUUID -> "bb5bef4e-6efd-4e13-b426-7642f6ce68f6"],
 
 Cell[BoxData[
  StyleBox["\<\"TranslateTemplate[template] translates the template into C++ \
 code.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-5ed1c592-2100-4f81-bf3b-d1bda517b3cd"]
+ CellTags->"Info-5ed1c592-2100-4f81-bf3b-d1bda517b3cd",
+ ExpressionUUID -> "198ea22d-418a-414d-a5d7-7bf6ce8e9f46"]
 }, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["CompileTemplate", "Subsubsection"],
+Cell["CompileTemplate", "Subsubsection",
+ ExpressionUUID -> "42928e49-773a-4c71-9124-ac1e42f046b5"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "CompileTemplate"}]], "Input"],
+ RowBox[{"?", "CompileTemplate"}]], "Input",
+ ExpressionUUID -> "6788e9ee-9244-4d48-8017-8039c482f126"],
 
 Cell[BoxData[
  StyleBox["\<\"CompileTemplate[template] compiles the library defined by the \
@@ -2436,78 +2955,167 @@ template. Required source files must be present in the current \
 directory.\\nCompileTemplate[template, {file1, \[Ellipsis]}] includes \
 additional source files in the compilation.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-b1082e50-3750-462a-840e-4291b205cf5d"]
+ CellTags->"Info1043717408024-9227688"]
 }, Open  ]],
 
 Cell[TextData[{
- Cell[BoxData[
-  FormBox[
-   RowBox[{"CompileTemplate", "[", "]"}], TraditionalForm]]],
+ Cell[BoxData["CompileTemplate"]],
  " takes the same options as ",
- Cell[BoxData[
-  FormBox["CreateLibrary", TraditionalForm]]],
+ ButtonBox["CreateLibrary",
+  BaseStyle->"Link",
+  ButtonData->"paclet:CCompilerDriver/ref/CreateLibrary"],
+ "."
+}], "Text",
+ ExpressionUUID -> "858073fb-a398-4ca0-8aac-f78ecaf598b2"],
+
+Cell[TextData[{
+ Cell[BoxData["CompileTemplate"]],
+ " will silently unload the template before compilation."
+}], "Text",
+ ExpressionUUID -> "53e0d77f-d6da-409b-9615-f4d4ad44c22b"],
+
+Cell[TextData[{
+ "It always looks for source files in the current directory. If your source \
+files are located elsewhere use ",
+ Cell[BoxData["CompileTemplate"]],
+ " in conjunction with ",
+ Cell[BoxData["SetDirectory"]],
+ " and ",
+ Cell[BoxData["ResetDirectory"]],
  "."
 }], "Text"],
 
 Cell[TextData[{
+ "LTemplate requires a C++11 capable compiler, and ",
+ Cell[BoxData["CompileTemplate"]],
+ " will automatically pass the ",
+ StyleBox["-std=c++11", "Program"],
+ " or equivalent option to it. If you wish to use a newer standard, specify \
+it manually, e.g. ",
  Cell[BoxData[
-  FormBox["CompileTemplate", TraditionalForm]]],
- " will unload the template before compilation."
+  RowBox[{"CompileTemplate", "[", 
+   RowBox[{"\[Ellipsis]", ",", " ", 
+    RowBox[{"\"\<CompileOptions\>\"", "\[Rule]", 
+     RowBox[{"{", "\"\<-std=c++14\>\"", "}"}]}]}], "]"}]]],
+ "."
 }], "Text"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["LoadTemplate & UnloadTemplate", "Subsubsection"],
+Cell["LoadTemplate & UnloadTemplate", "Subsubsection",
+ ExpressionUUID -> "8c8f5e1a-9005-4b73-b970-dbf824287d43"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LoadTemplate"}]], "Input"],
+ RowBox[{"?", "LoadTemplate"}]], "Input",
+ ExpressionUUID -> "225f70ff-deb9-44c0-b73e-0c31452e709b"],
 
 Cell[BoxData[
  StyleBox["\<\"LoadTemplate[template] loads the library defined by the \
 template. The library must already be compiled.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-c8950299-eebd-4613-b8fd-cd0d86a67f7f"]
+ CellTags->"Info1023717408021-9227688"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "UnloadTemplate"}]], "Input"],
+ RowBox[{"?", "UnloadTemplate"}]], "Input",
+ ExpressionUUID -> "afc208f3-e1f1-442b-bf74-e0b42568a394"],
 
 Cell[BoxData[
  StyleBox["\<\"UnloadTemplate[template] attempts to unload the library \
 defined by the template.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-0f638c7d-40dd-4a76-baae-525c4afd45b4"]
+ CellTags->"Info1033717408022-9227688"]
 }, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Library expression management", "Subsubsection"],
+Cell["Library expression management", "Subsubsection",
+ ExpressionUUID -> "c5f0b142-8858-49e2-8c44-a12ac9d7c675"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "Make"}]], "Input"],
+ RowBox[{"?", "Make"}]], "Input",
+ ExpressionUUID -> "2c77931b-bce7-4248-9078-00723c3f0e9f"],
 
 Cell[BoxData[
  StyleBox["\<\"Make[class] creates an instance of class.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-e2b499d0-1811-46a2-828c-3d568aad8484"]
+ CellTags->"Info993717408017-9227688"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"?", "LExpressionList"}]], "Input"],
+ RowBox[{"?", "LExpressionList"}]], "Input",
+ ExpressionUUID -> "d10a1676-fbb9-4c8b-9d78-f6e6cd23e459"],
 
 Cell[BoxData[
  StyleBox["\<\"LExpressionList[class] returns all existing instances of \
 class.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-00585026-176c-404a-8007-2d1e6f758a59"]
+ CellTags->"Info1003717408018-9227688"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LClassContext"}]], "Input",
+ ExpressionUUID -> "f4cb4895-d905-4e8d-9cbf-348b6b43a2b3"],
+
+Cell[BoxData[
+ StyleBox["\<\"LClassContext[] returns the context where class symbols are \
+created.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info1013717408019-9227688"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Embedding LTemplate into another package", "Subsubsection"],
+
+Cell["\<\
+LTemplate can be embedded into another package. See the Deployment section \
+above for details.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "ConfigureLTemplate"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"ConfigureLTemplate[options] must be called after loading the \
+LTemplate package privately.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info583717836718-2741957"]
+}, Open  ]],
+
+Cell[TextData[{
+ "When embedding LTemplate, it is required to call ",
+ Cell[BoxData["ConfigureLTemplate"]],
+ " and set certation options. The following options are available:"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData["\"\<MessageSymbol\>\""]],
+ " sets the symbol with which library messages will be associated (see \
+message() and LibraryException)."
+}], "Item"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<LazyLoading\>\""]],
+ ", when set to ",
+ Cell[BoxData["True"]],
+ ", library functions will only be loaded upon their first use. This improves \
+package loading performance, but it can be a hindrance when developing or \
+debugging."
+}], "Item"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2518,24 +3126,49 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"LClassContext[] returns the context where class symbols are \
 created.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-140d6223-f287-42ab-bd8f-a18a405855ce"]
-}, Open  ]]
+ CellTags->"Info573717836654-2741957"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Use ",
+ Cell[BoxData[
+  RowBox[{"LClassContext", "[", "]"}]]],
+ " to retrieve the context where class symbols are created. When embedding \
+LTemplate, this context will not be automatically added to ",
+ Cell[BoxData["$ContextPath"]],
+ "."
+}], "Text"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["C++", "Subsection"],
+Cell["C++", "Subsection",
+ ExpressionUUID -> "c7910e55-158b-4a46-b1c4-9d32fac62196"],
+
+Cell[TextData[{
+ "Documentation can be generated form the LTemplate headers using ",
+ ButtonBox["Doxygen",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.doxygen.org/"], None},
+  ButtonNote->"http://www.doxygen.org/"],
+ "."
+}], "Text",
+ ExpressionUUID -> "0cb5adf7-80c7-4871-960e-dd1549cf6402"],
 
 Cell["\<\
-Documentation can be generated form the LTemplate headers using Doxygen.\
+Note: LTemplate requires a C++11 capable compiler. GCC 4.8 and MSVC 2015 have \
+been tested.\
 \>", "Text"],
 
 Cell[CellGroupData[{
 
-Cell["Basic types", "Subsubsection"],
+Cell["Basic types", "Subsubsection",
+ ExpressionUUID -> "f97ce2ca-630e-4c56-a4b8-b1b24f650bc7"],
 
-Cell["Basic LibraryLink types are mapped to C++ equivalents as", "Text"],
+Cell["Basic LibraryLink types are mapped to C++ equivalents as", "Text",
+ ExpressionUUID -> "dea7edaf-dd2a-48cf-8e36-059caa86690c"],
 
 Cell["\<\
 Integer\t\t\tmint
@@ -2543,20 +3176,80 @@ Real\t\t\tdouble
 Complex\t\t\tmma::complex_t  =  std::complex<double>
 \"UTF8String\"\tconst char *
 \"Boolean\"\t\tbool\
-\>", "Program"]
-}, Open  ]],
+\>", "Program",
+ ExpressionUUID -> "ebe95bc7-afb7-48d4-b049-1aba8eb4ec21"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Tensor types", "Subsubsection"],
+Cell["A note on array-like types and memory management", "Subsubsection"],
 
-Cell["Tensors are mapped as", "Text"],
+Cell[TextData[{
+ "It is important to keep in mind that the C++ classes used for working with \
+array-like data structures, such as Tensors, SparseArrays, RawArrays and \
+Images, act as ",
+ StyleBox["references",
+  FontSlant->"Italic"],
+ " to these arrays. The same array may have more than one such reference to \
+it. The names of all these classes end in \[OpenCurlyDoubleQuote]Ref\
+\[CloseCurlyDoubleQuote] to remind the user of this fact."
+}], "Text"],
+
+Cell[TextData[{
+ "For this reason, the creation and destruction of these data structures must \
+be handled explicitly. Please carefully read the ",
+ ButtonBox["LibraryLink tutorial",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:http://reference.wolfram.com/language/LibraryLink/tutorial/\
+Overview.html"],
+ ", especially the section on ",
+ ButtonBox["the memory management of MTensors",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:LibraryLink/tutorial/InteractionWithMathematica#97446640"],
+ "."
+}], "Text"],
+
+Cell["All array-like types provide the following member functions:", "Text"],
+
+Cell["\<\
+clone()
+free()
+disown()
+disownAll()
+shareCount()\
+\>", "Program"],
+
+Cell[TextData[{
+ "These provide the same functionality as the similarly-named LibraryLink API \
+functions, such as ",
+ StyleBox["MTensor_free()", "Program"],
+ ", etc."
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Tensor types", "Subsubsection",
+ ExpressionUUID -> "fc5f8ef4-da69-4a95-8519-27c004e1e055"],
+
+Cell["Tensors are mapped as", "Text",
+ ExpressionUUID -> "a787ac9f-1ca7-42a8-b232-5977d3b07512"],
 
 Cell["\<\
 {Integer, _}\tIntTensorRef      =  TensorRef<mint>
-{Real, _}\t\tRealTensorRef     =  TensorRef<double>
+{Real,    _}\tRealTensorRef     =  TensorRef<double>
 {Complex, _}\tComplexTensorRef  =  TensorRef<mma::complex_t>\
-\>", "Program"],
+\>", "Program",
+ ExpressionUUID -> "0dbf82f7-663a-415e-bc67-424384e03f47"],
+
+Cell[TextData[{
+ StyleBox["LType[List, type, rank]", "Program"],
+ " can also be used instead of ",
+ StyleBox["{type, rank}", "Program"],
+ "."
+}], "Text"],
 
 Cell[TextData[{
  StyleBox["MatrixRef<T>", "Program"],
@@ -2570,17 +3263,19 @@ indexing though ",
  ". Any tensor can be treated as a flat vector and indexed using ",
  StyleBox["operator []", "Program"],
  "."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "befd91db-7108-429d-8628-c5196de53687"],
 
 Cell["\<\
 {Integer, 2}\tIntMatrixRef      =  MatrixRef<mint>
-{Real, 2}\t\tRealMatrixRef     =  MatrixRef<double>
+{Real,    2}\tRealMatrixRef     =  MatrixRef<double>
 {Complex, 2}\tComplexMatrixRef  =  MatrixRef<mma::complex_t>
 
 {Integer, 3}\tIntCubeRef      =  CubeRef<mint>
-{Real, 3}\t\tRealCubeRef     =  CubeRef<double>
+{Real,    3}\tRealCubeRef     =  CubeRef<double>
 {Complex, 3}\tComplexCubeRef  =  CubeRef<mma::complex_t>\
-\>", "Program"],
+\>", "Program",
+ ExpressionUUID -> "24cc9d6f-7c76-4ffe-9a09-cd8ea090c88e"],
 
 Cell[TextData[{
  "The tensor types are simple wrappers around ",
@@ -2588,7 +3283,8 @@ Cell[TextData[{
  ", and act as references, i.e. multiple ",
  StyleBox["TensorRef", "Program"],
  " may point to the same LibraryLink tensor."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "79dfe6c6-839d-4850-a1f5-5ec8ebb89553"],
 
 Cell[TextData[{
  "One, two and three-dimensional tensors can be created using the following, \
@@ -2601,18 +3297,21 @@ where ",
  " or ",
  StyleBox["complex_t", "Program"],
  "."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "6d0c5587-0634-46ea-9c6a-61d5f546484b"],
 
 Cell["\<\
 makeVector<T>(mint len);
 makeMatrix<T>(mint rows, mint cols);
 makeCube<T>(mint rows, mint cols, mint slices);\
-\>", "Program"],
+\>", "Program",
+ ExpressionUUID -> "ac79c21c-3de8-44ec-9dd9-5a07d2f91b5b"],
 
 Cell["\<\
 We can also create a vector or matrix based on existing data. The data will \
 be copied.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "ce9b0604-ae87-44b3-9f1b-3c35104a1fba"],
 
 Cell["\<\
 makeVector<T>(mint len, const U *data);
@@ -2620,84 +3319,122 @@ makeMatrix<T>(mint nrow, mint ncol, const U *data); // assumes data uses \
 row-major storage
 makeMatrixTransposed<T>(mint nrow, mint ncol, const U *data); // assumes data \
 uses column-major storage\
-\>", "Program"],
+\>", "Program",
+ ExpressionUUID -> "42e9b73b-aa40-44f2-a622-382235fb829c"],
 
 Cell[TextData[{
  "Tensor patterns without type specifications, i.e. ",
  Cell[BoxData[
   FormBox[
    RowBox[{"{", 
-    RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]]],
+    RowBox[{"_", ",", "_"}], "}"}], TraditionalForm]],
+  ExpressionUUID -> "bb3bf2c7-7396-46da-a912-d6e65035cde7"],
  ", are not supported."
-}], "Text"]
-}, Open  ]],
+}], "Text",
+ ExpressionUUID -> "c61d54b8-1a60-458e-8e71-ea438207c160"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["SparseArray", "Subsubsection"],
+Cell["SparseArray", "Subsubsection",
+ ExpressionUUID -> "00f14242-398a-4cc4-8e05-02a78b2e67a6"],
 
 Cell["\<\
-LibraryDataType[SparseArray, Integer]\tSparseArrayRef<mint>
-LibraryDataType[SparseArray, Real]\t\tSparseArrayRef<double>
-LibraryDataType[SparseArray, Complex]\tSparseArrayRef<mma::complex_t>\
-\>", "Program"],
+LType[SparseArray, Integer]\t\tSparseArrayRef<mint>
+LType[SparseArray, Real]\t\tSparseArrayRef<double>
+LType[SparseArray, Complex]\t\tSparseArrayRef<mma::complex_t>\
+\>", "Program",
+ ExpressionUUID -> "dfcfe98f-0e34-4cb7-88d1-5f13101f1de7"],
 
 Cell[TextData[{
  "Optionally a rank specification can be given, for example ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"LibraryDataType", "[", 
-    RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}], 
-   TraditionalForm]]],
+  RowBox[{"LType", "[", 
+   RowBox[{"SparseArray", ",", "Integer", ",", "2"}], "]"}]]],
  "."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "687dfe52-ecf9-4c99-ab78-08a1e3f3ffad"],
 
 Cell[TextData[{
  "Sparse array patterns without type specifications, i.e. ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"LibraryDataType", "[", "SparseArray", "]"}], TraditionalForm]]],
+  RowBox[{"LType", "[", "SparseArray", "]"}]]],
  ", are not supported."
-}], "Text"]
-}, Open  ]],
+}], "Text",
+ ExpressionUUID -> "18fc7847-3c5e-4a53-9db6-7479c43e16b1"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["LExpressionID", "Subsubsection"],
+Cell["RawArray", "Subsubsection"],
 
-Cell["LExpressionID[\"SomeClass\"]\tSomeClass &", "Program"],
+Cell["\<\
+LType[RawArray, type]
+LType[RawArray]\
+\>", "Program"],
+
+Cell["TODO", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Image", "Subsubsection"],
+
+Cell["\<\
+LType[Image, type]
+LType[Image3D, type]
+LType[Image]
+LType[Image3D]\
+\>", "Program"],
+
+Cell["TODO", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["LExpressionID", "Subsubsection",
+ ExpressionUUID -> "7c86f063-a2e7-4854-ab27-ba9dca0f5202"],
+
+Cell["LExpressionID[\"SomeClass\"]\tSomeClass &", "Program",
+ ExpressionUUID -> "40a6c31e-8a3b-47b0-bdbb-06c63a637dcb"],
 
 Cell[TextData[{
  "Arguments of type ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}], 
-   TraditionalForm]]],
+  RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}]],
+  FormatType->"StandardForm"],
  " are handled specially. On the ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " side a managed library expression ID is expected, i.e. an integer. This \
 can be obtained from a managed library expression using the function ",
  Cell[BoxData[
-  FormBox[
-   RowBox[{"ManagedLibraryExpressionID", "[", "]"}], TraditionalForm]]],
+  RowBox[{"ManagedLibraryExpressionID", "[", "]"}]],
+  FormatType->"StandardForm"],
  ". On the C++ side it will be passed as a reference to a class instance, ",
- Cell[BoxData[
-  FormBox[
-   RowBox[{"SomeClass", " ", "&"}], TraditionalForm]]],
+ StyleBox["SomeClass &", "Program"],
+ "."
+}], "Text",
+ ExpressionUUID -> "e8becad8-52be-44f3-807d-c6c530c12699"],
+
+Cell[TextData[{
+ "To get the class instance from an integer directly in C++, use ",
+ StyleBox["mma::getInstance(id)", "Program"],
  "."
 }], "Text"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Strings", "Subsubsection"],
+Cell["Strings", "Subsubsection",
+ ExpressionUUID -> "2ce74630-7c00-495b-adc9-e7685321ee6e"],
 
 Cell[TextData[{
  "Strings are mapped to ",
  StyleBox["const char *", "Program"],
  " and must not be modified, except for freeing the input argument."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "e5eb0c4a-1b3a-49de-8238-7f57888a6fa3"],
 
 Cell[TextData[{
  "With LibraryLink, freeing strings that ",
@@ -2711,59 +3448,67 @@ convenience function is provided for this as ",
  " due to the ",
  StyleBox["const", "Program"],
  " qualifier."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "3092ecaa-0826-4bda-b750-f4f137f0eb4b"],
 
 Cell["\<\
 void disownString(const char *); // wrapper for UTF8String_disown\
-\>", "Program"]
-}, Open  ]],
+\>", "Program",
+ ExpressionUUID -> "2051517e-d117-4f6c-a859-8114830ee8e0"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["LinkObject passing", "Subsubsection"],
+Cell["LinkObject passing", "Subsubsection",
+ ExpressionUUID -> "6bcf5b8a-ec49-48d3-8ef6-4a69c2dbdfa5"],
 
 Cell["\<\
 The template syntax for LinkObject passing is \
 LFun[\[OpenCurlyDoubleQuote]functionName\[CloseCurlyDoubleQuote], \
 LinkObject].  The C++ equivalent must have the following signature:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "3f52cf89-6594-49e9-a19d-fdb724840926"],
 
-Cell["void functionName(MLINK link);", "Program"],
+Cell["void functionName(MLINK link);", "Program",
+ ExpressionUUID -> "00b2eca6-00f6-4b28-86e4-2172fb29079e"],
 
 Cell["\<\
 The mlstream.h auxiliary header provides a stream inserter/extractor based \
 syntax for reading arguments and returning results.\
-\>", "Text"]
-}, Open  ]],
+\>", "Text",
+ ExpressionUUID -> "97539fe8-2977-472c-9049-3728b3b941a6"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Other functions", "Subsubsection"],
-
-Cell["Some other useful functions are", "Text"],
+Cell["Issuing messages", "Subsubsection",
+ ExpressionUUID -> "564e3304-a167-4740-be0d-808e1f1373a0"],
 
 Cell["\<\
-void check_abort();
 void message(const char *msg, MessageType type = M_INFO);
 void message(std::string msg, MessageType type = M_INFO);
 massert(condition) // analogous to C's standard assert macro, but doesn't \
 kill the kernel\
-\>", "Program"]
-}, Open  ]],
+\>", "Program",
+ ExpressionUUID -> "cdae45d7-2af2-4f96-b51f-9c1eda48eeb2"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Printing to the notebook", "Subsubsection"],
+Cell["Printing to the notebook", "Subsubsection",
+ ExpressionUUID -> "7069daba-9610-493b-aa73-371995872a35"],
 
 Cell["\<\
 There is both a function and a streams interface for printing to the notebook.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "b3d8643e-fa7e-4f7b-8280-4910d0d95c29"],
 
 Cell["\<\
 void print(const char *msg);
 void print(std::string msg);
 std::ostream mma::mout;\
-\>", "Program"],
+\>", "Program",
+ ExpressionUUID -> "df16b316-3cbf-4e07-b68d-ac7dc74efb72"],
 
 Cell[TextData[{
  "When using the streams interface, expressions can be inserted into ",
@@ -2774,43 +3519,106 @@ flushed. This can be conveniently done using ",
  " or ",
  StyleBox["std::flush", "Program"],
  ".  Example:"
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "a3b495c9-1771-457c-96cb-89a4c5c84b95"],
 
 Cell["\<\
 int ans = 42;
 mma::mout << \"The answer is: \" << ans << std::endl;\
-\>", "Program"]
-}, Open  ]],
+\>", "Program",
+ ExpressionUUID -> "f56fe998-ce76-4e2f-b62d-dd3b83cab74d"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Error handling", "Subsubsection"],
+Cell["Error handling and debugging", "Subsubsection",
+ ExpressionUUID -> "45b8897f-d539-4098-bc8d-7abed08a3a07"],
 
 Cell["\<\
 An LTemplate function can report an error and exit immediately by throwing a \
 mma::LibraryError exception. The following constructors are available:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "31ad8e40-155f-4f71-8913-c105589d7f03"],
 
 Cell["\<\
 LibraryError(int error_code = LIBRARY_FUNCTION_ERROR);
 LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
+\>", "Program",
+ ExpressionUUID -> "e06b21af-2283-4b43-85d7-5a89e2997501"],
+
+Cell["\<\
+The massert() macro can be used as a direct alternative of the standard C \
+assert() macro.\
+\>", "Text"],
+
+Cell["\<\
+massert(condition) // analogous to C's standard assert macro, but doesn't \
+kill the kernel\
+\>", "Program"],
+
+Cell["\<\
+Define NDEBUG to disable assert checking. LTemplate uses a few assert checks \
+internally. Defining NDEBUG will disable these and may provide a tiny \
+performance boost.\
+\>", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Accessing the LibraryLink C API", "Subsubsection"],
+
+Cell[TextData[{
+ "The LibraryLink callback functions are available through ",
+ StyleBox["mma::libData", "Program"],
+ ", e.g. ",
+ StyleBox["mma::libData->MTensor_new()", "Program"],
+ "."
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Other functions", "Subsubsection"],
+
+Cell["\<\
+To make a function abortable using Evaluation \[Rule] Abort Evaluation, \
+periodically run check_abort() in your function.\
+\>", "Text"],
+
+Cell["void check_abort(); // checks for an honours user aborts", "Program"],
+
+Cell["\<\
+Access to existing class instances are provided through the follwing \
+functions:\
+\>", "Text"],
+
+Cell["\<\
+template<typename Class> Class &getInstance(mint id);
+template<typename T> const std::map<mint, Class *> &getCollection();\
 \>", "Program"]
+}, Closed]]
 }, Open  ]]
 }, Closed]]
 }, Open  ]]
-}, Open  ]]
 },
 WindowSize->{990, 700},
+WindowMargins->{{225, Automatic}, {Automatic, 75}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
+CommonDefaultFormatTypes->{"TextInline"->StandardForm},
 TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
 StyleDefinitions->Notebook[{
    Cell[
-    StyleData[StyleDefinitions -> "Default.nb"]],
+    StyleData[StyleDefinitions -> "Default.nb"]], 
    Cell[
-    StyleData["Section"], ShowGroupOpener -> True],
+    StyleData["Section"], ShowGroupOpener -> True], 
    Cell[
-    StyleData["Subsection"], ShowGroupOpener -> True],
+    StyleData["Subsection"], ShowGroupOpener -> True], 
    Cell[
-    StyleData["Subsubsection"], ShowGroupOpener -> True]}, Visible -> False,
+    StyleData["Subsubsection"], ShowGroupOpener -> True]}, Visible -> False, 
+  FrontEndVersion -> 
+  "10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, 2016)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
+
