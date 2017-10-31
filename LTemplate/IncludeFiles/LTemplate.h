@@ -1237,16 +1237,16 @@ typedef im_byte_t       im_bit8_t;   ///< Alias for \ref im_byte_t
  * The value representing "black" is always 0.
  */
 template<typename T>
-T imageMax() { return std::numeric_limits<T>::max(); }
+inline T imageMax() { return std::numeric_limits<T>::max(); }
 
 template<>
-im_bit_t imageMax() { return 1; }
+inline im_bit_t imageMax() { return 1; }
 
 template<>
-im_real32_t imageMax() { return 1.0f; }
+inline im_real32_t imageMax() { return 1.0f; }
 
 template<>
-im_real_t imageMax() { return 1.0; }
+inline im_real_t imageMax() { return 1.0; }
 
 namespace detail { // private
     template<typename T> inline imagedata_t libraryImageType() {
