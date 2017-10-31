@@ -338,11 +338,10 @@ fullyQualifiedSymbolName[sym_Symbol] := Context[sym] <> SymbolName[sym]
 setupCollection[classname_String] := {
   CDeclare[collectionType[classname], collectionName[classname]],
   "",
-  CInlineCode["namespace mma {"], (* workaround for gcc bug, "specialization of template in different namespace" *)
-  CFunction["template<> const " <> collectionType[classname] <> " &", "getCollection<" <> classname <> ">", {},
+  CInlineCode["namespace mma"], (* workaround for gcc bug, "specialization of template in different namespace" *)
+  CBlock@CFunction["template<> const " <> collectionType[classname] <> " &", "getCollection<" <> classname <> ">", {},
     CReturn[collectionName[classname]]
   ],
-  CInlineCode["} // mma"],
   "",
   CFunction["DLLEXPORT void", managerName[classname], {"WolframLibraryData libData", "mbool mode", "mint id"},
     CInlineCode@StringTemplate[ (* TODO: Check if id exists, use assert *)
