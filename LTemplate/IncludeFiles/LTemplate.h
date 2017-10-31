@@ -204,7 +204,7 @@ namespace detail {
     };
 
     template<typename LT>
-    LTAutoFree<LT> AutoFree(const LT &ref) { return LTAutoFree<LT>(ref); }
+    inline LTAutoFree<LT> AutoFree(const LT &ref) { return LTAutoFree<LT>(ref); }
 }
 
 
