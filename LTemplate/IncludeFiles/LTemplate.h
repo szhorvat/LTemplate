@@ -346,6 +346,7 @@ public:
     T *begin() const { return data(); }
     T *end() const { return begin() + length(); }
 
+    /// The type of the Tensor, may be `MType_Integer=2`, `MType_Real=3` or `MType_Complex=4`
     mint type() const { return detail::libraryType<T>(); }
 
     /** Convert to the given type of Tensor
@@ -455,7 +456,10 @@ typedef CubeRef<complex_t>  ComplexCubeRef;
 /// @}
 
 
-/// Create a Tensor of the given dimensions
+/** \brief Create a Tensor of the given dimensions
+ *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
+ *  \param dims are the dimensions
+ */
 template<typename T>
 inline TensorRef<T> makeTensor(std::initializer_list<mint> dims) {
     MTensor t = NULL;
@@ -465,9 +469,9 @@ inline TensorRef<T> makeTensor(std::initializer_list<mint> dims) {
 }
 
 /** \brief Create a Tensor of the given dimensions.
+ *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
  *  \param rank is the Tensor depth
  *  \param dims are the dimensions stored in a C array of length \c rank and type \c mint
- *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
  */
 template<typename T>
 inline TensorRef<T> makeTensor(mint rank, mint *dims) {
@@ -478,6 +482,7 @@ inline TensorRef<T> makeTensor(mint rank, mint *dims) {
 }
 
 /** \brief Create a Tensor of the given dimensions.
+ *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
  *  \param rank is the Tensor depth
  *  \param dims are the dimensions stored in a C array of length \c rank and type \c U
  */
@@ -489,27 +494,34 @@ inline TensorRef<T> makeTensor(mint rank, const U *dims) {
 
 
 /** \brief Creates a vector (rank-1 Tensor) of the given length
- * \param len is the vector length
  * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+ * \param length is the vector length
  */
 template<typename T>
-inline TensorRef<T> makeVector(mint len) {
-    return makeTensor<T>({len});
+inline TensorRef<T> makeVector(mint length) {
+    return makeTensor<T>({length});
 }
 
-/// Creates a vector (rank-1 Tensor) of the given length and copies the contents of a C array into it
+/** \brief Creates a vector (rank-1 Tensor) of the given length and copies the contents of a C array into it
+ * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+ * \param length is the length of the C array
+ * \param data points to the contents of the C array
+ */
 template<typename T, typename U>
-inline TensorRef<T> makeVector(mint len, const U *data) {
-    TensorRef<T> t = makeVector<T>(len);
-    std::copy(data, data+len, t.begin());
+inline TensorRef<T> makeVector(mint length, const U *data) {
+    TensorRef<T> t = makeVector<T>(length);
+    std::copy(data, data+length, t.begin());
     return t;
 }
 
-/// Creates a vector (rank-1 Tensor) from an intializer list
+/** \brief Creates a vector (rank-1 Tensor) from an intializer list
+ * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+ * \param values will be copied into the Tensor
+ */
 template<typename T>
-inline TensorRef<T> makeVector(std::initializer_list<T> l) {
-    TensorRef<T> t = makeVector<T>(l.size());
-    std::copy(l.begin(), l.end(), t.begin());
+inline TensorRef<T> makeVector(std::initializer_list<T> values) {
+    TensorRef<T> t = makeVector<T>(values.size());
+    std::copy(values.begin(), values.end(), t.begin());
     return t;
 }
 
@@ -534,10 +546,10 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol, const U *data) {
 
 /// Creates  matrix (rank-2 Tensor) using from a nested intializer list.
 template<typename T>
-inline MatrixRef<T> makeMatrix(std::initializer_list<std::initializer_list<T>> m) {
-    MatrixRef<T> t = makeMatrix<T>(m.size(), m.size() ? m.begin()->size() : 0);
+inline MatrixRef<T> makeMatrix(std::initializer_list<std::initializer_list<T>> values) {
+    MatrixRef<T> t = makeMatrix<T>(values.size(), values.size() ? values.begin()->size() : 0);
     T *ptr = t.data();
-    for (const auto &row : m) {
+    for (const auto &row : values) {
         massert(row.size() == t.cols());
         for (const auto &el : row) {
             *ptr = el;
@@ -557,10 +569,10 @@ inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
 
 
 /** \brief Creates a rank-3 Tensor of the given dimensions
+ * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
  * \param nslice is the number of slices
  * \param nrow is the number of rows
  * \param ncol is the number of columns
- * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
  */
 template<typename T>
 inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
@@ -577,13 +589,13 @@ inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
 
 /// Creates a rank-3 Tensor from a nested initializer list
 template<typename T>
-inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::initializer_list<T>>> c) {
-    size_t ns = c.size();
-    size_t rs = ns ? c.begin()->size() : 0;
-    size_t cs = rs ? c.begin()->begin()->size() : 0;
+inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::initializer_list<T>>> values) {
+    size_t ns = values.size();
+    size_t rs = ns ? values.begin()->size() : 0;
+    size_t cs = rs ? values.begin()->begin()->size() : 0;
     CubeRef<T> t = makeCube<T>(ns, rs, cs);
     T *ptr = t.data();
-    for (const auto &slice : c) {
+    for (const auto &slice : values) {
         massert(slice.size() == rs);
         for (const auto &row : slice) {
             massert(row.size() == cs);
@@ -1064,6 +1076,7 @@ public:
 
     const mint *dimensions() const { return libData->rawarrayLibraryFunctions->MRawArray_getDimensions(ra); }
 
+    /// Convert to the given type of RawArray; same as `MRawArray_convertType`
     template<typename U>
     RawArrayRef<U> convertTo() const {
         // TODO check error?
@@ -1125,16 +1138,20 @@ public:
     rawarray_t type() const { return detail::libraryRawType<T>(); }
 };
 
-/// Creates a RawArray of the given dimensions
+/** \brief Creates a RawArray of the given dimensions
+ *  \tparam T is the array element type
+ *  \param dims are the array dimensions
+ */
 template<typename T>
-inline RawArrayRef<T> makeRawArray(std::initializer_list<mint> l) {
+inline RawArrayRef<T> makeRawArray(std::initializer_list<mint> dims) {
     MRawArray ra = NULL;
-    int err = libData->rawarrayLibraryFunctions->MRawArray_new(detail::libraryRawType<T>(), l.size(), l.begin(), &ra);
+    int err = libData->rawarrayLibraryFunctions->MRawArray_new(detail::libraryRawType<T>(), dims.size(), dims.begin(), &ra);
     if (err) throw LibraryError("MRawArray_new() failed.", err);
     return ra;
 }
 
 /** \brief Create a RawArray of the given dimensions.
+ *  \tparam T is the array element type
  *  \param rank is the RawArray depth
  *  \param dims are the dimensions stored in a C array of length \c rank and type \c mint
  */
@@ -1147,6 +1164,7 @@ inline RawArrayRef<T> makeRawArray(mint rank, const mint *dims) {
 }
 
 /** \brief Create a RawArray of the given dimensions.
+ *  \tparam T is the array element type
  *  \param rank is the RawArray depth
  *  \param dims are the dimensions stored in a C array of length \c rank and type \c U
  */
@@ -1156,22 +1174,24 @@ inline RawArrayRef<T> makeRawArray(mint rank, const U *dims) {
     return makeRawArray<T>(rank, d.data());
 }
 
-/// Creates a rank-1 RawArray of the given length
+/** \brief Creates a rank-1 RawArray of the given length
+ *  \tparam T is the array element type
+ *  \param length is the vector length
+ */
 template<typename T>
-inline RawArrayRef<T> makeRawVector(mint len) {
-    return makeRawArray<T>({len});
+inline RawArrayRef<T> makeRawVector(mint length) {
+    return makeRawArray<T>({length});
 }
 
 /** \brief Creates a rank-1 RawArray of the given type from a C array of the corresponding type
- *
- *  \param len is the vector length
+ *  \tparam T is the array element type
+ *  \param length is the vector length
  *  \param data will be copied into the raw vector
- *  \tparam T is the array type
  */
 template<typename T>
-inline RawArrayRef<T> makeRawVector(mint len, const T *data) {
-    auto ra = makeRawVector<T>(len);
-    std::copy(data, data+len, ra.begin());
+inline RawArrayRef<T> makeRawVector(mint length, const T *data) {
+    auto ra = makeRawVector<T>(length);
+    std::copy(data, data+length, ra.begin());
     return ra;
 }
 
@@ -1207,6 +1227,7 @@ typedef im_byte_t       im_bit8_t;   ///< Alias for \ref im_byte_t
 /// @}
 
 /** \brief Returns the value representing "white" for the give pixel type
+ *  \tparam T is the pixel type
  *
  * For integer types, this is the highest value that can be stored.
  *
@@ -1328,7 +1349,7 @@ public:
 
     mint shareCount() const { return libData->imageLibraryFunctions->MImage_shareCount(im); }
 
-    /** \brief Convert the image to the given type of \ref ImageRef
+    /** \brief Convert to the given type of Image; same as `MImage_convertType`
      *  \param interleaving specifies whether to store the data in interleaved mode. See \ref interleavedQ
      *  \tparam U is the pixel type of the result.
      */
@@ -1602,12 +1623,12 @@ public:
 
 
 /** \brief Create a new Image
+ *  \tparam T is the pixel type
  *  \param width of the image (number of columns)
  *  \param height of the image (number of rows)
  *  \param channels is the number of image channels
  *  \param interleaving specifies whether to store the data in interleaved mode
  *  \param colorspace may be one of `MImage_CS_Automatic`, `MImage_CS_Gray`, `MImage_CS_RGB`, `MImage_CS_HSB`, `MImage_CS_CMYK`, `MImage_CS_XYZ`, `MImage_CS_LUV`, `MImage_CS_LAB`, `MImage_CS_LCH`
- *  \tparam T is the pixel type
  */
 template<typename T>
 inline ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
@@ -1617,13 +1638,13 @@ inline ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool in
 }
 
 /** \brief Create a new Image3D
+ *  \tparam T is the pixel type
  *  \param slices is the number of image slices
  *  \param width of individual slices (number of rows)
  *  \param height of individual slices (number of columns)
  *  \param channels is the number of image channels
  *  \param interleaving specifies whether to store the data in interleaved mode
  *  \param colorspace may be one of `MImage_CS_Automatic`, `MImage_CS_Gray`, `MImage_CS_RGB`, `MImage_CS_HSB`, `MImage_CS_CMYK`, `MImage_CS_XYZ`, `MImage_CS_LUV`, `MImage_CS_LAB`, `MImage_CS_LCH`
- *  \tparam T is the pixel type
  *
  */
 template<typename T>
