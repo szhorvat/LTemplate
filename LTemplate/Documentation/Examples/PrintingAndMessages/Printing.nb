@@ -219,7 +219,7 @@ Cell[BoxData[
 }, Open  ]],
 
 Cell[TextData[{
- "Throwing an mma::LibraryError object causes the associate error message to \
+ "Throwing a mma::LibraryError object causes the associate error message to \
 be shown as an ",
  Cell[BoxData[
   FormBox[
@@ -240,9 +240,8 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value must be \
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value must be \
 positive.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "655db173-eb2d-4167-808e-f1d194644760"],
 
@@ -296,10 +295,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Hello from Message!\
-\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Hello from \
+Message!\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "424eee77-650c-42ae-a335-e550cf345d42"]
 }, Open  ]],
 
@@ -314,10 +312,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Error \
-encountered.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"]
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Error encountered.\\\\\\\"\
+\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -330,10 +327,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value is \
-42.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value is 42.\\\\\\\"\\\
+\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "e2b1d362-349e-499f-bd0f-70e0e1d3d89a"]
 }, Open  ]],
 
@@ -387,10 +383,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "assert"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Assertion failed: \
-\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"42 == 137, file \
+   RowBox[{"LTemplate", "::", "assert"}], "MessageName"], ":", 
+  " ", "\<\"Assertion failed: \[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"42 == \
+137, file \
 /Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
 PrintingAndMessages/Printing.h, line 67\\\\\\\"\\\"}]\\)\[NoBreak].\"\>"}]], \
 "Message", "MSG",
@@ -407,7 +402,7 @@ Cell[TextData[{
  StyleBox["all",
   FontSlant->"Italic"],
  " C++ exceptions to avoid killing the kernel. For exceptions different from \
-Mathematica::LibraryError a warning message is shown: uncaught exceptions can \
+mma::LibraryError a warning message is shown: uncaught exceptions can \
 indicate a serious error in the library, possibly even memory corruption, \
 thus it is best to restart the kernel session. If the exception derives from \
 std::exception, the what() description is also included."
@@ -424,12 +419,12 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Unknown exception \
-caught in Printing::exception(). The library may be in an inconsistent state. \
-It is recommended that you restart the kernel now to avoid instability.\\\\\\\
-\\nvector\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Unknown exception caught \
+in Printing::exception(). The library may be in an inconsistent state. It is \
+recommended that you restart the kernel now to avoid \
+instability.\\\\\\\\nvector\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", \
+"MSG",
  ExpressionUUID -> "4b958576-2c0e-4050-aa31-432503d82f65"],
 
 Cell[BoxData[

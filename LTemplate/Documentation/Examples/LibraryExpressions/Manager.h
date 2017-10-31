@@ -1,6 +1,7 @@
 
 #include <LTemplate.h>
 
+// Dummy class for "free" functions
 struct Manager {
 
     // Release a VecExpr

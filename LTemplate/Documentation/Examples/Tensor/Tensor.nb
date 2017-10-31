@@ -5,7 +5,8 @@ Cell["Working with arrays", "Section",
  ExpressionUUID -> "89046541-ecb9-4571-a6e2-02bc16e11ecd"],
 
 Cell["\<\
-These examples demonstrate the basics of working with multidimensional arrays.\
+These examples demonstrate the basics of working with multidimensional \
+arrays, the meat-and-potatoes of LibraryLink programming.\
 \>", "Text",
  ExpressionUUID -> "9c75b65d-6319-43d0-add4-e5a2f62865ec"],
 

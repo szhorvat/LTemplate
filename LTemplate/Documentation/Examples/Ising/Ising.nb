@@ -4,10 +4,15 @@ Cell[CellGroupData[{
 Cell["Two-dimensional Ising model", "Section",
  ExpressionUUID -> "10c6cfd6-9e82-43f5-a390-f895753bc07f"],
 
-Cell["\<\
-This example show how to simulate a two-dimensional Ising model in C++ and \
-visualize it in real time in Mathematica.\
-\>", "Text",
+Cell[TextData[{
+ "This example shows how to simulate a two-dimensional ",
+ ButtonBox["Ising model",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://en.wikipedia.org/wiki/Ising_model"], None},
+  ButtonNote->"https://en.wikipedia.org/wiki/Ising_model"],
+ " in C++ and visualize it in real time in Mathematica."
+}], "Text",
  ExpressionUUID -> "76cdc71d-e64b-4770-8661-fd72ae6b7780"],
 
 Cell[BoxData[{
@@ -91,7 +96,10 @@ Cell[BoxData[{
     RowBox[{"\"\<getState\>\"", "[", "]"}]}]}], ";"}]}], "Input",
  ExpressionUUID -> "732764c4-9e22-41c5-8271-53a1ecaf3c95"],
 
-Cell["Control sliders for the temperature and simulation speed:", "Text",
+Cell["\<\
+Control sliders for the temperature and simulation speed. Try using them \
+while the simulation is running.\
+\>", "Text",
  ExpressionUUID -> "bb8b1248-3180-4132-bfc9-664523f0b223"],
 
 Cell[BoxData[
@@ -118,7 +126,7 @@ Cell[BoxData[
    RowBox[{"Dynamic", "[", "step", "]"}]}], "}"}]], "Input",
  ExpressionUUID -> "82de69c3-d667-4447-874f-e58320aa4df3"],
 
-Cell["Set up dynamic visualizations:", "Text",
+Cell["Set up dynamic visualizations.", "Text",
  ExpressionUUID -> "37962e41-50d0-4648-9fa0-5fda053fa3e2"],
 
 Cell[BoxData[
@@ -153,7 +161,7 @@ Cell[BoxData[
      "}"}], "]"}]}]], "Input",
  ExpressionUUID -> "73fd3f39-b896-4ae1-a4cc-115272b9e9af"],
 
-Cell["Start the simulation:", "Text",
+Cell["Start the simulation.", "Text",
  ExpressionUUID -> "8f9ec8ef-ea0b-4024-ba82-1f22cae42506"],
 
 Cell[BoxData[
@@ -172,7 +180,8 @@ Cell[BoxData[
  ExpressionUUID -> "c7758668-cab3-47ee-a816-125c948085c4"],
 
 Cell["\<\
-Simply abort the calculation (Evaluation menu) to stop the simulation.\
+Simply abort the calculation (Evaluation menu, Abort Evaluation) to stop the \
+simulation.\
 \>", "Text",
  ExpressionUUID -> "897d8457-ad83-4800-a4b2-33c18a32e805"]
 }, Open  ]]

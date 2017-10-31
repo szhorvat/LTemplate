@@ -111,6 +111,8 @@ struct Img {
      *
      *  - Dispatching to the correct function based on the type of the image
      *  - Casting GenericImageRef to a type-specialized ImageRef
+     *  - Finding the clipping values of different images types using mma::imageMax()
+     *  - Iterating through each pixel and each non-alpha channel
      *
      */
     mma::GenericImageRef adjust(mma::GenericImageRef im) {

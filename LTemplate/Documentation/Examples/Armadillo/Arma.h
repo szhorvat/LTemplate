@@ -46,16 +46,20 @@ arma::SpMat<T> toArmaSparseTransposed(mma::SparseMatrixRef<T> sm) {
             // because Armadillo uses unsigned integers while Mathematica uses signed ones
             arma::conv_to<arma::uvec>::from(toArmaVec(sm.columnIndices())) - 1, // convert to 0-based indices; Mathematica uses 1-based ones.
             arma::conv_to<arma::uvec>::from(toArmaVec(sm.rowPointers())),
-            toArmaVec(sm.explicitValues()), sm.cols(), sm.rows()
+            toArmaVec(sm.explicitValues()),
+            sm.cols(), sm.rows()
            );
 }
 
+// Convert from Armadillo sparse matrix to Mathematica SparseArray
 template<typename T>
 mma::SparseMatrixRef<T> fromArmaSparse(const arma::SpMat<T> &am) {
-    auto pos  = mma::makeMatrix<mint>(am.n_nonzero, 2);
-    auto vals = mma::makeVector<double>(am.n_nonzero);
+    // there are am.n_nonzero explicitly stored elements in am
+    auto pos  = mma::makeMatrix<mint>(am.n_nonzero, 2); // positions array
+    auto vals = mma::makeVector<double>(am.n_nonzero);  // values array
 
-    // iterate through all explicitly stored elements in the Armadillo sparse matrix
+    // iterate through all explicitly stored elements in the Armadillo sparse matrix and
+    // fill out the positions and values arrays to be used in the creation of a Mathematica SparseArray
     mint i = 0;
     for (typename arma::SpMat<T>::const_iterator it = am.begin();
          it != am.end();
@@ -76,23 +80,36 @@ mma::SparseMatrixRef<T> fromArmaSparse(const arma::SpMat<T> &am) {
 
 class Arma {
 public:
+    // Matrix inverse
     mma::RealMatrixRef inv(mma::RealMatrixRef mat) {
         arma::mat m = toArmaTransposed(mat);
         return fromArmaTransposed<double>(arma::inv(m));
     }
 
+    // The first k complex eigenvalues of a sparse matrix
     mma::ComplexTensorRef eigs(mma::SparseMatrixRef<double> sm, mint k) {
         return fromArmaVec<mma::complex_t>(arma::eigs_gen(toArmaSparseTransposed(sm), k));
     }
 
+    // Random sparse matrix
     mma::SparseMatrixRef<double> sprandu(mint i, mint j, double dens) {
         return fromArmaSparse(arma::sprandu<arma::sp_mat>(i, j, dens));
     }
+
+    // Solve a linear equation
+    mma::RealTensorRef solve(mma::RealMatrixRef mat, mma::RealTensorRef vec) {
+        return fromArmaVec<double>(
+                    arma::solve(toArmaTransposed(mat).t(), // transpose back to match mat
+                    toArmaVec(vec))
+                );
+    }
         
+    // Print an Armadillo matrix
     void print(mma::RealMatrixRef mat) {
         mma::mout << toArmaTransposed(mat).t();
     }
 
+    // Print an Armadillo sparse matrix
     void printSparse(mma::SparseMatrixRef<double> sm) {
         mma::mout << toArmaSparseTransposed(sm);
     }

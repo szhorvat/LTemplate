@@ -5,14 +5,25 @@ Cell["Managed Library Expressions", "Section",
  ExpressionUUID -> "cd2d3f18-e46f-4d9c-adac-d36ea52104dd"],
 
 Cell[TextData[{
- "This example demonstrates various operations on managed library \
-expressions. It shows the implementation of a real vector class, ",
+ "This example demonstrates various operations on ",
+ ButtonBox["managed library expressions",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:paclet:LibraryLink/tutorial/InteractionWithMathematica#353220453"],\
+
+ ". It shows the implementation of a real-valued vector class, ",
  Cell[BoxData[
   FormBox["VecExpr", TraditionalForm]],
   ExpressionUUID -> "54d425c9-3fb5-4ffc-87c3-e4a57edcb78c"],
  "."
 }], "Text",
  ExpressionUUID -> "63587299-0a81-4c30-a2c3-d05440e19b72"],
+
+Cell["\<\
+LTemplate was originally created to simplify working with managed library \
+expressions. All LTemplate classes correspond to library expressions with the \
+same manager name.\
+\>", "Text"],
 
 Cell[BoxData[{
  RowBox[{
@@ -609,10 +620,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LibraryFunction", "::", "noinst"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Managed library expression instance does not exist. \\!\\(\
-\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+   RowBox[{"LibraryFunction", "::", "noinst"}], "MessageName"], ":", 
+  " ", "\<\"Managed library expression instance does not exist. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
 ButtonFrame->None, ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote \
 -> \\\"LibraryFunction::noinst\\\"]\\)\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "60e15e21-1284-4ec8-a7d0-024e642d2f55"],
@@ -690,3 +700,4 @@ FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
 2016)",
 StyleDefinitions->"Default.nb"
 ]
+

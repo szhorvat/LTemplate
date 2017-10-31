@@ -5,14 +5,11 @@ Cell["Basic LTemplate usage", "Section"],
 
 Cell[TextData[{
  "This notebook demonstrates basic LTemplate usage with ",
- Cell[BoxData["Integer"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["Integer"]],
  ", ",
- Cell[BoxData["Real"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["Real"]],
  " and ",
- Cell[BoxData["Complex"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["Complex"]],
  " numerical arguments."
 }], "Text"],
 
@@ -46,7 +43,7 @@ Cell[BoxData[
     "]"}]}], ";"}]], "Input"],
 
 Cell["\<\
-The corresponding C++ code is in Basics.h in the same directory.\
+The corresponding C++ code is in Basics.h, in the same directory.\
 \>", "Text"],
 
 Cell[BoxData[
@@ -225,16 +222,14 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LibraryFunction", "::", "cfsa"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Argument \
-\[NoBreak]\\!\\(\\*RowBox[{\\\"\[ImaginaryI]\\\"}]\\)\[NoBreak] at position \
-\[NoBreak]\\!\\(\\*RowBox[{\\\"2\\\"}]\\)\[NoBreak] should be a \[NoBreak]\\!\
-\\(\\*RowBox[{\\\"\\\\\\\"machine-size real \
-number\\\\\\\"\\\"}]\\)\[NoBreak]. \
-\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
-ButtonFrame->None, ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote \
--> \\\"LibraryFunction::cfsa\\\"]\\)\"\>"}]], "Message", "MSG"],
+   RowBox[{"LibraryFunction", "::", "cfsa"}], "MessageName"], ":", 
+  " ", "\<\"Argument \[NoBreak]\\!\\(\\*RowBox[{\\\"\[ImaginaryI]\\\"}]\\)\
+\[NoBreak] at position \[NoBreak]\\!\\(\\*RowBox[{\\\"2\\\"}]\\)\[NoBreak] \
+should be a \[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"machine-size real number\\\
+\\\\\"\\\"}]\\)\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote -> \
+\\\"LibraryFunction::cfsa\\\"]\\)\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
  RowBox[{
@@ -260,8 +255,9 @@ Cell[BoxData[
            
            ImageSize->
             Dynamic[{
-             Automatic, 3.5 CurrentValue["FontCapHeight"]/
-              AbsoluteCurrentValue[Magnification]}]], 
+             Automatic, 
+              3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+               Magnification])}]], 
           GraphicsBox[
            {Thickness[0.038461538461538464`], 
             {FaceForm[{GrayLevel[0.93], Opacity[1.]}], 
@@ -368,8 +364,9 @@ TVVwWKy880/7FHWIexrkIfLX1RzOMDZZVjHIOaDkh3vSDuj5AwCF11Vc
            
            ImageSize->
             Dynamic[{
-             Automatic, 3.5 CurrentValue["FontCapHeight"]/
-              AbsoluteCurrentValue[Magnification]}]], 
+             Automatic, 
+              3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+               Magnification])}]], 
           GraphicsBox[
            {Thickness[0.038461538461538464`], 
             {FaceForm[{GrayLevel[0.93], Opacity[1.]}], 
@@ -508,23 +505,19 @@ x86-64/Basics.dylib", "Basics_add", {Integer, Real, Real}, Real],
 }, Open  ]],
 
 Cell[TextData[{
- Cell[BoxData["mandel"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["mandel"]],
  " is a helper function for implementing the escape time algorithm for \
 visualizing the Mandelbrot set. It counts how many iterations of ",
  Cell[BoxData[
   RowBox[{"z", "\[Function]", 
    RowBox[{
-    SuperscriptBox["z", "2"], "+", "c"}]}]],
-  FormatType->"StandardForm"],
+    SuperscriptBox["z", "2"], "+", "c"}]}]]],
  " are necessary before ",
  Cell[BoxData[
   RowBox[{
-   RowBox[{"Abs", "[", "z", "]"}], ">", "2"}]],
-  FormatType->"StandardForm"],
+   RowBox[{"Abs", "[", "z", "]"}], ">", "2"}]]],
  ". The first argument is ",
- Cell[BoxData["c"],
-  FormatType->"StandardForm"],
+ Cell[BoxData["c"]],
  ", the second the maximum number of iterations."
 }], "Text"],
 
@@ -728,3 +721,4 @@ FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
 2016)",
 StyleDefinitions->"Default.nb"
 ]
+
