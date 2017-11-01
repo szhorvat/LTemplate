@@ -79,6 +79,22 @@ LibraryLink. This is discussed in the ",
 
 Cell[CellGroupData[{
 
+Cell["What are the minimum system requirements?", "Subsection"],
+
+Cell[TextData[{
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 10.0 or later and a C++11 capable compiler."
+}], "Text"],
+
+Cell["\<\
+If using the default compiler on OS X, then OS X 10.9 or later is needed for \
+C++11 support.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["\<\
 Do I need to learn LibraryLink before starting to use LTemplate?\
 \>", "Subsection",
@@ -254,8 +270,8 @@ WindowSize->{641, 852},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 
