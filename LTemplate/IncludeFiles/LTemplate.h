@@ -1112,7 +1112,8 @@ public:
         checkType();
     }
 
-    RawArrayRef(const GenericRawArrayRef &gra) :
+    // explicit conversion required to prevent accidental auto-conversion between RawArrays of different types
+    explicit RawArrayRef(const GenericRawArrayRef &gra) :
         GenericRawArrayRef(gra),
         array_data(reinterpret_cast<T *>(libData->rawarrayLibraryFunctions->MRawArray_getData(gra.rawArray())))
     {
@@ -1461,8 +1462,9 @@ public:
             throw LibraryError("2D image expected.", LIBRARY_TYPE_ERROR);
     }
 
+    // explicit conversion required to prevent accidental auto-conversion between Images of different types or Image and Image3D
     /// Cast a GenericImageRef to a type-specialized 2D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
-    ImageRef(const GenericImageRef &gim) :
+    explicit ImageRef(const GenericImageRef &gim) :
         GenericImageRef(gim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(gim.image())))
     {
@@ -1558,8 +1560,9 @@ public:
             throw LibraryError("3D image expected.", LIBRARY_TYPE_ERROR);
     }
 
+    // explicit conversion required to prevent accidental auto-conversion between Image3Ds of different types or Image and Image3D
     /// Cast a GenericImageRef to a type-specialized 3D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
-    Image3DRef(const GenericImageRef &gim) :
+    explicit Image3DRef(const GenericImageRef &gim) :
         GenericImageRef(gim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(gim.image())))
     {
