@@ -315,7 +315,7 @@ MLSTREAM_DEF_VEC_PUT(Real128, mlextended_double)
 
 // Put all other types
 template<typename T,
-         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlextended_double)) ), int>::type = 0 >
+         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlint64)) ), int>::type = 0 >
 inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
     ml << mlHead("List", vec.size());
     for (typename std::vector<T>::const_iterator i = vec.begin(); i != vec.end(); ++i)
