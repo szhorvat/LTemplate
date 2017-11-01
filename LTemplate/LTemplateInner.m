@@ -803,6 +803,7 @@ compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : Option
                 Switch[{$OperatingSystem, driver["Name"][]},
                   {"Windows", "Visual Studio"}, {},
                   {"Windows", "Intel Compiler"}, "/Qstd=c++11",
+                  {"MacOSX", "Clang"}, {"-mmacosx-version-min=10.9", "-std=c++11"},
                   {_, _}, "-std=c++11"
                 ]
               }
