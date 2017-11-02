@@ -3369,11 +3369,37 @@ Cell[CellGroupData[{
 Cell["RawArray", "Subsubsection"],
 
 Cell["\<\
-LType[RawArray, type]
-LType[RawArray]\
+LType[RawArray, type]\t\tRawArrayRef<type>
+LType[RawArray]\t\t\t\tGenericRawArrayRef\
 \>", "Program"],
 
-Cell["TODO", "Text"]
+Cell["TODO", "Text"],
+
+Cell["RawArray behaves slightly differently from Tensors:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+RawArrays passed to (or returned from) a library functon are not \
+auto-converted to the type specified in the template (as is the case with \
+Tensors, SparseArrays and Images). If there is a type mismatch, an error is \
+thrown.\
+\>", "Item"],
+
+Cell["\<\
+The RawArray rank cannot be specified in the template. Check for the rank in \
+C++ if necessary, and throw a LibraryError manually in case the array was not \
+of the expected rank.\
+\>", "Item"],
+
+Cell["\<\
+A RawArray with unspecified type can be passed to (or returned from) the \
+library. It will be mapped to GenericRawArrayRef in C++, which can either be \
+cast to the correct type without copying (see type() member function and \
+RawArrayRef constructor), or converted to the desired type (see convertTo() \
+member function).\
+\>", "Item"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3381,10 +3407,10 @@ Cell[CellGroupData[{
 Cell["Image", "Subsubsection"],
 
 Cell["\<\
-LType[Image, type]
-LType[Image3D, type]
-LType[Image]
-LType[Image3D]\
+LType[Image, type]\t\t\tImageRef<type>
+LType[Image3D, type]\t\tImage3DRef<type>
+LType[Image]\t\t\t\tGenericImageRef
+LType[Image3D]\t\t\t\tGenericImageRef\
 \>", "Program"],
 
 Cell["TODO", "Text"]
@@ -3401,16 +3427,14 @@ Cell["LExpressionID[\"SomeClass\"]\tSomeClass &", "Program",
 Cell[TextData[{
  "Arguments of type ",
  Cell[BoxData[
-  RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}]],
-  FormatType->"StandardForm"],
+  RowBox[{"LExpressionID", "[", "\"\<SomeClass\>\"", "]"}]]],
  " are handled specially. On the ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " side a managed library expression ID is expected, i.e. an integer. This \
 can be obtained from a managed library expression using the function ",
  Cell[BoxData[
-  RowBox[{"ManagedLibraryExpressionID", "[", "]"}]],
-  FormatType->"StandardForm"],
+  RowBox[{"ManagedLibraryExpressionID", "[", "]"}]]],
  ". On the C++ side it will be passed as a reference to a class instance, ",
  StyleBox["SomeClass &", "Program"],
  "."

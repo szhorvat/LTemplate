@@ -144,10 +144,7 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", 
-  RowBox[{"template", ",", 
-   RowBox[{"\"\<ShellOutputFunction\>\"", "\[Rule]", "Print"}]}], 
-  "]"}]], "Input",
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
  ExpressionUUID -> "875fce35-a408-48db-81ef-9540cfbe76eb"],
 
 Cell[CellGroupData[{
@@ -189,7 +186,7 @@ Images",
     RGBColor[0, 0, 
      Rational[2, 3]]]],
   Editable->False]], "Print",
- ExpressionUUID -> "1b26f540-869d-4ef8-94e1-fef3931bd783"],
+ ExpressionUUID -> "17f93e39-d090-431b-9082-0e2b5b1f0f38"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -241,7 +238,7 @@ Cell[BoxData[
     RGBColor[0, 0, 
      Rational[2, 3]]]],
   Editable->False]], "Print",
- ExpressionUUID -> "6c816294-cb2a-422e-8867-85bac24a48c8"],
+ ExpressionUUID -> "992cc1d3-c215-4dae-970b-4ad8b11f87fb"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -256,7 +253,7 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print",
- ExpressionUUID -> "6ce9b3c9-edd2-4ce5-8685-2d3769db9206"],
+ ExpressionUUID -> "4a9d5ad7-2099-4a80-ade0-821ce5c16c91"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -271,15 +268,12 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print",
- ExpressionUUID -> "2e8437f6-2e32-499a-b5ad-cf012c7c0ba0"],
-
-Cell[BoxData["\<\"\"\>"], "Print",
- ExpressionUUID -> "f719ce10-5d8c-4238-82d6-ca958a9298a8"]
+ ExpressionUUID -> "69770340-7e51-41e3-917a-6e9740a5d527"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
 LibraryResources/MacOSX-x86-64/Img.dylib\"\>"], "Output",
- ExpressionUUID -> "eeb9ff8d-8bc7-4ecc-acb3-554119ea42eb"]
+ ExpressionUUID -> "60bf0b2e-a6c2-44fa-bdc3-88544798bc6f"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -295,7 +289,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"Img", "[", "1", "]"}]], "Output",
- ExpressionUUID -> "44f9b790-599d-49d7-bdde-9791d1336c9c"]
+ ExpressionUUID -> "2d35163f-7f15-492b-9f6d-d4b2d5feca6e"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5605,7 +5599,7 @@ rd/fz32NS/enT9D9/Nz5Hffij8U/O3/mrF91/hNeT5/p/X/4BJ1p69uvpF/4
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{150, 150},
   PlotRange->{{0, 150}, {0, 150}}]], "Output",
- ExpressionUUID -> "e5bcc1ef-3969-4bf4-ab84-86fbd3bd85eb"]
+ ExpressionUUID -> "39de6e02-a8ba-42f2-97b9-44509f41a80e"]
 }, Open  ]],
 
 Cell["\<\
@@ -5628,7 +5622,7 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{"\<\"Byte\"\>", ",", "\<\"Real\"\>"}], "}"}]], "Output",
- ExpressionUUID -> "8a78c089-fab8-40d1-b40b-c8d7d0703d38"]
+ ExpressionUUID -> "710a3d3d-51c9-4601-a5bd-0fcfa9318e37"]
 }, Open  ]],
 
 Cell["\<\
@@ -8344,7 +8338,7 @@ VnXitbzL+Jfpxin/arpxqh+nOrLxsik/uxbXnnS182k4NOVHxpOmfIl41Hxx
     DefaultBaseStyle->"ImageGraphics",
     ImageSizeRaw->{150, 150},
     PlotRange->{{0, 150}, {0, 150}}]}], "}"}]], "Output",
- ExpressionUUID -> "625f3acb-b32e-46fc-9d54-260aba24f37e"]
+ ExpressionUUID -> "afebc230-4e5b-40a1-ac79-14dae03a977a"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -10662,7 +10656,7 @@ ufnCjZcfxOv2jcGPrd/ofGB40nhp8Z7eYR/HH7cf83NnThB/yh+CExYu
     DefaultBaseStyle->"ImageGraphics",
     ImageSizeRaw->{150, 150},
     PlotRange->{{0, 150}, {0, 150}}]}], "}"}]], "Output",
- ExpressionUUID -> "5ad31df3-e2bf-47b8-ba40-71c58968d8cf"]
+ ExpressionUUID -> "49086dd6-832e-415a-84ac-84fba4cb6de7"]
 }, Open  ]]
 }, Open  ]],
 
@@ -10707,7 +10701,7 @@ nSEtPx9tzmZtKmvzHLIwoYUZdLWmbatSV8nJ263UFX419+AVhQ4Lj9OKMEDt
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{100, 100},
   PlotRange->{{0, 100}, {0, 100}}]], "Output",
- ExpressionUUID -> "abf5ec22-b608-4fad-bf34-1aafbc26c31c"]
+ ExpressionUUID -> "5eb2e694-5a9d-4da7-85d0-659732553830"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -11417,7 +11411,7 @@ N4Mp1G6GNGrfGNxZhbgOdbhfO+9wcnJycnJycv6v+H8AkBP8sg==
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{100, 100},
   PlotRange->{{0, 100}, {0, 100}}]], "Output",
- ExpressionUUID -> "d0691990-7f55-4345-9fa7-76f4511c3a55"]
+ ExpressionUUID -> "f5ec2202-614e-47e1-a4b1-129d770d1fc0"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -12527,7 +12521,7 @@ f/7zn//85z//+c//d/5fnpTRSQ==
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{100, 100},
   PlotRange->{{0, 100}, {0, 100}}]], "Output",
- ExpressionUUID -> "0288cef8-aaf9-4986-84f1-71ba9fb9ef59"]
+ ExpressionUUID -> "7d55cfe8-cc08-4447-9c5b-e1c381b8fa1f"]
 }, Open  ]]
 }, Open  ]],
 
@@ -15216,7 +15210,7 @@ OPz/O/QNVw==
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{"200", ",", "301"}], "}"}]], "Output",
- ExpressionUUID -> "81c16a72-f856-4ad9-b235-7aeb12b7597b"]
+ ExpressionUUID -> "766fa443-cd09-4b9f-88c4-bcd55d8166aa"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -17900,10 +17894,10 @@ OPz/O/QNVw==
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.0000409915702479339`2.", ",", 
+  RowBox[{"0.0000376175970310809`2.", ",", 
    RowBox[{"{", 
     RowBox[{"200", ",", "301"}], "}"}]}], "}"}]], "Output",
- ExpressionUUID -> "20f4a4ee-a606-4a82-b00f-d7be9f437d36"]
+ ExpressionUUID -> "3babb042-dcdc-4c74-8326-4be93fe256cf"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -20578,10 +20572,10 @@ OPz/O/QNVw==
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.0000369100985221675`2.", ",", 
+  RowBox[{"0.0000334183389074694`2.", ",", 
    RowBox[{"{", 
     RowBox[{"200", ",", "301"}], "}"}]}], "}"}]], "Output",
- ExpressionUUID -> "efc3c2cd-b9cc-4db6-b91e-76ffd9837302"]
+ ExpressionUUID -> "1c8b4537-48fe-4665-a784-986582ab8fd7"]
 }, Open  ]]
 }, Open  ]],
 
@@ -20617,7 +20611,7 @@ f4z6Y9Qfo/4Y9ceoP0b9MeqPUX+M+mPUH6P+GPXHqD9G/THqj1F/jPpj1B+j
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{200, 50},
   PlotRange->{{0, 200}, {0, 50}}]], "Output",
- ExpressionUUID -> "3fa7e69f-95b1-482e-813d-254232da92dd"]
+ ExpressionUUID -> "b10c1ae1-5cdd-43d7-b264-c40700125a09"]
 }, Open  ]]
 }, Open  ]],
 
@@ -20776,7 +20770,7 @@ YKl9VjZYzrVWL560KhdyILXTygrLvZZFsYj565xI7bWyw/Kg9cxr7SscSXm2
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{300, 224},
   PlotRange->{{0, 300}, {0, 224}}]], "Output",
- ExpressionUUID -> "6232e3ed-148f-4787-9e51-85a380eab87f"]
+ ExpressionUUID -> "6a2861fe-7dd7-4fa4-9e44-bda4f1c6605f"]
 }, Open  ]],
 
 Cell["Display the image in nicer colours.", "Text",
@@ -20991,7 +20985,7 @@ GINVYWgwGn37rf8DLSwVlw==
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{300, 224},
   PlotRange->{{0, 300}, {0, 224}}]], "Output",
- ExpressionUUID -> "1fceb272-5055-4c14-b797-2b987d3c63b0"]
+ ExpressionUUID -> "abef456b-5643-4d9e-b299-82b8989e3b76"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -21352,7 +21346,7 @@ Sks=
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{300, 419},
   PlotRange->{{0, 300}, {0, 419}}]], "Output",
- ExpressionUUID -> "1369604b-2e77-489b-bd6f-94ab19d777e1"]
+ ExpressionUUID -> "79d47920-f886-457b-b5ee-df3c4a4ced09"]
 }, Open  ]]
 }, Open  ]],
 
@@ -21368,7 +21362,7 @@ Cell[TextData[{
  " function \[OpenCurlyDoubleQuote]stretches\[CloseCurlyDoubleQuote] the \
 values in the image to fill out the entire available range, similarly to ",
  Cell[BoxData["ImageAdjust"],
-  FormatType->"StandardForm"],
+  ExpressionUUID -> "2e0004bf-fa83-4218-b4c9-2382f5cfb4f8"],
  ". The C++ code demonstrates working on images of arbitrary type."
 }], "Text",
  ExpressionUUID -> "8b76a650-ae11-457b-848c-cf2cf5d72026"],
@@ -26870,7 +26864,7 @@ Cell[BoxData[
  ExpressionUUID -> "41c2d74e-064c-4104-b2de-4e7225a59843"],
 
 Cell[BoxData["\<\"Byte\"\>"], "Output",
- ExpressionUUID -> "506e55d4-d054-461b-bd79-ef65d9f0ee99"]
+ ExpressionUUID -> "f9365c68-b749-4465-a00b-6b85f4d47dd2"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -32380,7 +32374,7 @@ Hy8L/18=
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{500, 300},
   PlotRange->{{0, 500}, {0, 300}}]], "Output",
- ExpressionUUID -> "be6c06b0-9f90-4202-9ba3-4abad67dfa35"]
+ ExpressionUUID -> "5137adea-6891-4bcb-a5e0-5916edbc132b"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -32390,7 +32384,7 @@ Cell[BoxData[
  ExpressionUUID -> "4f871a65-a958-4d99-ad65-180e30d823e2"],
 
 Cell[BoxData["\<\"Byte\"\>"], "Output",
- ExpressionUUID -> "e0c46e1f-5af0-4c38-a95c-96e6fac1509a"]
+ ExpressionUUID -> "43ca8ac4-b06a-4172-91c2-c988c59719c7"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -41173,7 +41167,7 @@ w/dT7vClJSc+tfdf5d2+V/wp5awv3cf/0v+/++7n//7n5v8ArLlLhQ==
   DefaultBaseStyle->"ImageGraphics",
   ImageSizeRaw->{500, 300},
   PlotRange->{{0, 500}, {0, 300}}]], "Output",
- ExpressionUUID -> "cbe4156f-bace-439c-ba49-889c69367ea5"]
+ ExpressionUUID -> "c83a9058-43df-4c6b-9b10-3a2e19b5b893"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -41183,7 +41177,7 @@ Cell[BoxData[
  ExpressionUUID -> "3b3649b7-6eba-414b-bc5b-e7198c7abd49"],
 
 Cell[BoxData["\<\"Real\"\>"], "Output",
- ExpressionUUID -> "b5b2fc32-9d5a-4728-954c-d20d02af19c0"]
+ ExpressionUUID -> "80419ada-9e05-49b1-8d72-17b88caa5f84"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
