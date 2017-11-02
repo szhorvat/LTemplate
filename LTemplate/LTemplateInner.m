@@ -159,7 +159,7 @@ depthNullPattern = PatternSequence[] | depthPattern; (* like depthPattern, but a
 
 arrayPattern = LType[List, numericTypePattern, depthNullPattern]; (* disallow MTensor without explicit element type specification *)
 sparseArrayPattern = LType[SparseArray, numericTypePattern, depthNullPattern]; (* disallow SparseArray without explicit element type specification *)
-rawArrayPattern = LType[RawArray, rawTypePattern, depthNullPattern] | LType[RawArray];
+rawArrayPattern = LType[RawArray, rawTypePattern] | LType[RawArray];
 imagePattern = LType[Image|Image3D, imageTypePattern] | LType[Image|Image3D];
 
 (*
@@ -194,14 +194,14 @@ wrapNakedHeadsRules = Dispatch@{
 };
 
 elemTypeAliases = Dispatch@{
-  LType[RawArray, "Byte", rest___]    :> LType[RawArray, "UnsignedInteger8", rest],
-  LType[RawArray, "Bit16", rest___]   :> LType[RawArray, "UnsignedInteger16", rest],
+  LType[RawArray, "Byte"]    :> LType[RawArray, "UnsignedInteger8"],
+  LType[RawArray, "Bit16"]   :> LType[RawArray, "UnsignedInteger16"],
   (* omit "Integer" because the naming is confusing and people may assume it's "Integer64" *)
-  (* LType[RawArray, "Integer"]          :> LType[RawArray, "Integer32", rest], *)
-  LType[RawArray, "Float", rest___]   :> LType[RawArray, "Real32", rest],
-  LType[RawArray, "Double", rest___]  :> LType[RawArray, "Real64", rest],
-  LType[RawArray, "Real", rest___]    :> LType[RawArray, "Real64", rest],
-  LType[RawArray, "Complex", rest___] :> LType[RawArray, "Complex128", rest],
+  (* LType[RawArray, "Integer"]          :> LType[RawArray, "Integer32"], *)
+  LType[RawArray, "Float"]   :> LType[RawArray, "Real32"],
+  LType[RawArray, "Double"]  :> LType[RawArray, "Real64"],
+  LType[RawArray, "Real"]    :> LType[RawArray, "Real64"],
+  LType[RawArray, "Complex"] :> LType[RawArray, "Complex128"],
 
   LType[h : Image|Image3D, "UnsignedInteger8"]  :> LType[h, "Byte"],
   LType[h : Image|Image3D, "UnsignedInteger16"] :> LType[h, "Bit16"],
@@ -606,7 +606,7 @@ types = Dispatch@{
         {"mma::SparseArrayRef<" <> ctype <> ">", "mma::detail::getSparseArray<" <> ctype <> ">", "mma::detail::setSparseArray<" <> ctype <> ">"}
       ],
 
-  {LType[RawArray, type_, ___], ___} :>
+  {LType[RawArray, type_], ___} :>
       With[
         {ctype = rawTypes[type]},
         {"mma::RawArrayRef<" <> ctype <> ">", "mma::detail::getRawArray<" <> ctype <> ">", "mma::detail::setRawArray<" <> ctype <> ">"}
@@ -614,7 +614,7 @@ types = Dispatch@{
 
   {LType[RawArray], ___} -> {"mma::GenericRawArrayRef", "mma::detail::getGenericRawArray", "mma::detail::setGenericRawArray"},
 
-  {LType[Image, type_, ___], ___} :>
+  {LType[Image, type_], ___} :>
       With[
         {ctype = imageTypes[type]},
         {"mma::ImageRef<" <> ctype <> ">", "mma::detail::getImage<" <> ctype <> ">", "mma::detail::setImage<" <> ctype <> ">"}
@@ -622,7 +622,7 @@ types = Dispatch@{
 
   {LType[Image], ___} -> {"mma::GenericImageRef", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
 
-  {LType[Image3D, type_, ___], ___} :>
+  {LType[Image3D, type_], ___} :>
       With[
         {ctype = imageTypes[type]},
         {"mma::Image3DRef<" <> ctype <> ">", "mma::detail::getImage3D<" <> ctype <> ">", "mma::detail::setImage3D<" <> ctype <> ">"}
