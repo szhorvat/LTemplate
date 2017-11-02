@@ -1,0 +1,980 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Interfacing with the Boost Graph Library", "Section",
+ ExpressionUUID -> "aa884a08-8724-4a0b-bbe5-6894c36af936"],
+
+Cell["\<\
+This example shows how to create a class that represent a graph, and run \
+various algorithms on it using the Boost Graph Library.\
+\>", "Text",
+ ExpressionUUID -> "0ef29b79-5af8-4918-8a14-11a8a85e43d4"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]}], "Input",
+ ExpressionUUID -> "978a9ae9-dee6-4995-ac77-77a4bd3103c3"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"template", "=", "\[IndentingNewLine]", 
+   RowBox[{"LClass", "[", 
+    RowBox[{"\"\<BGraph\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<set\>\"", ",", "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"Integer", " ", 
+           RowBox[{"(*", " ", 
+            RowBox[{"vertex", " ", "count"}], " ", "*)"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"{", 
+            RowBox[{"Integer", ",", "2", ",", "\"\<Constant\>\""}], "}"}]}], 
+          " ", 
+          RowBox[{"(*", " ", 
+           RowBox[{"0", "-", 
+            RowBox[{"based", " ", "indexed", " ", "edge", " ", "list"}]}], 
+           " ", "*)"}], "}"}], ",", "\[IndentingNewLine]", "\"\<Void\>\""}], 
+        "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<vcount\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "Integer"}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<ecount\>\"", ",", 
+         RowBox[{"{", "}"}], ",", "Integer"}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<edgeList\>\"", ",", 
+         RowBox[{"{", "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "2"}], "}"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<isomorphicQ\>\"", ",", "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"LExpressionID", "[", "\"\<BGraph\>\"", "]"}], " ", 
+          RowBox[{"(*", " ", 
+           RowBox[{"the", " ", "other", " ", "graph"}], " ", "*)"}], "}"}], 
+         ",", "\[IndentingNewLine]", 
+         RowBox[{"True", "|", "False"}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LFun", "[", 
+        RowBox[{"\"\<kuratowskiSubdivision\>\"", ",", 
+         RowBox[{"{", "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"Integer", ",", "1"}], "}"}]}], " ", 
+        RowBox[{"(*", " ", 
+         RowBox[{"edge", " ", "indices"}], " ", "*)"}], "]"}]}], 
+      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input",
+ ExpressionUUID -> "72378522-fb62-4f9c-8d3f-92fbc6288650"],
+
+Cell["\<\
+To compile this example, it is necessary to indicate the location of the \
+Boost headers. Adjust this according to your system.\
+\>", "Text",
+ ExpressionUUID -> "d6d6fe8c-81d4-4580-9546-8cc36aaa6eda"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CompileTemplate", "[", 
+  RowBox[{"template", ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<IncludeDirectories\>\"", "\[Rule]", 
+    RowBox[{"{", "\"\</opt/local/include\>\"", "}"}]}]}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Boost", " ", "location"}], " ", "*)"}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ ExpressionUUID -> "a8045402-4022-4ecb-8598-fadac4343f5b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Current directory is: \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/\
+Examples/BGraph\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Current directory is: ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["/Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
+BGraph", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "26b4ea99-649a-4493-8698-93dea00ec109"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Unloading library \"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\"BGraph\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]], "\[InvisibleSpace]", 
+   StyleBox["\<\" ...\"\>",
+    StripOnInput->False,
+    LineColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FrontFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    BackFaceColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    GraphicsColor->RGBColor[0, 0, 
+      Rational[2, 3]],
+    FontColor->RGBColor[0, 0, 
+      Rational[2, 3]]]}],
+  SequenceForm[
+   Style["Unloading library ", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style["BGraph", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]], 
+   Style[" ...", 
+    RGBColor[0, 0, 
+     Rational[2, 3]]]],
+  Editable->False]], "Print",
+ ExpressionUUID -> "45483da9-a286-471b-b009-19b3b967f092"],
+
+Cell[BoxData[
+ StyleBox["\<\"Generating library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "28bfd165-8ae5-45a3-a4c7-5af42b66a785"],
+
+Cell[BoxData[
+ StyleBox["\<\"Compiling library code ...\"\>",
+  StripOnInput->False,
+  LineColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FrontFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  BackFaceColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  GraphicsColor->RGBColor[0, 0, 
+    Rational[2, 3]],
+  FontColor->RGBColor[0, 0, 
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "48c79bcf-4c3b-4c4f-9290-9a813741d266"]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
+LibraryResources/MacOSX-x86-64/BGraph.dylib\"\>"], "Output",
+ ExpressionUUID -> "840d4b10-2e8f-4954-8708-8fc124ee6fa1"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "b54a2e2b-71f0-4352-8b31-66e687bf008f"],
+
+Cell[CellGroupData[{
+
+Cell["Create graphs", "Subsubsection",
+ ExpressionUUID -> "d5c63930-33b8-4220-9037-dab8375a7462"],
+
+Cell["\<\
+Since LTemplate does not currently support passing arguments to constructors, \
+the BGraph object is creates in two steps:\
+\>", "Text",
+ ExpressionUUID -> "0f5ba9c6-8c9c-4b01-a9df-1db10ffa1d04"],
+
+Cell[CellGroupData[{
+
+Cell["Create an empty graph", "Item",
+ ExpressionUUID -> "15fefd58-434d-4b4d-98a1-284f858116e0"],
+
+Cell["Set edges and vertices", "Item",
+ ExpressionUUID -> "5dbaf41d-e438-46c3-bde4-3ab1a12605fe"]
+}, Open  ]],
+
+Cell["\<\
+The following function handles all of this. We will use only this function to \
+create BGraphs to ensure that they have been correctly initialized.\
+\>", "Text",
+ ExpressionUUID -> "443e6f8a-3657-4581-a2fe-f79b14b13a8c"],
+
+Cell["\<\
+IndexGraph is not particularly fast, but we shall use it for the sake of \
+simplicity. The set function expects zero-based indices, therefore we must \
+subtract 1.\
+\>", "Text",
+ ExpressionUUID -> "863c26ce-b730-467b-aa20-a4496c915d92"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeBGraph", "[", 
+   RowBox[{"g_", "?", "UndirectedGraphQ"}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"bg", "=", 
+      RowBox[{"Make", "[", "BGraph", "]"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"bg", "@", 
+      RowBox[{"\"\<set\>\"", "[", 
+       RowBox[{
+        RowBox[{"VertexCount", "[", "g", "]"}], ",", 
+        RowBox[{
+         RowBox[{"List", "@@@", 
+          RowBox[{"EdgeList", "@", 
+           RowBox[{"IndexGraph", "[", "g", "]"}]}]}], "-", "1"}]}], "]"}]}], 
+     ";", "\[IndentingNewLine]", "bg"}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input",
+ ExpressionUUID -> "a97ac584-7bf7-4cb1-aa00-ee13e8d901c1"],
+
+Cell["Let\[CloseCurlyQuote]s convert the following graph to a BGraph:", "Text",
+ ExpressionUUID -> "a3d5cb7d-ea6c-4e07-8c71-0841fe32fed4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"pg", "=", 
+  RowBox[{"PetersenGraph", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "34e4f8f6-0463-4722-8961-331d8f3e32d9"],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {
+      Null, {{1, 3}, {1, 4}, {1, 6}, {2, 4}, {2, 5}, {2, 7}, {3, 5}, {3, 8}, {
+       4, 9}, {5, 10}, {6, 7}, {6, 10}, {7, 8}, {8, 9}, {9, 10}}}, {
+      VertexCoordinates -> {{0.9510565162951535, 0.30901699437494745`}, {
+        0.5877852522924732, -0.8090169943749473}, {-0.587785252292473, \
+-0.8090169943749475}, {-0.9510565162951536, 
+        0.30901699437494723`}, {-2.4492935982947064`*^-16, 1.}, {
+        1.902113032590307, 0.6180339887498949}, {
+        1.1755705045849465`, -1.6180339887498947`}, {-1.175570504584946, \
+-1.618033988749895}, {-1.9021130325903073`, 
+        0.6180339887498945}, {-4.898587196589413*^-16, 2.}}}]]}, 
+    TagBox[
+     GraphicsGroupBox[
+      GraphicsComplexBox[{{0.9510565162951535, 0.30901699437494745`}, {
+       0.5877852522924732, -0.8090169943749473}, {-0.587785252292473, \
+-0.8090169943749475}, {-0.9510565162951536, 
+       0.30901699437494723`}, {-2.4492935982947064`*^-16, 1.}, {
+       1.902113032590307, 0.6180339887498949}, {
+       1.1755705045849465`, -1.6180339887498947`}, {-1.175570504584946, \
+-1.618033988749895}, {-1.9021130325903073`, 
+       0.6180339887498945}, {-4.898587196589413*^-16, 2.}}, {
+        {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+         {Arrowheads[0.], ArrowBox[{1, 3}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{1, 4}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{1, 6}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{2, 4}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{2, 5}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{2, 7}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{3, 5}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{3, 8}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{4, 9}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{5, 10}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{6, 7}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{6, 10}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{7, 8}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{8, 9}, 0.03574187784409402]}, 
+         {Arrowheads[0.], ArrowBox[{9, 10}, 0.03574187784409402]}}, 
+        {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+         DiskBox[1, 0.03574187784409402], DiskBox[2, 0.03574187784409402], 
+         DiskBox[3, 0.03574187784409402], DiskBox[4, 0.03574187784409402], 
+         DiskBox[5, 0.03574187784409402], DiskBox[6, 0.03574187784409402], 
+         DiskBox[7, 0.03574187784409402], DiskBox[8, 0.03574187784409402], 
+         DiskBox[9, 0.03574187784409402], DiskBox[10, 0.03574187784409402]}}]],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FormatType->TraditionalForm,
+  FrameTicks->None]], "Output",
+ ExpressionUUID -> "2728ee8c-fc48-4a9d-9129-9d80455b0b70"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"bg", "=", 
+  RowBox[{"makeBGraph", "[", "pg", "]"}]}]], "Input",
+ ExpressionUUID -> "82e12ead-05f1-41e9-8ae1-4523e471cf24"],
+
+Cell[BoxData[
+ RowBox[{"BGraph", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "8d1730d3-d6fb-4f22-8435-71fc4923c556"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Retrieve basic properties", "Subsubsection",
+ ExpressionUUID -> "ea7843fc-c17b-4122-b1bb-45dc2250980f"],
+
+Cell["How many vertices does it have?", "Text",
+ ExpressionUUID -> "1a73c6c9-f664-476f-9973-ff8a64c0d1b4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"bg", "@", 
+  RowBox[{"\"\<vcount\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "20a28eb0-555f-40c7-8308-e0773b60bb58"],
+
+Cell[BoxData["10"], "Output",
+ ExpressionUUID -> "fa8d3a82-3793-43d0-845a-8114d20da8ab"]
+}, Open  ]],
+
+Cell["How many edges does it have?", "Text",
+ ExpressionUUID -> "cca07f74-dd9d-40c6-80d7-dafddcd8a719"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"bg", "@", 
+  RowBox[{"\"\<ecount\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "742a3af0-a9dc-4fa9-a297-e7d4f89885c6"],
+
+Cell[BoxData["15"], "Output",
+ ExpressionUUID -> "2ba271ae-d759-45eb-97ab-c93ad3fd0c55"]
+}, Open  ]],
+
+Cell["Retrieve the edge list.", "Text",
+ ExpressionUUID -> "77d0c741-8d01-4279-b7d4-cbcb6c98a16c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"bg", "@", 
+  RowBox[{"\"\<edgeList\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "077bae0c-1dbb-4829-902a-86b4d8068303"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "5"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "4"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "6"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "4"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "8"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"4", ",", "9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "6"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"7", ",", "8"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"8", ",", "9"}], "}"}]}], "}"}]], "Output",
+ ExpressionUUID -> "7fab54c6-d92f-43ad-a525-a0d1e3db563d"]
+}, Open  ]],
+
+Cell["\<\
+Convert to a Mathematica Graph with vertices labelled from 1 (instead of 0).\
+\>", "Text",
+ ExpressionUUID -> "bb99f19b-3ddb-47d7-b9e8-e647810ef431"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"fromBGraph", "[", "bg_BGraph", "]"}], ":=", "\[IndentingNewLine]", 
+  
+  RowBox[{"Graph", "[", 
+   RowBox[{
+    RowBox[{"Range", "[", 
+     RowBox[{"bg", "@", 
+      RowBox[{"\"\<vcount\>\"", "[", "]"}]}], "]"}], ",", 
+    RowBox[{"1", "+", 
+     RowBox[{"bg", "@", 
+      RowBox[{"\"\<edgeList\>\"", "[", "]"}]}]}], ",", 
+    RowBox[{"DirectedEdges", "\[Rule]", "False"}]}], "]"}]}]], "Input",
+ ExpressionUUID -> "d48948ea-3ba1-4e1b-af8c-70946e65dca9"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"fromBGraph", "[", "bg", "]"}]], "Input",
+ ExpressionUUID -> "d20d883e-2eae-4153-a2fa-3ac7cd828056"],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {
+      Null, {{1, 3}, {1, 4}, {1, 6}, {2, 4}, {2, 5}, {2, 7}, {3, 5}, {3, 8}, {
+       4, 9}, {5, 10}, {6, 7}, {6, 10}, {7, 8}, {8, 9}, {9, 10}}}]]}, 
+    TagBox[
+     GraphicsGroupBox[
+      GraphicsComplexBox[{{1.8750105837989297`, 0.733244241062911}, {
+       1.8415650123658316`, 1.3620813936125686`}, {1.1749364294125422`, 
+       0.39951830930753657`}, {0.9014384102184719, 0.9286633426597406}, {
+       1.8190275035455308`, 0.09019481978361599}, {1.2929028389366695`, 
+       1.1785381450163794`}, {1.0513121542102433`, 1.9864048777087877`}, {
+       0.27259657017746486`, 1.2771371290432734`}, {0., 
+       0.48128666421627553`}, {0.8106136635018724, 0.}}, {
+        {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+         {Arrowheads[0.], ArrowBox[{1, 3}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{1, 4}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{1, 6}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{2, 4}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{2, 5}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{2, 7}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{3, 5}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{3, 8}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{4, 9}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{5, 10}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{6, 7}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{6, 10}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{7, 8}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{8, 9}, 0.02250105963782012]}, 
+         {Arrowheads[0.], ArrowBox[{9, 10}, 0.02250105963782012]}}, 
+        {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+         DiskBox[1, 0.02250105963782012], DiskBox[2, 0.02250105963782012], 
+         DiskBox[3, 0.02250105963782012], DiskBox[4, 0.02250105963782012], 
+         DiskBox[5, 0.02250105963782012], DiskBox[6, 0.02250105963782012], 
+         DiskBox[7, 0.02250105963782012], DiskBox[8, 0.02250105963782012], 
+         DiskBox[9, 0.02250105963782012], DiskBox[10, 0.02250105963782012]}}]],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FormatType->TraditionalForm,
+  FrameTicks->None]], "Output",
+ ExpressionUUID -> "d2a5a57b-d954-4d4d-823c-a3e6f55586e9"]
+}, Open  ]],
+
+Cell["\<\
+Verify that it is indeed the same graph, with the same edge ordering:\
+\>", "Text",
+ ExpressionUUID -> "44e63c1f-4e60-443b-9f21-179f10cc5a1b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EdgeList", "[", 
+   RowBox[{"fromBGraph", "[", "bg", "]"}], "]"}], "===", 
+  RowBox[{"EdgeList", "@", 
+   RowBox[{"IndexGraph", "[", "pg", "]"}]}]}]], "Input",
+ ExpressionUUID -> "b78cf826-1a21-49e5-af94-3bc3bfc6491a"],
+
+Cell[BoxData["True"], "Output",
+ ExpressionUUID -> "353d8e39-9b8d-42f9-8651-4b8448051f4a"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Run graph algorithms", "Subsubsection",
+ ExpressionUUID -> "006201b5-7775-4b41-b5cb-e0a1aa4a1371"],
+
+Cell["Run the isomorphism algorithm.", "Text",
+ ExpressionUUID -> "7128c8bd-c750-4132-b4f7-c9c7a25bd5e5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"bg2", "=", 
+  RowBox[{"makeBGraph", "[", 
+   RowBox[{"GraphData", "[", "\"\<PetersenGraph\>\"", "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "5ada7d10-ff87-4af2-99f5-da05449dc9e1"],
+
+Cell[BoxData[
+ RowBox[{"BGraph", "[", "2", "]"}]], "Output",
+ ExpressionUUID -> "5393bb6b-e8ad-4ddb-90b9-b991bc601566"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"bg", "@", 
+  RowBox[{"\"\<isomorphicQ\>\"", "[", 
+   RowBox[{"ManagedLibraryExpressionID", "[", "bg2", "]"}], "]"}]}]], "Input",
+ 
+ ExpressionUUID -> "ccda914c-ccd5-4de5-93a5-32f6976820b9"],
+
+Cell[BoxData["True"], "Output",
+ ExpressionUUID -> "5fadbaa2-c984-4a51-b088-b1bdb4a7d663"]
+}, Open  ]],
+
+Cell["\<\
+Wrap the function for convenient isomorphism checking of Mathematica Graphs.\
+\>", "Text",
+ ExpressionUUID -> "3f76d1e0-bb97-48ba-935a-037e49f98985"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"isomorphicQ", "[", 
+   RowBox[{
+    RowBox[{"g1_", "?", "UndirectedGraphQ"}], ",", 
+    RowBox[{"g2_", "?", "UndirectedGraphQ"}]}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"bg1", "=", 
+       RowBox[{"makeBGraph", "[", "g1", "]"}]}], ",", 
+      RowBox[{"bg2", "=", 
+       RowBox[{"makeBGraph", "[", "g2", "]"}]}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"bg1", "@", 
+     RowBox[{"\"\<isomorphicQ\>\"", "[", 
+      RowBox[{"ManagedLibraryExpressionID", "[", "bg2", "]"}], "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ ExpressionUUID -> "f1de92a5-ee30-47b7-9e51-06430b8ab0e3"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"isomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"Graph", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"1", "\[UndirectedEdge]", "2"}], ",", 
+      RowBox[{"2", "\[UndirectedEdge]", "3"}]}], "}"}], "]"}], ",", 
+   RowBox[{"Graph", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"1", "\[UndirectedEdge]", "3"}], ",", 
+      RowBox[{"2", "\[UndirectedEdge]", "3"}]}], "}"}], "]"}]}], 
+  "]"}]], "Input",
+ ExpressionUUID -> "4499c911-4c58-4bbb-abb7-0237457b0473"],
+
+Cell[BoxData["True"], "Output",
+ ExpressionUUID -> "a02d2212-e6fe-4e70-b330-f78e3a203c0f"]
+}, Open  ]],
+
+Cell["\<\
+Let us compute a Kuratowski subdivision of a non-planar graph.\
+\>", "Text",
+ ExpressionUUID -> "4c3bc4d3-c457-46c1-a5c0-e8d2d0e63fb9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"kuratowskiSubdivision", "[", 
+   RowBox[{"g_", "?", "UndirectedGraphQ"}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"bg", "=", 
+      RowBox[{"makeBGraph", "[", "g", "]"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Part", "[", 
+     RowBox[{
+      RowBox[{"EdgeList", "[", "g", "]"}], ",", 
+      RowBox[{"1", "+", 
+       RowBox[{"bg", "@", 
+        RowBox[{"\"\<kuratowskiSubdivision\>\"", "[", "]"}]}]}]}], "]"}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ ExpressionUUID -> "296d406b-a5ec-4462-b98f-104ed144c9f5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"npg", "=", 
+  RowBox[{"GraphData", "[", 
+   RowBox[{"{", 
+    RowBox[{"\"\<Cone\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "7"}], "}"}]}], "}"}], "]"}]}]], "Input",
+ ExpressionUUID -> "c263174f-c3e5-4bf3-997e-29138e40b539"],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, {Null, 
+       SparseArray[
+       Automatic, {11, 11}, 0, {
+        1, {{0, 9, 18, 27, 36, 40, 44, 48, 52, 56, 60, 64}, {{2}, {4}, {5}, {
+          6}, {7}, {8}, {9}, {10}, {11}, {1}, {3}, {5}, {6}, {7}, {8}, {9}, {
+          10}, {11}, {2}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {1}, {
+          3}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {1}, {2}, {3}, {4}, {1}, {
+          2}, {3}, {4}, {1}, {2}, {3}, {4}, {1}, {2}, {3}, {4}, {1}, {2}, {
+          3}, {4}, {1}, {2}, {3}, {4}, {1}, {2}, {3}, {4}}}, Pattern}]}]]}, 
+    TagBox[
+     GraphicsGroupBox[
+      GraphicsComplexBox[{{0.780774697805059, 1.199409711066857}, {
+       1.1999525032799427`, 0.8319430146461535}, {0.8200678462633789, 
+       0.7964395160694195}, {1.1631489624818339`, 1.2336554432233262`}, {
+       1.436385194178687, 1.9305572632126569`}, {0., 1.2362392592240465`}, {
+       1.9812731165155193`, 1.2361258172872176`}, {0.9886961315621108, 0.}, {
+       1.7894534978737644`, 0.3840372833294744}, {0.5527059960246021, 
+       1.932547584373542}, {0.18951736097760385`, 0.3902718952492563}}, {
+        {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+         {Arrowheads[0.], ArrowBox[{1, 2}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 4}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 5}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 6}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 7}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 8}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 9}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 10}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{1, 11}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 3}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 5}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 6}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 7}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 8}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 9}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 10}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{2, 11}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 4}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 5}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 6}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 7}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 8}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 9}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 10}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{3, 11}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{4, 5}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{4, 6}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{4, 7}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{4, 8}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{4, 9}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{4, 10}, 0.02245933508462397]}, 
+         {Arrowheads[0.], ArrowBox[{4, 11}, 0.02245933508462397]}}, 
+        {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+         DiskBox[1, 0.02245933508462397], DiskBox[2, 0.02245933508462397], 
+         DiskBox[3, 0.02245933508462397], DiskBox[4, 0.02245933508462397], 
+         DiskBox[5, 0.02245933508462397], DiskBox[6, 0.02245933508462397], 
+         DiskBox[7, 0.02245933508462397], DiskBox[8, 0.02245933508462397], 
+         DiskBox[9, 0.02245933508462397], DiskBox[10, 0.02245933508462397], 
+         DiskBox[11, 0.02245933508462397]}}]],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FormatType->TraditionalForm,
+  FrameTicks->None]], "Output",
+ ExpressionUUID -> "21ac32cf-65f2-4897-aa63-dbc1bfa803be"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"kuratowskiSubdivision", "[", "npg", "]"}]], "Input",
+ ExpressionUUID -> "505b1e60-9260-43b2-98e3-382c63076f42"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"1", "\[UndirectedEdge]", "2"}], ",", 
+   RowBox[{"2", "\[UndirectedEdge]", "5"}], ",", 
+   RowBox[{"2", "\[UndirectedEdge]", "6"}], ",", 
+   RowBox[{"2", "\[UndirectedEdge]", "7"}], ",", 
+   RowBox[{"3", "\[UndirectedEdge]", "5"}], ",", 
+   RowBox[{"3", "\[UndirectedEdge]", "6"}], ",", 
+   RowBox[{"3", "\[UndirectedEdge]", "7"}], ",", 
+   RowBox[{"4", "\[UndirectedEdge]", "5"}], ",", 
+   RowBox[{"4", "\[UndirectedEdge]", "6"}], ",", 
+   RowBox[{"4", "\[UndirectedEdge]", "7"}]}], "}"}]], "Output",
+ ExpressionUUID -> "f85fa7a7-747b-471e-8058-d86250add82f"]
+}, Open  ]],
+
+Cell["\<\
+The function returns it as a list of edge indices, which we transform to an \
+edge list in Mathematica. Let us visualize it.\
+\>", "Text",
+ ExpressionUUID -> "187c2fe1-68a5-4036-bcfc-6616ddc9bfc9"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"npg", ",", 
+   RowBox[{"Subgraph", "[", 
+    RowBox[{"npg", ",", 
+     RowBox[{"kuratowskiSubdivision", "[", "npg", "]"}]}], "]"}]}], 
+  "]"}]], "Input",
+ ExpressionUUID -> "6c3bf6da-8056-4946-94f3-93d61584acbf"],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, {Null, 
+       SparseArray[
+       Automatic, {11, 11}, 0, {
+        1, {{0, 9, 18, 27, 36, 40, 44, 48, 52, 56, 60, 64}, {{2}, {4}, {5}, {
+          6}, {7}, {8}, {9}, {10}, {11}, {1}, {3}, {5}, {6}, {7}, {8}, {9}, {
+          10}, {11}, {2}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {1}, {
+          3}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {1}, {2}, {3}, {4}, {1}, {
+          2}, {3}, {4}, {1}, {2}, {3}, {4}, {1}, {2}, {3}, {4}, {1}, {2}, {
+          3}, {4}, {1}, {2}, {3}, {4}, {1}, {2}, {3}, {4}}}, Pattern}]}, {
+      GraphHighlight -> {
+         UndirectedEdge[5, 4], 
+         UndirectedEdge[2, 3], 
+         UndirectedEdge[7, 4], 
+         UndirectedEdge[1, 5], 
+         UndirectedEdge[5, 3], 
+         UndirectedEdge[7, 3], 1, 
+         UndirectedEdge[2, 6], 6, 5, 
+         UndirectedEdge[2, 7], 
+         UndirectedEdge[1, 7], 
+         UndirectedEdge[1, 4], 
+         UndirectedEdge[6, 4], 
+         UndirectedEdge[1, 2], 
+         UndirectedEdge[1, 6], 7, 2, 
+         UndirectedEdge[6, 3], 
+         UndirectedEdge[3, 4], 
+         UndirectedEdge[2, 5], 4, 3}}]]}, 
+    TagBox[
+     GraphicsGroupBox[
+      GraphicsComplexBox[{{0.780774697805059, 1.199409711066857}, {
+       1.1999525032799427`, 0.8319430146461535}, {0.8200678462633789, 
+       0.7964395160694195}, {1.1631489624818339`, 1.2336554432233262`}, {
+       1.436385194178687, 1.9305572632126569`}, {0., 1.2362392592240465`}, {
+       1.9812731165155193`, 1.2361258172872176`}, {0.9886961315621108, 0.}, {
+       1.7894534978737644`, 0.3840372833294744}, {0.5527059960246021, 
+       1.932547584373542}, {0.18951736097760385`, 0.3902718952492563}}, {
+        {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+            1.1999525032799427`, 0.8319430146461535}}, 0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+            1.1631489624818339`, 1.2336554432233262`}}, 
+            0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+            1.436385194178687, 1.9305572632126569`}}, 
+            0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.780774697805059, 1.199409711066857}, {0., 
+            1.2362392592240465`}}, 0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+            1.9812731165155193`, 1.2361258172872176`}}, 
+            0.02245933508462397]}}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+           0.9886961315621108, 0.}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+           1.7894534978737644`, 0.3840372833294744}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+           0.5527059960246021, 1.932547584373542}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.780774697805059, 1.199409711066857}, {
+           0.18951736097760385`, 0.3902718952492563}}, 
+           0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {
+            0.8200678462633789, 0.7964395160694195}}, 
+            0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {
+            1.436385194178687, 1.9305572632126569`}}, 
+            0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {0., 
+            1.2362392592240465`}}, 0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {
+            1.9812731165155193`, 1.2361258172872176`}}, 
+            0.02245933508462397]}}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {
+           0.9886961315621108, 0.}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {
+           1.7894534978737644`, 0.3840372833294744}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {
+           0.5527059960246021, 1.932547584373542}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1999525032799427`, 0.8319430146461535}, {
+           0.18951736097760385`, 0.3902718952492563}}, 
+           0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {
+            1.1631489624818339`, 1.2336554432233262`}}, 
+            0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {
+            1.436385194178687, 1.9305572632126569`}}, 
+            0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {0., 
+            1.2362392592240465`}}, 0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {
+            1.9812731165155193`, 1.2361258172872176`}}, 
+            0.02245933508462397]}}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {
+           0.9886961315621108, 0.}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {
+           1.7894534978737644`, 0.3840372833294744}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {
+           0.5527059960246021, 1.932547584373542}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.8200678462633789, 0.7964395160694195}, {
+           0.18951736097760385`, 0.3902718952492563}}, 
+           0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{1.1631489624818339`, 1.2336554432233262`}, {
+            1.436385194178687, 1.9305572632126569`}}, 
+            0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{1.1631489624818339`, 1.2336554432233262`}, {0., 
+            1.2362392592240465`}}, 0.02245933508462397]}}, 
+         {Hue[1, 1, 0.7], Opacity[1], 
+          {Arrowheads[0.], 
+           ArrowBox[{{1.1631489624818339`, 1.2336554432233262`}, {
+            1.9812731165155193`, 1.2361258172872176`}}, 
+            0.02245933508462397]}}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1631489624818339`, 1.2336554432233262`}, {
+           0.9886961315621108, 0.}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1631489624818339`, 1.2336554432233262`}, {
+           1.7894534978737644`, 0.3840372833294744}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1631489624818339`, 1.2336554432233262`}, {
+           0.5527059960246021, 1.932547584373542}}, 0.02245933508462397]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.1631489624818339`, 1.2336554432233262`}, {
+           0.18951736097760385`, 0.3902718952492563}}, 0.02245933508462397]}}, 
+        {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+         {Hue[1, 1, 0.7], EdgeForm[{Hue[1, 1, 0.7], Opacity[1]}], 
+          DiskBox[1, 0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], EdgeForm[{Hue[1, 1, 0.7], Opacity[1]}], 
+          DiskBox[2, 0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], EdgeForm[{Hue[1, 1, 0.7], Opacity[1]}], 
+          DiskBox[3, 0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], EdgeForm[{Hue[1, 1, 0.7], Opacity[1]}], 
+          DiskBox[4, 0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], EdgeForm[{Hue[1, 1, 0.7], Opacity[1]}], 
+          DiskBox[5, 0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], EdgeForm[{Hue[1, 1, 0.7], Opacity[1]}], 
+          DiskBox[6, 0.02245933508462397]}, 
+         {Hue[1, 1, 0.7], EdgeForm[{Hue[1, 1, 0.7], Opacity[1]}], 
+          DiskBox[7, 0.02245933508462397]}, DiskBox[8, 0.02245933508462397], 
+         DiskBox[9, 0.02245933508462397], DiskBox[10, 0.02245933508462397], 
+         DiskBox[11, 0.02245933508462397]}}]],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FormatType->TraditionalForm,
+  FrameTicks->None]], "Output",
+ ExpressionUUID -> "4581a286-c75f-4757-8653-4b6d4378c180"]
+}, Open  ]],
+
+Cell["For planar graphs, the function returns the empty list.", "Text",
+ ExpressionUUID -> "cf1d13e4-9d78-4d46-92cf-0ee99f6206d2"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"kuratowskiSubdivision", "[", 
+  RowBox[{"CycleGraph", "[", "5", "]"}], "]"}]], "Input",
+ ExpressionUUID -> "2647bdf5-f0b8-4a77-a554-893f75eea34e"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ ExpressionUUID -> "6b676bec-d857-4cfb-a509-467344ec6278"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{302, Automatic}, {Automatic, 40}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
