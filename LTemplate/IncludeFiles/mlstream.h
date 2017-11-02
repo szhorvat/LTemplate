@@ -222,6 +222,7 @@ inline mlStream & operator >> (mlStream &ml, std::string &s) {
     if (! MLGetUTF8String(ml.link(), &sp, &bytes, &chars))
         ml.error("String expected");
     s.assign(reinterpret_cast<const char *>(sp), bytes);
+    MLReleaseUTF8String(ml.link(), sp, bytes);
     return ml;
 }
 
