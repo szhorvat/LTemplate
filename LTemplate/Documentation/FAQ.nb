@@ -15,7 +15,8 @@ Cell[TextData[{
   BaseStyle->"Link",
   ButtonData->"paclet:LibraryLink/tutorial/Overview"],
  " development."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "84bc5199-cfac-4299-bbcf-7a325adebdda"],
 
 Cell[TextData[{
  "LTemplate is a ",
@@ -36,7 +37,8 @@ functions for faster development and debugging."
 
 Cell[CellGroupData[{
 
-Cell["What is the best way to learn LTemplate?", "Subsection"],
+Cell["What is the best way to learn LTemplate?", "Subsection",
+ ExpressionUUID -> "10ef8230-2810-479d-a49e-81c66d950569"],
 
 Cell[TextData[{
  "It is recommended to understand the basics of the LibraryLink C API before \
@@ -53,7 +55,8 @@ Guide. Read them concurrently with ",
   ButtonData->"paclet:LibraryLink/tutorial/Overview"],
  " and learn at least about passing numerical arguments, returning results, \
 and basic handling of arrays."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "c89e8e65-ef9d-4631-8615-3f48fa4c6a24"],
 
 Cell[TextData[{
  "Once you have a grasp of the basics, start reading ",
@@ -63,7 +66,8 @@ Cell[TextData[{
  " while concurrently looking at the example programs in the \
 Documentation/Examples directory. Start with these two sets of examples: \
 Basics, Tensor."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "48223301-4631-4c9d-8eba-22f3997bbeda"],
 
 Cell[TextData[{
  "When working with array-like types, such as Tensors, SparseArray, Images \
@@ -74,23 +78,8 @@ LibraryLink. This is discussed in the ",
   ButtonData->
    "paclet:LibraryLink/tutorial/InteractionWithMathematica#97446640"],
  " section of the User Guide."
-}], "Text"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell["What are the minimum system requirements?", "Subsection"],
-
-Cell[TextData[{
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- " 10.0 or later and a C++11 capable compiler."
-}], "Text"],
-
-Cell["\<\
-If using the default compiler on OS X, then OS X 10.9 or later is needed for \
-C++11 support.\
-\>", "Text"]
+}], "Text",
+ ExpressionUUID -> "200e6859-1313-406b-bc6e-7a01099ac1c7"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -107,65 +96,103 @@ look at ",
   BaseStyle->"Link",
   ButtonData->"paclet:LibraryLink/tutorial/Overview"],
  " and understand the basic LibraryLink examples."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "7be581f2-80bf-479c-8e6e-b52c26c90176"],
 
 Cell["\<\
 While LTemplate makes it much easier and faster to set up a library, it is \
 necessary to understand certain concepts, such as the memory management of \
 MTensors, to be able to write correct code.\
-\>", "Text"]
+\>", "Text",
+ ExpressionUUID -> "227313e7-b579-4141-b2de-fdec7ba242c8"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["What are the minimum system requirements?", "Subsection",
+ ExpressionUUID -> "51910736-00c4-49b0-a96a-8f49ce40bc9b"],
+
+Cell[TextData[{
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 10.0 or later and a C++11 capable compiler."
+}], "Text",
+ ExpressionUUID -> "9fe30d23-5ab4-4554-8cf8-8c2bdfd839b0"],
+
+Cell["\<\
+If using the default compiler on OS X, then OS X 10.9 or later is needed for \
+C++11 support.\
+\>", "Text",
+ ExpressionUUID -> "21a75098-23b8-4b98-a52d-c5bf149c206b"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell["\<\
 Can I use LTemplate to generate an interface to an existing class?\
-\>", "Subsection"],
+\>", "Subsection",
+ ExpressionUUID -> "1e1f3d74-d37e-4ca9-9add-9bd3b2dc3f03"],
 
 Cell["\<\
 No. Just like library functions, LTemplate classes must follow certain \
 conventions.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "6149f3af-6968-4612-821d-e0bb36832284"],
 
 Cell["\<\
 To interface with another library, one would normally create conversion \
 functions to/from that library\[CloseCurlyQuote]s data types. See \
 Examples/Armadillo for an example.\
-\>", "Text"]
+\>", "Text",
+ ExpressionUUID -> "d359e04d-37aa-4085-a1a0-9debfc2116ff"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Can I use C instead of C++?", "Subsection"],
+Cell["Can I use C instead of C++?", "Subsection",
+ ExpressionUUID -> "450cc096-5703-43bd-99bc-43067ca00ffc"],
 
 Cell["\<\
 LTemplate requires the use of C++. It is the features that C++ provides over \
 C that made it possible to construct an easier-to-use interface than the C \
 LibraryLink API.\
-\>", "Text"]
+\>", "Text",
+ ExpressionUUID -> "648cfb8b-abac-4831-a302-3630b1347094"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell["\<\
 Why do I need to create a class? I only need a few functions.\
-\>", "Subsection"],
+\>", "Subsection",
+ ExpressionUUID -> "199aeea2-6a9e-4d87-96b8-83f5fb006faa"],
 
 Cell["\<\
 Future versions of LTemplate may add support for free functions.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "e81f5fe4-c895-4058-8ce6-e841fe1da761"],
 
 Cell["\<\
 Originally, LTemplate was created to make it easy to set up managed library \
 expressions, which map very well to classes.  If you only need free \
 functions, you can always create a single instance of a class, and keep \
 calling functions on it.\
-\>", "Text"]
+\>", "Text",
+ ExpressionUUID -> "cf515e75-a8f9-48e7-b670-3165f0b60d1e"],
+
+Cell["\<\
+However, non-trivial libraries that manage a global state, such as physics \
+simulations, typically benefit from encapsulating that state into a class. \
+Then it becomes easy to create multiple simulation states and manage them \
+simultaneously.\
+\>", "Text",
+ ExpressionUUID -> "a9232ad7-1bf9-4d2f-961d-48ddfa5cdf2c"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["How do I write library initialization and cleanup code?", "Subsection"],
+Cell["How do I write library initialization and cleanup code?", "Subsection",
+ ExpressionUUID -> "7156cafb-6789-46cc-861c-dde52523c241"],
 
 Cell[TextData[{
  "Currently LTemplate doesn\[CloseCurlyQuote]t support injecting code into ",
@@ -175,23 +202,27 @@ Cell[TextData[{
  ". Add the initialization and cleanup code to the constructor and destructor \
 of a special class. The create a single instance of this class. The \
 destructor will be called when the library is unloaded."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "c0e101f7-fb15-475d-86d2-91512f7e6871"],
 
 Cell["\<\
 A drawback of this method is that it cannot be controlled which classes and \
 which objects will be destroyed last. This will be remedied in a future \
 versions of LTemplate.\
-\>", "Text"]
+\>", "Text",
+ ExpressionUUID -> "8fdffd20-a2eb-4df5-903f-b07a1baec6b7"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Can I use the LibraryLink C API with LTemplate?", "Subsection"],
+Cell["Can I use the LibraryLink C API with LTemplate?", "Subsection",
+ ExpressionUUID -> "3869333c-c237-439b-9bda-cb8b0d1121c5"],
 
 Cell["\<\
 Yes, the C functions from WolframLibrary.h can be used in a library built \
 with LTemplate.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "e578081d-e797-43a6-8e7c-e0a6ececb829"],
 
 Cell[TextData[{
  "Wrapper classes, such as ",
@@ -201,52 +232,62 @@ Cell[TextData[{
  ".  See e.g. ",
  StyleBox["mma::TensorRef::tensor()", "Program"],
  "."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "42722a35-6258-4c92-9f37-cf435e4cc308"],
 
 Cell[TextData[{
  StyleBox["mma::libData", "Program"],
  " provides access to the LibraryLink callback functions."
-}], "Text"]
+}], "Text",
+ ExpressionUUID -> "c9873b5b-4323-4c9b-bf4f-c57dbb5cfbdb"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Can I use LTemplate in another package?", "Subsection"],
+Cell["Can I use LTemplate in another package?", "Subsection",
+ ExpressionUUID -> "909417d4-a800-483c-87ab-9ea4ce1c1c17"],
 
 Cell["\<\
 Yes, LTemplate is designed to be embeddable into other packages.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "a96a30e4-40f1-4dd6-9276-ee30fd5a3a7e"],
 
 Cell["\<\
 Mathematica packages that rely on LTemplate should embed it instead of \
 requiring users to install LTemplate. This is to avoid compatibility problems.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "b4c08f9c-74dd-4046-a480-8e2f8dfd5447"],
 
 Cell["\<\
 When LTemplate is embedded into another package, it supports a few \
 customization features:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "626ecd89-cbfc-4337-88a2-b6b8380b001b"],
 
 Cell[CellGroupData[{
 
 Cell["\<\
 The symbol that library messages are associated with can be customized.\
-\>", "Item"],
+\>", "Item",
+ ExpressionUUID -> "bd6578de-767a-4477-9e09-f0ef6e2707dc"],
 
 Cell["\<\
 LTemplate can be set up for lazy loading, so that each function gets loaded \
 only when needed.\
-\>", "Item"]
+\>", "Item",
+ ExpressionUUID -> "caeec10e-d9e6-4ec4-b674-66badb0548b8"]
 }, Open  ]],
 
 Cell["\<\
 See the skeleton-project directory for an example of embedding LTemplate.\
-\>", "Text"]
+\>", "Text",
+ ExpressionUUID -> "7cd2aed8-e1d5-401d-8058-ed20cf1575c4"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Are there any published packages built on LTemplate?", "Subsection"],
+Cell["Are there any published packages built on LTemplate?", "Subsection",
+ ExpressionUUID -> "1ccb7075-3970-4518-bcac-634be0af38e5"],
 
 Cell[TextData[{
  ButtonBox["IGraph/M",
@@ -262,7 +303,8 @@ Cell[TextData[{
   ButtonNote->"http://igraph.org/"],
  ". It is built on top of LTemplate, and it implements a wrapper class for \
 igraph graphs."
-}], "Text"]
+}], "Text",
+ ExpressionUUID -> "954ec604-83e0-4c38-acf8-7c72a132ab8f"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -270,8 +312,8 @@ WindowSize->{641, 852},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
-2014)",
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
 StyleDefinitions->"Default.nb"
 ]
 
