@@ -333,8 +333,7 @@ inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
         int count; \
         if (! MLGet ## MTYPE ## List(ml.link(), &data, &count)) \
             ml.error(#MTYPE " list expected"); \
-        vec.resize(count); \
-        std::copy(data, data+count, vec.begin()); \
+        vec.assign(data, data+count); \
         MLRelease ## MTYPE ## List(ml.link(), data, count); \
         return ml; \
     }
@@ -350,8 +349,7 @@ MLSTREAM_DEF_VEC_GET_INTEGRAL(Integer64, mlint64)
         int count; \
         if (! MLGet ## MTYPE ## List(ml.link(), &data, &count)) \
             ml.error(#MTYPE " list expected"); \
-        vec.resize(count); \
-        std::copy(data, data+count, vec.begin()); \
+        vec.assign(data, data+count); \
         MLRelease ## MTYPE ## List(ml.link(), data, count); \
         return ml; \
     }
