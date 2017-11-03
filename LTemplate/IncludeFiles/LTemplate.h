@@ -818,13 +818,13 @@ public:
 
     /// Bidirectional iterator for enumerating the explicitly stored values and positions of a sparse matrix.
     class iterator : public std::iterator<std::bidirectional_iterator_tag, T> {
-        SparseMatrixRef &sm;
+        const SparseMatrixRef *smp;
         mint row_index, index;
 
         friend class SparseMatrixRef;
 
-        iterator(const SparseMatrixRef &sm, const mint &row_index, const mint &index) :
-            sm(sm),
+        iterator(const SparseMatrixRef *smp, const mint &row_index, const mint &index) :
+            smp(smp),
             row_index(row_index),
             index(index)
         { /* empty */ }
@@ -832,19 +832,20 @@ public:
     public:
 
         iterator(const iterator &) = default;
+        iterator & operator = (const iterator &) = default;
 
         /** \brief Access explicit value.
          *
          * Should not be used with pattern arrays. There is no safety check for this.
          */
-        T &operator *() const { return sm.ev[index]; }
+        T &operator *() const { return smp->ev[index]; }
 
         bool operator == (const iterator &it) const { return index == it.index; }
         bool operator != (const iterator &it) const { return index != it.index; }
 
         iterator &operator ++ () {
             index++;
-            while (sm.rp[row_index+1] == index && row_index < sm.size())
+            while (smp->rp[row_index+1] == index && row_index < smp->size())
                 row_index++;
             return *this;
         }
@@ -856,7 +857,7 @@ public:
         }
 
         iterator &operator -- () {
-            while (sm.rp[row_index] == index && row_index > 0)
+            while (smp->rp[row_index] == index && row_index > 0)
                 row_index--;
             index--;
             return *this;
@@ -869,7 +870,7 @@ public:
         }
 
         mint row() const { return row_index; } ///< Row of the referenced element (0-based indexing)
-        mint col() const { return sm.ci[index]-1; } ///< Column of the referenced element (0-based indexing)
+        mint col() const { return smp->ci[index]-1; } ///< Column of the referenced element (0-based indexing)
     };
 
     SparseMatrixRef(const SparseArrayRef<T> &sa) : SparseArrayRef<T>(sa)
@@ -921,12 +922,12 @@ public:
         mint row_index = 0;
         while (rp[row_index+1] == 0 && row_index < size())
             row_index++;
-        return iterator{*this, row_index, 0};
+        return iterator{this, row_index, 0};
     }
 
     /// Iterator to the end of explicit values and positions
     iterator end() const {
-        return iterator{*this, rows(), size()};
+        return iterator{this, rows(), size()};
     }
 };
 
