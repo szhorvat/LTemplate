@@ -1088,8 +1088,10 @@ public:
     /// Convert to the given type of RawArray; same as `MRawArray_convertType`
     template<typename U>
     RawArrayRef<U> convertTo() const {
-        // TODO check error?
-        return libData->rawarrayLibraryFunctions->MRawArray_convertType(ra, detail::libraryRawType<U>());
+        MRawArray res = libData->rawarrayLibraryFunctions->MRawArray_convertType(ra, detail::libraryRawType<U>());
+        if (! res)
+            throw LibraryError("MRawArray_convertType() failed.");
+        return res;
     }
 
     rawarray_t type() const { return libData->rawarrayLibraryFunctions->MRawArray_getType(ra); }
