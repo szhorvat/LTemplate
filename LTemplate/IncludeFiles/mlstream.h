@@ -359,4 +359,19 @@ MLSTREAM_DEF_VEC_GET(Real64, double)
 MLSTREAM_DEF_VEC_GET(Real128, mlextended_double)
 
 
+// Get all other types
+template<typename T,
+         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlint64)) ), int>::type = 0 >
+inline mlStream & operator >> (mlStream &ml, std::vector<T> &vec) {
+    int count;
+    if (! MLTestHead(ml.link(), "List", &count))
+        ml.error("Head \"List\" expected");
+    vec.clear();
+    vec.resize(count);
+    for (auto &el : vec)
+        ml >> el;
+    return ml;
+}
+
+
 #endif // MLSTREAM_H
