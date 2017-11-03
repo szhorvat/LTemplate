@@ -197,14 +197,13 @@ namespace detail {
     public:
         LTAutoFree(const LT &ref) : ref(ref) { }
         ~LTAutoFree() { ref.free(); }
+        LTAutoFree(const LTAutoFree &) = delete;
+        LTAutoFree & operator = (const LTAutoFree &) = delete;
 
         operator LT & () { return ref; }
 
         LT & operator -> () { return ref; }
     };
-
-    template<typename LT>
-    inline LTAutoFree<LT> AutoFree(const LT &ref) { return LTAutoFree<LT>(ref); }
 }
 
 
@@ -991,7 +990,7 @@ template<typename T>
 inline SparseMatrixRef<T> makeSparseMatrix(IntMatrixRef pos, TensorRef<T> vals, mint nrow, mint ncol, T imp = 0) {
     massert(pos.cols() == 2);
 
-    auto dims = detail::AutoFree(makeVector<mint>({nrow, ncol}));
+    detail::LTAutoFree<TensorRef<mint>> dims{makeVector<mint>({nrow, ncol})};
     SparseMatrixRef<T> sa = makeSparseArray(pos, vals, dims, imp);
 
     return sa;
