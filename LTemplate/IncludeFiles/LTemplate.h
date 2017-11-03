@@ -1085,6 +1085,14 @@ public:
 
     const mint *dimensions() const { return libData->rawarrayLibraryFunctions->MRawArray_getDimensions(ra); }
 
+    /// Creates a copy of the referenced RawArray
+    GenericRawArrayRef clone() const {
+        MRawArray c = NULL;
+        int err = libData->rawarrayLibraryFunctions->MRawArray_clone(rawArray(), &c);
+        if (err) throw LibraryError("MRawArray_clone() failed.", err);
+        return c;
+    }
+
     /// Convert to the given type of RawArray; same as `MRawArray_convertType`
     template<typename U>
     RawArrayRef<U> convertTo() const {
