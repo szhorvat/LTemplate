@@ -259,9 +259,9 @@ namespace detail { // private
             "Only mint, double and mma::complex_t are allowed in mma::TensorRef<...> and mma::SparseArrayRef<...>.");
     }
 
-    template<> inline mint libraryType<mint>()      { return MType_Integer; }
-    template<> inline mint libraryType<double>()    { return MType_Real; }
-    template<> inline mint libraryType<complex_t>() { return MType_Complex; }
+    template<> constexpr mint libraryType<mint>()      { return MType_Integer; }
+    template<> constexpr mint libraryType<double>()    { return MType_Real; }
+    template<> constexpr mint libraryType<complex_t>() { return MType_Complex; }
 } // end namespace detail
 
 
@@ -347,7 +347,7 @@ public:
     T *end() const { return begin() + length(); }
 
     /// The type of the Tensor, may be `MType_Integer=2`, `MType_Real=3` or `MType_Complex=4`
-    mint type() const { return detail::libraryType<T>(); }
+    constexpr mint type() const { return detail::libraryType<T>(); }
 
     /** Convert to the given type of Tensor
      *  \tparam U is the element type of the result.
@@ -405,6 +405,9 @@ public:
     /// Number of columns in the matrix
     mint cols() const { return ncols; }
 
+    /// Returns 2 for a matrix
+    constexpr mint rank() const { return 2; }
+
     /// Index into a matrix using row and column indices
     T & operator () (mint i, mint j) const { return (*this)[ncols*i + j]; }
 };
@@ -444,6 +447,9 @@ public:
 
     /// Number of slices in the cube
     mint slices() const { return nslices; }
+
+    /// Returns 3 for a cube
+    constexpr mint rank() const { return 3; }
 
     /// Index into a cube using slicem row, and column indices
     T & operator () (mint i, mint j, mint k) const { return (*this)[i*nrows*ncols + j*ncols + k]; }
@@ -791,8 +797,8 @@ public:
         return t;
     }
 
-    /// Returns the element type of the sparse array
-    mint type() const { return detail::libraryType<T>(); }
+    /// Returns the element type of the SparseArray, may be `MType_Integer=2`, `MType_Real=3` or `MType_Complex=4`
+    constexpr mint type() const { return detail::libraryType<T>(); }
 };
 
 
@@ -887,6 +893,8 @@ public:
 
     /// Number of columns in the sparse matrix
     mint cols() const { return ncols; }
+
+    constexpr mint rank() const { return 2; }
 
     /** \brief Index into a sparse matrix (read-only, 0-based)
      *
@@ -1000,18 +1008,18 @@ namespace detail { // private
             "Only int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t, int64_t, uint64_t, float, double, complex_float_t, complex_double_t are allowed in mma::RawArrayRef<...>.");
     }
 
-    template<> inline rawarray_t libraryRawType<int8_t>()   { return MRawArray_Type_Bit8;   }
-    template<> inline rawarray_t libraryRawType<uint8_t>()  { return MRawArray_Type_Ubit8;  }
-    template<> inline rawarray_t libraryRawType<int16_t>()  { return MRawArray_Type_Bit16;  }
-    template<> inline rawarray_t libraryRawType<uint16_t>() { return MRawArray_Type_Ubit16; }
-    template<> inline rawarray_t libraryRawType<int32_t>()  { return MRawArray_Type_Bit32;  }
-    template<> inline rawarray_t libraryRawType<uint32_t>() { return MRawArray_Type_Ubit32; }
-    template<> inline rawarray_t libraryRawType<int64_t>()  { return MRawArray_Type_Bit64;  }
-    template<> inline rawarray_t libraryRawType<uint64_t>() { return MRawArray_Type_Ubit64; }
-    template<> inline rawarray_t libraryRawType<float>()    { return MRawArray_Type_Real32; }
-    template<> inline rawarray_t libraryRawType<double>()   { return MRawArray_Type_Real64; }
-    template<> inline rawarray_t libraryRawType<complex_float_t>()  { return MRawArray_Type_Float_Complex; }
-    template<> inline rawarray_t libraryRawType<complex_double_t>() { return MRawArray_Type_Double_Complex; }
+    template<> constexpr rawarray_t libraryRawType<int8_t>()   { return MRawArray_Type_Bit8;   }
+    template<> constexpr rawarray_t libraryRawType<uint8_t>()  { return MRawArray_Type_Ubit8;  }
+    template<> constexpr rawarray_t libraryRawType<int16_t>()  { return MRawArray_Type_Bit16;  }
+    template<> constexpr rawarray_t libraryRawType<uint16_t>() { return MRawArray_Type_Ubit16; }
+    template<> constexpr rawarray_t libraryRawType<int32_t>()  { return MRawArray_Type_Bit32;  }
+    template<> constexpr rawarray_t libraryRawType<uint32_t>() { return MRawArray_Type_Ubit32; }
+    template<> constexpr rawarray_t libraryRawType<int64_t>()  { return MRawArray_Type_Bit64;  }
+    template<> constexpr rawarray_t libraryRawType<uint64_t>() { return MRawArray_Type_Ubit64; }
+    template<> constexpr rawarray_t libraryRawType<float>()    { return MRawArray_Type_Real32; }
+    template<> constexpr rawarray_t libraryRawType<double>()   { return MRawArray_Type_Real64; }
+    template<> constexpr rawarray_t libraryRawType<complex_float_t>()  { return MRawArray_Type_Float_Complex; }
+    template<> constexpr rawarray_t libraryRawType<complex_double_t>() { return MRawArray_Type_Double_Complex; }
 
     inline const char *rawTypeMathematicaName(rawarray_t rt) {
         switch (rt) {
@@ -1137,7 +1145,7 @@ public:
     T *begin() const { return data(); }
     T *end() const { return begin() + length(); }
 
-    rawarray_t type() const { return detail::libraryRawType<T>(); }
+    constexpr rawarray_t type() const { return detail::libraryRawType<T>(); }
 };
 
 /** \brief Creates a RawArray of the given dimensions
@@ -1256,11 +1264,11 @@ namespace detail { // private
             "Only im_bit_t, im_byte_t, im_bit16_t, im_real32_t, im_real_t are allowed in mma::ImageRef<...>.");
     }
 
-    template<> inline imagedata_t libraryImageType<im_bit_t>()    { return MImage_Type_Bit;   }
-    template<> inline imagedata_t libraryImageType<im_byte_t>()   { return MImage_Type_Bit8;  }
-    template<> inline imagedata_t libraryImageType<im_bit16_t>()  { return MImage_Type_Bit16;  }
-    template<> inline imagedata_t libraryImageType<im_real32_t>() { return MImage_Type_Real32; }
-    template<> inline imagedata_t libraryImageType<im_real_t>()   { return MImage_Type_Real;  }
+    template<> constexpr imagedata_t libraryImageType<im_bit_t>()    { return MImage_Type_Bit;   }
+    template<> constexpr imagedata_t libraryImageType<im_byte_t>()   { return MImage_Type_Bit8;  }
+    template<> constexpr imagedata_t libraryImageType<im_bit16_t>()  { return MImage_Type_Bit16;  }
+    template<> constexpr imagedata_t libraryImageType<im_real32_t>() { return MImage_Type_Real32; }
+    template<> constexpr imagedata_t libraryImageType<im_real_t>()   { return MImage_Type_Real;  }
 
 
     inline const char *imageTypeMathematicaName(imagedata_t it) {
@@ -1483,7 +1491,7 @@ public:
     }
 
     /// Returns 2 for a 2D image.
-    mint rank() const { return 2; }
+    constexpr mint rank() const { return 2; }
 
     /// Creates a copy of the referenced Image
     ImageRef clone() const {
@@ -1524,7 +1532,7 @@ public:
     }
 
     /// Returns the image/pixel type
-    imagedata_t type() const { return detail::libraryImageType<T>(); }
+    constexpr imagedata_t type() const { return detail::libraryImageType<T>(); }
 };
 
 
@@ -1581,7 +1589,7 @@ public:
     }
 
     /// Returns 3 for a 3D image
-    mint rank() const { return 3; }
+    constexpr mint rank() const { return 3; }
 
     /// Creates a copy of the referenced Image3D
     Image3DRef clone() const {
@@ -1622,7 +1630,7 @@ public:
     }
 
     /// Returns the image/pixel type
-    imagedata_t type() const { return detail::libraryImageType<T>(); }
+    constexpr imagedata_t type() const { return detail::libraryImageType<T>(); }
 };
 
 
