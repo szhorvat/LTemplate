@@ -1419,14 +1419,14 @@ public:
 
     pixel_iterator operator - (ptrdiff_t n) const { return pixel_iterator(ptr - n*step, step); }
 
-    ptrdiff_t operator - (const pixel_iterator &it) const { (ptr - it.ptr)/step; }
+    ptrdiff_t operator - (const pixel_iterator &it) const { return (ptr - it.ptr)/step; }
 
     T & operator [] (mint i) { return ptr[i*step]; }
 
-    bool operator < (const pixel_iterator &it) const { ptr < it.ptr; }
-    bool operator > (const pixel_iterator &it) const { ptr > it.ptr; }
-    bool operator <= (const pixel_iterator &it) const { ptr <= it.ptr; }
-    bool operator >= (const pixel_iterator &it) const { ptr >= it.ptr; }
+    bool operator < (const pixel_iterator &it) const { return ptr < it.ptr; }
+    bool operator > (const pixel_iterator &it) const { return ptr > it.ptr; }
+    bool operator <= (const pixel_iterator &it) const { return ptr <= it.ptr; }
+    bool operator >= (const pixel_iterator &it) const { return ptr >= it.ptr; }
 };
 
 
