@@ -282,8 +282,6 @@ class TensorRef {
     T * const tensor_data;
     const mint len;
 
-    TensorRef & operator = (const TensorRef &) = delete;
-
     // A "null" TensorRef is used only for SparseArrayRef's ev member to handle pattern arrays
     // It cannot be publicly constructed
     TensorRef() : t(nullptr), tensor_data(nullptr), len(0) { }
@@ -628,8 +626,6 @@ class SparseArrayRef {
     const IntTensorRef ci; // column indices
     const TensorRef<T> ev; // explicit values, ev.nullQ() may be true
     T &iv;                 // implicit value
-
-    SparseArrayRef & operator = (const SparseArrayRef &) = delete;
 
     static TensorRef<T> getExplicitValues(const MSparseArray &msa) {
         MTensor *ev = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(msa);
@@ -1050,8 +1046,6 @@ class GenericRawArrayRef {
     const MRawArray ra;
     const mint len;
 
-    GenericRawArrayRef & operator = (const GenericRawArrayRef &) = delete;
-
 public:
     GenericRawArrayRef(const MRawArray &mra) :
         ra(mra),
@@ -1304,8 +1298,6 @@ class GenericImageRef {
     const mint len;
     const mint nrows, ncols, nslices, nchannels;
     const bool interleaved, alphaChannel;
-
-    GenericImageRef & operator = (const GenericImageRef &) = delete;
 
 public:
     GenericImageRef(const MImage &mim) :
