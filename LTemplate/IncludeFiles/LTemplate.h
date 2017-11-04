@@ -1292,11 +1292,11 @@ namespace detail { // private
 template<typename T> class ImageRef;
 template<typename T> class Image3DRef;
 
-/// Wrapper class for `MImage` pointers; unspecialized base class. Typically used through \ref ImageRef or \ref Image3DRef.
+/// Wrapper class for `MImage` pointers; unspecialized base class. Typically used through \ref ImageRef.
 class GenericImageRef {
     const MImage im;
     const mint len;
-    const mint nrows, ncols, nslices, nchannels;
+    const mint nrows, ncols, nchannels;
     const bool interleaved, alphaChannel;
 
 public:
@@ -1305,11 +1305,12 @@ public:
         len(libData->imageLibraryFunctions->MImage_getFlattenedLength(im)),
         nrows(libData->imageLibraryFunctions->MImage_getRowCount(im)),
         ncols(libData->imageLibraryFunctions->MImage_getColumnCount(im)),
-        nslices(libData->imageLibraryFunctions->MImage_getSliceCount(im)),
         nchannels(libData->imageLibraryFunctions->MImage_getChannels(im)),
         interleaved(libData->imageLibraryFunctions->MImage_interleavedQ(im)),
         alphaChannel(libData->imageLibraryFunctions->MImage_alphaChannelQ(im))
-    { }
+    {
+        massert(libData->imageLibraryFunctions->MImage_getRank(im) == 2);
+    }
 
     /// Returns the referenced \c MImage
     MImage image() const { return im; }
@@ -1326,14 +1327,11 @@ public:
     /// Returns the number of image columns
     mint cols() const { return ncols; }
 
-    /// Returns the number of image slices for 3D images; for 2D images it returns 1.
-    mint slices() const { return nslices; }
+    /// Returns the number of pixels in a single image channel
+    mint channelSize() const { return rows()*cols(); }
 
-    /// Returns the number of pixels in a single image channel.
-    mint channelSize() const { return slices()*rows()*cols(); }
-
-    /// Returns 2 for 3D images and 3 for 3D images.
-    mint rank() const { return libData->imageLibraryFunctions->MImage_getRank(im); }
+    /// Returns 2 for 2D images
+    constexpr mint rank() const { return 2; }
 
     /// Returns the number of image channels
     mint channels() const { return nchannels; }
@@ -1352,6 +1350,14 @@ public:
         return libData->imageLibraryFunctions->MImage_getColorSpace(im);
     }
 
+    /// Creates a copy of the referenced Image
+    GenericImageRef clone() const {
+        MImage c = NULL;
+        int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
+        if (err) throw LibraryError("MImage_clone() failed.", err);
+        return c;
+    }
+
     /// Frees the referenced \c MImage, same as \c MImage_free
     void free() const { libData->imageLibraryFunctions->MImage_free(im); }
 
@@ -1366,12 +1372,116 @@ public:
      */
     template<typename U>
     ImageRef<U> convertTo(bool interleaving) const {
-        return libData->imageLibraryFunctions->MImage_convertType(im, detail::libraryImageType<U>(), interleaving);
+        MImage res = libData->imageLibraryFunctions->MImage_convertType(im, detail::libraryImageType<U>(), interleaving);
+        if (! res)
+            throw LibraryError("MImage_convertType() failed.");
+        return res;
     }
 
-    /// Convert the image to the given type of \ref ImageRef. The interleaving mode is preserved.
+    /// Convert the image to the given type of Image. The interleaving mode is preserved.
     template<typename U>
     ImageRef<U> convertTo() const { return convertTo<U>(interleavedQ()); }
+
+    /// Returns the image/pixel type
+    imagedata_t type() const {
+        return libData->imageLibraryFunctions->MImage_getDataType(im);
+    }
+};
+
+
+/// Wrapper class for `MImage` pointers; unspecialized base class. Typically used through \ref Image3DRef.
+class GenericImage3DRef {
+    const MImage im;
+    const mint len;
+    const mint nrows, ncols, nslices, nchannels;
+    const bool interleaved, alphaChannel;
+
+public:
+    GenericImage3DRef(const MImage &mim) :
+        im(mim),
+        len(libData->imageLibraryFunctions->MImage_getFlattenedLength(im)),
+        nrows(libData->imageLibraryFunctions->MImage_getRowCount(im)),
+        ncols(libData->imageLibraryFunctions->MImage_getColumnCount(im)),
+        nslices(libData->imageLibraryFunctions->MImage_getSliceCount(im)),
+        nchannels(libData->imageLibraryFunctions->MImage_getChannels(im)),
+        interleaved(libData->imageLibraryFunctions->MImage_interleavedQ(im)),
+        alphaChannel(libData->imageLibraryFunctions->MImage_alphaChannelQ(im))
+    {
+        massert(libData->imageLibraryFunctions->MImage_getRank(im) == 3);
+    }
+
+    /// Returns the referenced \c MImage
+    MImage image() const { return im; }
+
+    /// Returns the total number of pixels in all image channels. Same as \c MImage_getFlattenedLength. \sa channelSize
+    mint length() const { return len; }
+
+    /// Returns the total number of pixels in all image channels, synonym of \ref length(). \sa channelSize
+    mint size() const { return length(); }
+
+    /// Returns the number of image rows
+    mint rows() const { return nrows; }
+
+    /// Returns the number of image columns
+    mint cols() const { return ncols; }
+
+    /// Returns the number of image slices in the Image3D
+    mint slices() const { return nslices; }
+
+    /// Returns the number of pixels in a single image channel.
+    mint channelSize() const { return slices()*rows()*cols(); }
+
+    /// Returns 3 for 3D images.
+    constexpr mint rank() const { return 3; }
+
+    /// Returns the number of image channels
+    mint channels() const { return nchannels; }
+
+    /// Returns the number of non-alpha channels. Same as \ref channels() if the image has no alpha channel; one less otherwise.
+    mint nonAlphaChannels() const { return alphaChannelQ() ? channels()-1 : channels(); }
+
+    /// Returns true if image channels are stored in interleaved mode, e.g. `rgbrgbrgb...` instead of `rrr...ggg...bbb...` for an RGB image.
+    bool interleavedQ() const { return interleaved; }
+
+    /// Does the image have an alpha channel?
+    bool alphaChannelQ() const { return alphaChannel; }
+
+    /// Returns the image colour space
+    colorspace_t colorSpace() const {
+        return libData->imageLibraryFunctions->MImage_getColorSpace(im);
+    }
+
+    /// Creates a copy of the referenced Image3D
+    GenericImage3DRef clone() const {
+        MImage c = NULL;
+        int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
+        if (err) throw LibraryError("MImage_clone() failed.", err);
+        return c;
+    }
+
+    /// Frees the referenced \c MImage, same as \c MImage_free
+    void free() const { libData->imageLibraryFunctions->MImage_free(im); }
+
+    void disown() const { libData->imageLibraryFunctions->MImage_disown(im); }
+    void disownAll() const { libData->imageLibraryFunctions->MImage_disownAll(im); }
+
+    mint shareCount() const { return libData->imageLibraryFunctions->MImage_shareCount(im); }
+
+    /** \brief Convert to the given type of Image3D; same as `MImage_convertType`
+     *  \param interleaving specifies whether to store the data in interleaved mode. See \ref interleavedQ
+     *  \tparam U is the pixel type of the result.
+     */
+    template<typename U>
+    Image3DRef<U> convertTo(bool interleaving) const {
+        MImage res = libData->imageLibraryFunctions->MImage_convertType(im, detail::libraryImageType<U>(), interleaving);
+        if (! res)
+            throw LibraryError("MImage_convertType() failed.");
+        return res;
+    }
+
+    /// Convert the image to the given type of Image3D. The interleaving mode is preserved.
+    template<typename U>
+    Image3DRef<U> convertTo() const { return convertTo<U>(interleavedQ()); }
 
     /// Returns the image/pixel type
     imagedata_t type() const {
@@ -1467,10 +1577,7 @@ public:
     ImageRef(const MImage &mim) :
         GenericImageRef(mim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(mim)))
-    {
-        if (GenericImageRef::rank() != 2)
-            throw LibraryError("2D image expected.", LIBRARY_TYPE_ERROR);
-    }
+    { }
 
     // explicit conversion required to prevent accidental auto-conversion between Images of different types or Image and Image3D
     /// Cast a GenericImageRef to a type-specialized 2D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
@@ -1486,13 +1593,7 @@ public:
                 << detail::imageTypeMathematicaName(expected) << " expected.";
             throw LibraryError(err.str(), LIBRARY_TYPE_ERROR);
         }
-
-        if (GenericImageRef::rank() != 2)
-            throw LibraryError("2D image expected.", LIBRARY_TYPE_ERROR);
     }
-
-    /// Returns 2 for a 2D image.
-    constexpr mint rank() const { return 2; }
 
     /// Creates a copy of the referenced Image
     ImageRef clone() const {
@@ -1554,7 +1655,7 @@ public:
  * \sa ImageRef
  */
 template<typename T>
-class Image3DRef : public GenericImageRef {
+class Image3DRef : public GenericImage3DRef {
     T * const image_data;
 
 public:
@@ -1563,34 +1664,25 @@ public:
     typedef class pixel_iterator<T> pixel_iterator;
 
     Image3DRef(const MImage &mim) :
-        GenericImageRef(mim),
+        GenericImage3DRef(mim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(mim)))
-    {
-        if (GenericImageRef::rank() != 3)
-            throw LibraryError("3D image expected.", LIBRARY_TYPE_ERROR);
-    }
+    { }
 
     // explicit conversion required to prevent accidental auto-conversion between Image3Ds of different types or Image and Image3D
     /// Cast a GenericImageRef to a type-specialized 3D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
-    explicit Image3DRef(const GenericImageRef &gim) :
-        GenericImageRef(gim),
+    explicit Image3DRef(const GenericImage3DRef &gim) :
+        GenericImage3DRef(gim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(gim.image())))
     {
         imagedata_t received = gim.type();
         imagedata_t expected = detail::libraryImageType<T>();
         if (received != expected) {
             std::ostringstream err;
-            err << "Image of type " << detail::imageTypeMathematicaName(received) << " received, "
+            err << "Image3D of type " << detail::imageTypeMathematicaName(received) << " received, "
                 << detail::imageTypeMathematicaName(expected) << " expected.";
             throw LibraryError(err.str(), LIBRARY_TYPE_ERROR);
         }
-
-        if (GenericImageRef::rank() != 3)
-            throw LibraryError("3D image expected.", LIBRARY_TYPE_ERROR);
     }
-
-    /// Returns 3 for a 3D image
-    constexpr mint rank() const { return 3; }
 
     /// Creates a copy of the referenced Image3D
     Image3DRef clone() const {

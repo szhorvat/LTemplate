@@ -628,7 +628,7 @@ types = Dispatch@{
         {"mma::Image3DRef<" <> ctype <> ">", "mma::detail::getImage3D<" <> ctype <> ">", "mma::detail::setImage3D<" <> ctype <> ">"}
       ],
 
-  {LType[Image3D], ___} -> {"mma::GenericImageRef", "mma::detail::getGenericImage", "mma::detail::setGenericImage"},
+  {LType[Image3D], ___} -> {"mma::GenericImage3DRef", "mma::detail::getGenericImage3D", "mma::detail::setGenericImage3D"},
 
   (* This is a special type that translates integer managed expression IDs on the Mathematica side
      into a class reference on the C++ side. It cannot be returned. *)
