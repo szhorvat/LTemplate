@@ -38,6 +38,28 @@
  *      << sum << prod;
  * }
  * \endcode
+ *
+ * See `Documentation/Examples/LinkObject` for more examples.
+ *
+ * ----
+ *
+ * Currently, mlstream.h has direct support for sending and receiving the following types:
+ *
+ * **Sending**
+ *
+ *  - Signed integers (16-, 32- and 64-bit)
+ *  - Floating point numbers
+ *  - Strings (`std::string` or null-terminated C string)
+ *  - `mma::RealTensorRef` and `mma::IntTensorRef` of arbitrary dimensions
+ *  - `std::vector` or `std::list` holding any supported type (with optimization for `std::vector` holding numerical types)
+ *  - Symbols (mlSymbol) or functions (mlHead)
+ *
+ * **Receiving**
+ *
+ *  - Signed integers (16-, 32- and 64-bit)
+ *  - Floating point numbers
+ *  - Strings (`std::string` only)
+ *  - `std::vector` holding any supported type (with optimization for numerical types)
  */
 
 #include "LTemplate.h"
@@ -65,7 +87,7 @@ class mlStream {
     std::string context;
 
 public:
-    explicit mlStream(MLINK lp_) : lp(lp_) { }
+    explicit mlStream(MLINK link) : lp(link) { }
     mlStream(MLINK lp_, std::string context_) : lp(lp_), context(context_) { }
 
     MLINK link() { return lp; }
@@ -87,11 +109,11 @@ public:
 
 // Special
 
-/// Must be the first item extracted from mlStream, checks number of arguments.
+/// Must be the first item extracted from mlStream, checks number of arguments and prepares for reading them.
 struct mlCheckArgs {
     int argc;
 
-    explicit mlCheckArgs(int argc_) : argc(argc_) { }
+    explicit mlCheckArgs(int argc) : argc(argc) { }
 };
 
 inline mlStream & operator >> (mlStream &ml, const mlCheckArgs &ca) {
@@ -116,7 +138,7 @@ struct mlHead {
     const char *head;
     int argc;
 
-    mlHead(const char *head_, int argc_) : head(head_), argc(argc_) { }
+    mlHead(const char *head, int argc) : head(head), argc(argc) { }
 };
 
 inline mlStream & operator << (mlStream &ml, const mlHead &head) {
@@ -133,7 +155,7 @@ inline mlStream & operator << (mlStream &ml, const mlHead &head) {
 struct mlSymbol {
     const char *symbol;
 
-    explicit mlSymbol(const char *symbol_) : symbol(symbol_) { }
+    explicit mlSymbol(const char *symbol) : symbol(symbol) { }
 };
 
 inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
@@ -149,7 +171,7 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 /// Used for discarding a given number of expressions from an mlStream
 struct mlDiscard {
     const int count;
-    explicit mlDiscard(int count_ = 1) : count(count_) { }
+    explicit mlDiscard(int count = 1) : count(count) { }
 };
 
 inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
@@ -222,6 +244,7 @@ inline mlStream & operator >> (mlStream &ml, std::string &s) {
     if (! MLGetUTF8String(ml.link(), &sp, &bytes, &chars))
         ml.error("String expected");
     s.assign(reinterpret_cast<const char *>(sp), bytes);
+    MLReleaseUTF8String(ml.link(), sp, bytes);
     return ml;
 }
 
@@ -315,7 +338,7 @@ MLSTREAM_DEF_VEC_PUT(Real128, mlextended_double)
 
 // Put all other types
 template<typename T,
-         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlextended_double)) ), int>::type = 0 >
+         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlint64)) ), int>::type = 0 >
 inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
     ml << mlHead("List", vec.size());
     for (typename std::vector<T>::const_iterator i = vec.begin(); i != vec.end(); ++i)
@@ -332,8 +355,7 @@ inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
         int count; \
         if (! MLGet ## MTYPE ## List(ml.link(), &data, &count)) \
             ml.error(#MTYPE " list expected"); \
-        vec.resize(count); \
-        std::copy(data, data+count, vec.begin()); \
+        vec.assign(data, data+count); \
         MLRelease ## MTYPE ## List(ml.link(), data, count); \
         return ml; \
     }
@@ -349,8 +371,7 @@ MLSTREAM_DEF_VEC_GET_INTEGRAL(Integer64, mlint64)
         int count; \
         if (! MLGet ## MTYPE ## List(ml.link(), &data, &count)) \
             ml.error(#MTYPE " list expected"); \
-        vec.resize(count); \
-        std::copy(data, data+count, vec.begin()); \
+        vec.assign(data, data+count); \
         MLRelease ## MTYPE ## List(ml.link(), data, count); \
         return ml; \
     }
@@ -358,6 +379,21 @@ MLSTREAM_DEF_VEC_GET_INTEGRAL(Integer64, mlint64)
 MLSTREAM_DEF_VEC_GET(Real32, float)
 MLSTREAM_DEF_VEC_GET(Real64, double)
 MLSTREAM_DEF_VEC_GET(Real128, mlextended_double)
+
+
+// Get all other types
+template<typename T,
+         typename std::enable_if<! (std::is_integral<T>::value && std::is_signed<T>::value && (sizeof(T) == sizeof(short) || sizeof(T) == sizeof(int) || sizeof(T) == sizeof(mlint64)) ), int>::type = 0 >
+inline mlStream & operator >> (mlStream &ml, std::vector<T> &vec) {
+    int count;
+    if (! MLTestHead(ml.link(), "List", &count))
+        ml.error("Head \"List\" expected");
+    vec.clear();
+    vec.resize(count);
+    for (auto &el : vec)
+        ml >> el;
+    return ml;
+}
 
 
 #endif // MLSTREAM_H

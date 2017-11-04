@@ -36,6 +36,7 @@ template<typename T>
 inline Image3DRef<T> getImage3D(MArgument marg) { return MArgument_getMImage(marg); }
 
 inline GenericImageRef getGenericImage(MArgument marg) { return MArgument_getMImage(marg); }
+inline GenericImage3DRef getGenericImage3D(MArgument marg) { return MArgument_getMImage(marg); }
 
 template<typename T>
 inline void setImage(MArgument marg, ImageRef<T> &val) { MArgument_setMImage(marg, val.image()); }
@@ -44,6 +45,7 @@ template<typename T>
 inline void setImage3D(MArgument marg, Image3DRef<T> &val) { MArgument_setMImage(marg, val.image()); }
 
 inline void setGenericImage(MArgument marg, GenericImageRef &val) { MArgument_setMImage(marg, val.image()); }
+inline void setGenericImage3D(MArgument marg, GenericImage3DRef &val) { MArgument_setMImage(marg, val.image()); }
 
 #ifdef LTEMPLATE_RAWARRAY
 template<typename T>
@@ -102,7 +104,7 @@ class MBuffer : public std::streambuf {
     std::vector<char_type> buf;
 
 public:
-    MBuffer(std::size_t buf_size = 4096) : buf(buf_size + 1) {
+    explicit MBuffer(std::size_t buf_size = 4096) : buf(buf_size + 1) {
         setp(&buf.front(), &buf.back());
     }
 

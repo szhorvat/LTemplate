@@ -1,13 +1,25 @@
 Notebook[{
 
 Cell[CellGroupData[{
-Cell["LinkObject based passing", "Section"],
+Cell["LinkObject based passing", "Section",
+ ExpressionUUID -> "5f730c1c-3f28-44e9-a51b-8c18457a0324"],
 
 Cell["\<\
-LinkObject-based passing provides much more flexibility than using the \
-standard LibraryLink type. However, it is also much slower.  See a benchmark \
-here:\
-\>", "Text"],
+This example demonstrates passing arguments and returning results through a \
+MathLink connection.\
+\>", "Text",
+ ExpressionUUID -> "4931aba6-de17-4b05-9fa9-774e9e7c77b4"],
+
+Cell[TextData[{
+ ButtonBox["LinkObject-based passing",
+  BaseStyle->"Link",
+  ButtonData->
+   "paclet:paclet:LibraryLink/tutorial/InteractionWithMathematica#306127487"],\
+
+ " provides much more flexibility than using the standard LibraryLink type. \
+However, it is also much slower.  See a benchmark here:"
+}], "Text",
+ ExpressionUUID -> "2a159845-6072-4bfb-9bec-57f3c1c411bb"],
 
 Cell[TextData[ButtonBox["https://mathematica.stackexchange.com/questions/\
 91887/mathlink-wstp-vs-librarylink-performance",
@@ -17,13 +29,15 @@ Cell[TextData[ButtonBox["https://mathematica.stackexchange.com/questions/\
 vs-librarylink-performance"], None},
  ButtonNote->
   "https://mathematica.stackexchange.com/questions/91887/mathlink-wstp-vs-\
-librarylink-performance"]], "Item"],
+librarylink-performance"]], "Item",
+ ExpressionUUID -> "16e90e3f-c037-4f85-97cb-622e2139b86d"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{"SetDirectory", "@", 
    RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
- RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]}], "Input"],
+ RowBox[{"Needs", "[", "\"\<LTemplate`\>\"", "]"}]}], "Input",
+ ExpressionUUID -> "7e1f28de-1661-4af5-b312-b65eee18d48b"],
 
 Cell[BoxData[
  RowBox[{
@@ -45,7 +59,8 @@ Cell[BoxData[
        RowBox[{"LFun", "[", 
         RowBox[{"\"\<value\>\"", ",", "LinkObject"}], "]"}]}], 
       "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
-  ";"}]], "Input"],
+  ";"}]], "Input",
+ ExpressionUUID -> "7fda221d-b883-438b-8492-91ba45272041"],
 
 Cell[BoxData[
  RowBox[{
@@ -86,18 +101,23 @@ Cell[BoxData[
             RowBox[{"\"\<prodSum\>\"", ",", "LinkObject"}], "]"}], ",", 
            "\[IndentingNewLine]", 
            RowBox[{"LFun", "[", 
-            RowBox[{"\"\<sqrtList\>\"", ",", "LinkObject"}], "]"}]}], 
+            RowBox[{"\"\<sqrtList\>\"", ",", "LinkObject"}], "]"}], ",", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"LFun", "[", 
+            RowBox[{"\"\<strcat\>\"", ",", "LinkObject"}], "]"}]}], 
           "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], ",", 
        "\[IndentingNewLine]", 
        RowBox[{"tensorClass", "[", "Real", "]"}], ",", "\[IndentingNewLine]", 
        
        RowBox[{"tensorClass", "[", "Integer", "]"}]}], "\[IndentingNewLine]", 
-      "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input"],
+      "}"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ ExpressionUUID -> "6ed6ee35-ca79-4bb0-a779-b5016009a32b"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"CompileTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "8d0172da-dc4a-4a66-b09c-e337af11bcd8"],
 
 Cell[CellGroupData[{
 
@@ -137,7 +157,8 @@ Examples/LinkObject\"\>",
 LinkObject", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "e76d9baf-6d2d-4e59-9cb8-baa17660b303"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -188,7 +209,8 @@ Cell[BoxData[
    Style[" ...", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
-  Editable->False]], "Print"],
+  Editable->False]], "Print",
+ ExpressionUUID -> "e76d9baf-6d2d-4e59-9cb8-baa17660b303"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -202,7 +224,8 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"],
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "e76d9baf-6d2d-4e59-9cb8-baa17660b303"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -216,66 +239,81 @@ Cell[BoxData[
   GraphicsColor->RGBColor[0, 0, 
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
-    Rational[2, 3]]]], "Print"]
+    Rational[2, 3]]]], "Print",
+ ExpressionUUID -> "e76d9baf-6d2d-4e59-9cb8-baa17660b303"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
-LibraryResources/MacOSX-x86-64/LinkDemo.dylib\"\>"], "Output"]
+LibraryResources/MacOSX-x86-64/LinkDemo.dylib\"\>"], "Output",
+ ExpressionUUID -> "d37d7b4d-0a60-4c6d-8488-1f8db5b9cd9c"]
 }, Open  ]],
 
 Cell[BoxData[
- RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input"],
+ RowBox[{"LoadTemplate", "[", "template", "]"}]], "Input",
+ ExpressionUUID -> "59006634-acdc-465c-b23b-3388f0d02058"],
 
 Cell[CellGroupData[{
 
-Cell["Basics", "Subsubsection"],
+Cell["Basics", "Subsubsection",
+ ExpressionUUID -> "08e1f854-767a-473e-8e37-517fdd8ddebd"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "=", 
-  RowBox[{"Make", "[", "LinkDemo", "]"}]}]], "Input"],
+  RowBox[{"Make", "[", "LinkDemo", "]"}]}]], "Input",
+ ExpressionUUID -> "1e7436af-1b46-4b2c-8438-da9f2d814fc6"],
 
 Cell[BoxData[
- RowBox[{"LinkDemo", "[", "1", "]"}]], "Output"]
+ RowBox[{"LinkDemo", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "2fd1917c-d3a5-4176-bf57-64c85cf81023"]
 }, Open  ]],
 
-Cell["Reverse a string.", "Text"],
+Cell["Reverse a string.", "Text",
+ ExpressionUUID -> "bd40472f-b3f6-49b9-b999-b23b80b8d65c"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
-  RowBox[{"\"\<reverse\>\"", "[", "\"\<Dennis sinned.\>\"", "]"}]}]], "Input"],
+  RowBox[{"\"\<reverse\>\"", "[", "\"\<Dennis sinned.\>\"", "]"}]}]], "Input",
+ 
+ ExpressionUUID -> "a98933ac-d478-4d94-b8a5-017add059ddf"],
 
-Cell[BoxData["\<\".dennis sinneD\"\>"], "Output"]
+Cell[BoxData["\<\".dennis sinneD\"\>"], "Output",
+ ExpressionUUID -> "5b6b0ce7-bf9e-4a0a-beb0-bf18e6f04d74"]
 }, Open  ]],
 
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"reverse2", "[", "]"}], TraditionalForm]]],
+   RowBox[{"reverse2", "[", "]"}], TraditionalForm]],
+  ExpressionUUID -> "a39e405b-bd6b-4ffd-88ae-d8630e0b50c5"],
  " is a simpler implementation of the same using mlstream.h."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "bb67809e-d820-4b43-82ac-184e311a9412"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
-  RowBox[{
-  "\"\<reverse2\>\"", "[", "\"\<Dennis sinned.\>\"", "]"}]}]], "Input"],
+  RowBox[{"\"\<reverse2\>\"", "[", "\"\<Dennis sinned.\>\"", "]"}]}]], "Input",
+ ExpressionUUID -> "f6aa51a4-2dd7-423f-bce3-4513fd0125a8"],
 
-Cell[BoxData["\<\".dennis sinneD\"\>"], "Output"]
+Cell[BoxData["\<\".dennis sinneD\"\>"], "Output",
+ ExpressionUUID -> "d37f147a-0ac4-46e7-98d7-c4cc7aba007d"]
 }, Open  ]],
 
-Cell["Error checking is included.", "Text"],
+Cell["Error checking is included.", "Text",
+ ExpressionUUID -> "a7d2e878-5009-49f2-a72e-ef03395e781e"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<reverse2\>\"", "[", 
-   RowBox[{"\"\<foo\>\"", ",", "\"\<bar\>\""}], "]"}]}]], "Input"],
+   RowBox[{"\"\<foo\>\"", ",", "\"\<bar\>\""}], "]"}]}]], "Input",
+ ExpressionUUID -> "bcd06e5b-36da-4c50-b2aa-2d44abbd9988"],
 
 Cell[BoxData[
  RowBox[{
@@ -284,60 +322,72 @@ Cell[BoxData[
   RowBox[{
   ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"reverse2: 1 \
 arguments expected, 2 received.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], \
-"Message", "MSG"],
+"Message", "MSG",
+ ExpressionUUID -> "b555dda9-2a07-4886-b6da-17876773c66b"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "f9b75ce4-5529-4e24-b633-712187be51c9"]
 }, Open  ]],
 
 Cell["\<\
 Note that any type that can be converted to a string can be read off the link \
 as a string. Passing a number of a symbol to the function won\
 \[CloseCurlyQuote]t result in an error.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "a33d738a-83e5-4bb3-9305-a0df47aeca31"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
-  RowBox[{"\"\<reverse2\>\"", "[", "123", "]"}]}]], "Input"],
+  RowBox[{"\"\<reverse2\>\"", "[", "123", "]"}]}]], "Input",
+ ExpressionUUID -> "2c12bcb8-71bc-490b-8623-281fcf54be92"],
 
-Cell[BoxData["\<\"321\"\>"], "Output"]
+Cell[BoxData["\<\"321\"\>"], "Output",
+ ExpressionUUID -> "391dec1a-5613-404c-a85f-a2748b02099a"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
-  RowBox[{"\"\<reverse2\>\"", "[", "symbol", "]"}]}]], "Input"],
+  RowBox[{"\"\<reverse2\>\"", "[", "symbol", "]"}]}]], "Input",
+ ExpressionUUID -> "ce6d7519-b297-46db-a4cb-b9f4eadc92bd"],
 
-Cell[BoxData["\<\"lobmys\"\>"], "Output"]
+Cell[BoxData["\<\"lobmys\"\>"], "Output",
+ ExpressionUUID -> "8b8513d6-caf5-42be-9b2c-d9120ea125d9"]
 }, Open  ]],
 
-Cell["Add two numbers.", "Text"],
+Cell["Add two numbers.", "Text",
+ ExpressionUUID -> "c860b0f5-793b-4044-b233-68f8ed268664"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addTwo\>\"", "[", 
-   RowBox[{"4", ",", "5"}], "]"}]}]], "Input"],
+   RowBox[{"4", ",", "5"}], "]"}]}]], "Input",
+ ExpressionUUID -> "21fee05f-283c-47d5-8e33-67738d4056ff"],
 
-Cell[BoxData["9"], "Output"]
+Cell[BoxData["9"], "Output",
+ ExpressionUUID -> "1087ed51-42a8-4123-9ede-2e01f1570227"]
 }, Open  ]],
 
 Cell["\<\
 This function tried to read integers from the link. Strings are not \
 convertible to integers, thus with string arguments an error occurs.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "4036c2fe-bb2b-478d-a988-cd0f1293ce8d"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<addTwo\>\"", "[", 
-   RowBox[{"\"\<a\>\"", ",", "\"\<b\>\""}], "]"}]}]], "Input"],
+   RowBox[{"\"\<a\>\"", ",", "\"\<b\>\""}], "]"}]}]], "Input",
+ ExpressionUUID -> "91cc4482-9505-4651-8154-a95ad14c6a0c"],
 
 Cell[BoxData[
  RowBox[{
@@ -345,36 +395,43 @@ Cell[BoxData[
    RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
   RowBox[{
   ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Integer64 expected.\
-\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "304bb7e1-9adc-4e7f-942f-01f0825f3dbc"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "afffa030-4085-4308-aab6-6ec8e9c32ec1"]
 }, Open  ]],
 
 Cell["\<\
 Compute both the produce and sum of an arbitrary-length real list:\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "e849ad0c-2ecf-48e8-983c-81f1386ae91b"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<prodSum\>\"", "[", 
-   RowBox[{"Range", "[", "5", "]"}], "]"}]}]], "Input"],
+   RowBox[{"Range", "[", "5", "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "2f44c694-4ca8-433b-94f2-27abc3141a04"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"15.`", ",", "120.`"}], "}"}]], "Output"]
+  RowBox[{"120.`", ",", "15.`"}], "}"}]], "Output",
+ ExpressionUUID -> "1094a56a-a80b-462b-840f-58cee58e6773"]
 }, Open  ]],
 
-Cell["Error checking is always available.", "Text"],
+Cell["Error checking is always available.", "Text",
+ ExpressionUUID -> "2cf21cf2-59b7-4c24-b199-4af38484f52b"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
-  RowBox[{"\"\<prodSum\>\"", "[", "12", "]"}]}]], "Input"],
+  RowBox[{"\"\<prodSum\>\"", "[", "12", "]"}]}]], "Input",
+ ExpressionUUID -> "5b320d7a-5956-46da-a48d-f4f574ebadaa"],
 
 Cell[BoxData[
  RowBox[{
@@ -382,37 +439,78 @@ Cell[BoxData[
    RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
   RowBox[{
   ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"prodSum: Real64 \
-list expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+list expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+ ExpressionUUID -> "a41bf603-f9d2-45a8-8d8b-4022c4c70f8b"],
 
 Cell[BoxData[
  RowBox[{"LibraryFunctionError", "[", 
-  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output"]
+  RowBox[{"\<\"LIBRARY_FUNCTION_ERROR\"\>", ",", "6"}], "]"}]], "Output",
+ ExpressionUUID -> "113724dd-0d3d-4801-9fa9-5f2060057e6b"]
 }, Open  ]],
 
-Cell["Compute the square root of each element in a list.", "Text"],
+Cell["Compute the square root of each element in a list.", "Text",
+ ExpressionUUID -> "8552624d-d3e3-4eba-8f30-6e851b28f019"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<sqrtList\>\"", "[", 
-   RowBox[{"Range", "[", "5", "]"}], "]"}]}]], "Input"],
+   RowBox[{"Range", "[", "5", "]"}], "]"}]}]], "Input",
+ ExpressionUUID -> "7f1ab8a6-56b6-41f8-bf9a-3af150053cbc"],
 
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
   "1.`", ",", "1.4142135623730951`", ",", "1.7320508075688772`", ",", "2.`", 
-   ",", "2.23606797749979`"}], "}"}]], "Output"]
+   ",", "2.23606797749979`"}], "}"}]], "Output",
+ ExpressionUUID -> "ce544aaa-ab16-4957-a9a5-7f51c821ed19"]
 }, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Returning MTensors", "Subsubsection"],
+Cell["Variable number of arguments", "Subsubsection",
+ ExpressionUUID -> "5c32a900-84ca-4881-a485-00251fe436d5"],
+
+Cell["Concatenate an arbitrary number of string arguments.", "Text",
+ ExpressionUUID -> "edcf9a77-da24-4df1-87ab-ce9030a26ea5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<strcat\>\"", "[", 
+   RowBox[{"\"\<foo\>\"", ",", "\"\<bar\>\""}], "]"}]}]], "Input",
+ ExpressionUUID -> "1afd7a38-c3ee-41a3-8de9-ee8450f60dcb"],
+
+Cell[BoxData["\<\"foobar\"\>"], "Output",
+ ExpressionUUID -> "3724c723-f575-4b87-8e55-ae6cc8127c56"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"obj", "@", 
+  RowBox[{"\"\<strcat\>\"", "[", 
+   RowBox[{"\"\<foo\>\"", ",", "\"\<bar\>\"", ",", "\"\<baz\>\""}], 
+   "]"}]}]], "Input",
+ ExpressionUUID -> "406b2ff3-f017-4177-aeb1-29b0d905032b"],
+
+Cell[BoxData["\<\"foobarbaz\"\>"], "Output",
+ ExpressionUUID -> "4670280e-25f6-493f-a02b-4bd42d8a2f11"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Returning MTensors", "Subsubsection",
+ ExpressionUUID -> "06a99056-bbd9-43a7-8dfc-beac65d7c439"],
 
 Cell["\<\
 mlstream.h supports directly returning Real and Integer Tensors.\
-\>", "Text"],
+\>", "Text",
+ ExpressionUUID -> "09498a36-b2a2-41c3-b8f6-2e4e19ad55df"],
 
 Cell[TextData[{
  "The following function creates a new instance of the RealTensor or \
@@ -421,9 +519,10 @@ using the helper function ",
  Cell[BoxData[
   FormBox[
    RowBox[{"tensorClass", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  ExpressionUUID -> "b452462b-1341-47f3-b457-0b918f8ee2b1"],
  ". In C++, they share code using the template mechanism."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "621670d4-eb5a-4acc-a241-825977492d90"],
 
 Cell[BoxData[
  RowBox[{
@@ -449,7 +548,8 @@ Cell[BoxData[
        "\[IndentingNewLine]", 
        RowBox[{"Return", "[", "$Failed", "]"}]}], "\[IndentingNewLine]", 
       "]"}], ";", "\[IndentingNewLine]", "ten"}]}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input"],
+   "]"}]}]], "Input",
+ ExpressionUUID -> "913bdc3f-0cfd-4271-af0a-348be33d0e6e"],
 
 Cell[CellGroupData[{
 
@@ -459,21 +559,25 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"{", 
      RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", "Integer"}], 
-   "]"}]}]], "Input"],
+   "]"}]}]], "Input",
+ ExpressionUUID -> "71f268f0-674f-4793-b78a-55e022318aa1"],
 
 Cell[BoxData[
- RowBox[{"IntegerTensor", "[", "1", "]"}]], "Output"]
+ RowBox[{"IntegerTensor", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "944b9e6b-97b7-4a5e-be9b-de773cf27c89"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"ten1", "@", 
-  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input"],
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "c72d872c-9871-42f9-8d67-d6c0e0a85a7d"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"1", ",", "2", ",", "3"}], "}"}]], "Output"]
+  RowBox[{"1", ",", "2", ",", "3"}], "}"}]], "Output",
+ ExpressionUUID -> "2f9afaf1-d14d-4b7b-8fe7-1d09d69e6862"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -486,29 +590,33 @@ Cell[BoxData[
      RowBox[{"1", ",", 
       RowBox[{"{", 
        RowBox[{"2", ",", "3"}], "}"}]}], "]"}], ",", "Real"}], 
-   "]"}]}]], "Input"],
+   "]"}]}]], "Input",
+ ExpressionUUID -> "cc26659c-f597-40ac-8287-a597920b2766"],
 
 Cell[BoxData[
- RowBox[{"RealTensor", "[", "1", "]"}]], "Output"]
+ RowBox[{"RealTensor", "[", "1", "]"}]], "Output",
+ ExpressionUUID -> "a6b494e9-c508-4cc9-b787-097e8f29232d"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"ten2", "@", 
-  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input"],
+  RowBox[{"\"\<value\>\"", "[", "]"}]}]], "Input",
+ ExpressionUUID -> "1717bae0-cbf6-4060-9d05-1af1d6084804"],
 
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
    RowBox[{"{", 
     RowBox[{
-    "0.8907613237342562`", ",", "0.7284841745035704`", ",", 
-     "0.23574357406811708`"}], "}"}], ",", 
+    "0.5710411770333428`", ",", "0.874008795255814`", ",", 
+     "0.7642745978733672`"}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{
-    "0.44447182733017754`", ",", "0.5552106009865929`", ",", 
-     "0.3104895151882623`"}], "}"}]}], "}"}]], "Output"]
+    "0.6728380038611987`", ",", "0.29066733882731777`", ",", 
+     "0.01901174940230832`"}], "}"}]}], "}"}]], "Output",
+ ExpressionUUID -> "db5c0e01-d1c0-42a1-80bf-6f83a0d5f478"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]

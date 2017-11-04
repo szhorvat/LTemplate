@@ -85,7 +85,7 @@ enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
 
 
 /** \brief Issue a _Mathematica_ message.
- *  \param msg the text of the message
+ *  \param msg is the text of the message
  *  \param type determines the message tag which will be used
  *
  * If `msg == NULL`, no message will be issued. This is for compatibility with other libraries
@@ -95,7 +95,7 @@ enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
  */
 void message(const char *msg, MessageType type = M_INFO);
 
-inline void message(std::string msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
+inline void message(const std::string &msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
 
 
 /** \brief Call _Mathematica_'s `Print[]`.
@@ -117,13 +117,13 @@ inline void print(const char *msg) {
 }
 
 /// Call _Mathematica_'s `Print[]`, `std::string` argument version.
-inline void print(std::string msg) { print(msg.c_str()); }
+inline void print(const std::string &msg) { print(msg.c_str()); }
 
 
 /** \brief Can be used to output with _Mathematica_'s `Print[]` in a manner similar to `std::cout`.
  *
- * The stream _must_ be flushed (`std::endl` or `std::flush`) to trigger printing earlier than
- * the return of the library function.
+ * The stream _must_ be flushed to trigger printing earlier than the return of the library function.
+ * This is most easily accomplished by inserting `std::endl` or `std::flush`.
  *
  * \sa print(), message()
  */
@@ -131,8 +131,18 @@ extern std::ostream mout;
 
 
 /** \brief Throwing this type returns to _Mathematica_ immediately.
- *  \param s reported in _Mathematica_ as `LTemplate::error`; gets copied.
- *  \param err used as the LibraryFunction exit code.
+ *  \param msg is reported in _Mathematica_ as `LTemplate::error`.
+ *  \param err is used as the LibraryFunction exit code.
+ *
+ *  Typical values for the exit code are the following, but any integer may be used, *except* 0 (i.e. `LIBRARY_NO_ERROR`).
+ *  Using 0 in LibraryError may cause a crash, as _Mathematica_ will expect to find a return value.
+ *
+ *   - `LIBRARY_TYPE_ERROR`
+ *   - `LIBRARY_RANK_ERROR`
+ *   - `LIBRARY_DIMENSION_ERROR`
+ *   - `LIBRARY_NUMERICAL_ERROR`
+ *   - `LIBRARY_MEMORY_ERROR`
+ *   - `LIBRARY_FUNCTION_ERROR`
  */
 class LibraryError {
     const std::string msg;
@@ -141,7 +151,7 @@ class LibraryError {
 
 public:
     explicit LibraryError(int err = LIBRARY_FUNCTION_ERROR) : has_msg(false), err_code(err) { }
-    LibraryError(std::string s, int err = LIBRARY_FUNCTION_ERROR) : msg(s), has_msg(true), err_code(err) { }
+    explicit LibraryError(const std::string &msg, int err = LIBRARY_FUNCTION_ERROR) : msg(msg), has_msg(true), err_code(err) { }
 
     const std::string &message() const { return msg; }
     bool has_message() const { return has_msg; }
@@ -184,7 +194,7 @@ inline void check_abort() {
 }
 
 
-/// Convenience function for disowning `const char *` strings.
+/// Convenience function for disowning `const char *` strings; same as `UTF8String_disown`.
 inline void disownString(const char *str) {
     libData->UTF8String_disown(const_cast<char *>(str));
 }
@@ -197,36 +207,35 @@ namespace detail {
     public:
         LTAutoFree(const LT &ref) : ref(ref) { }
         ~LTAutoFree() { ref.free(); }
+        LTAutoFree(const LTAutoFree &) = delete;
+        LTAutoFree & operator = (const LTAutoFree &) = delete;
 
         operator LT & () { return ref; }
 
         LT & operator -> () { return ref; }
     };
-
-    template<typename LT>
-    inline LTAutoFree<LT> AutoFree(const LT &ref) { return LTAutoFree<LT>(ref); }
 }
 
 
 /** \brief Get all instances of an LTemplate class
  *
- *  *Do not* use `delete` on the Class pointers in this collection or a crash may result later in the session.
+ *  Do not use `delete` on the Class pointers in this collection or a crash may result later in the session.
  *
  */
 template<typename Class>
 extern const std::map<mint, Class *> &getCollection();
 
 /** \brief Get class instance corresponding to the given managed library expression ID
- *  \tparam Class the LTemplate class to get an instance of.
+ *  \tparam Class is the LTemplate class to get an instance of.
  *  \param id is the managed library expression ID.
  *
- * If no class instance correponding to `id` exists, a \ref LibraryError will be thrown.
+ * If no class instance corresponding to `id` exists, a \ref LibraryError will be thrown.
  *
  *  \throws LibraryError
  */
 template<typename Class>
 inline Class &getInstance(mint id) {
-    auto collection = getCollection<Class>();
+    const auto &collection = getCollection<Class>();
     auto it = collection.find(id);
     if (it == collection.end())
         throw LibraryError("Managed library expression instance does not exist.");
@@ -259,9 +268,9 @@ namespace detail { // private
             "Only mint, double and mma::complex_t are allowed in mma::TensorRef<...> and mma::SparseArrayRef<...>.");
     }
 
-    template<> inline mint libraryType<mint>()      { return MType_Integer; }
-    template<> inline mint libraryType<double>()    { return MType_Real; }
-    template<> inline mint libraryType<complex_t>() { return MType_Complex; }
+    template<> constexpr mint libraryType<mint>()      { return MType_Integer; }
+    template<> constexpr mint libraryType<double>()    { return MType_Real; }
+    template<> constexpr mint libraryType<complex_t>() { return MType_Complex; }
 } // end namespace detail
 
 
@@ -269,7 +278,10 @@ template<typename T> class SparseArrayRef;
 
 
 /** \brief Wrapper class for `MTensor` pointers
- *  \tparam T must be `mint`, `double` or `mma::complex_t`.
+ *  \tparam T is the type of the Tensor; must be `mint`, `double` or `mma::complex_t`.
+ *
+ * Specified as `LType[List, T, rank]` or `{T, rank}` in an `LTemplate` in _Mathematica_,
+ * where `T` is one of `Integer`, `Real` or `Complex`.
  *
  * Note that just like `MTensor`, this class only holds a reference to a Tensor.
  * Multiple \ref TensorRef objects may refer to the same Tensor.
@@ -282,8 +294,6 @@ class TensorRef {
     const MTensor t; // reminder: MTensor is a pointer type
     T * const tensor_data;
     const mint len;
-
-    TensorRef & operator = (const TensorRef &) = delete;
 
     // A "null" TensorRef is used only for SparseArrayRef's ev member to handle pattern arrays
     // It cannot be publicly constructed
@@ -301,19 +311,19 @@ public:
         detail::libraryType<T>(); // causes compile time error if T is invalid
     }
 
-    /// Returns the referenced \c MTensor
+    /// The referenced \c MTensor
     MTensor tensor() const { return t; }
 
-    /// Returns the rank of the Tensor, same as \c MTensor_getRank
+    /// Rank of the Tensor, same as \c MTensor_getRank
     mint rank() const { return libData->MTensor_getRank(t); }
 
-    /// Returns the number of elements in the Tensor, same as \c MTensor_getFlattenedLength
+    /// Number of elements in the Tensor, same as \c MTensor_getFlattenedLength
     mint length() const { return len; }
 
-    /// Returns the number of elements in the Tensor, synonym of \ref length()
+    /// Number of elements in the Tensor, synonym of \ref length()
     mint size() const { return length(); }
 
-    /// Frees the referenced Tensor, same as \c MTensor_free
+    /// Free the referenced Tensor; same as \c MTensor_free
     /**
      * Tensors created by the library with functions such as \ref makeVector() must be freed
      * after use unless they are returned to _Mathematica_.
@@ -323,12 +333,16 @@ public:
      */
     void free() const { libData->MTensor_free(t); }
 
+    /// Same as `MTensor_disown`
     void disown() const { libData->MTensor_disown(t); }
+
+    /// Same as `MTensor_disownAll`
     void disownAll() const { libData->MTensor_disownAll(t); }
 
+    /// Same as `MTensor_shareCount`
     mint shareCount() const { return libData->MTensor_shareCount(t); }
 
-    /// Creates a copy of the referenced Tensor
+    /// Create a copy of the referenced Tensor
     TensorRef clone() const {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
@@ -338,18 +352,22 @@ public:
 
     const mint *dimensions() const { return libData->MTensor_getDimensions(t); }
 
-    /// Returns a pointer to the underlying storage of the corresponding \c MTensor
+    /// Pointer to the underlying storage of the referenced Tensor; alias of \ref begin()
     T *data() const { return tensor_data; }
 
+    /// Index into the tensor data linearly; analogous to Flatten[tensor][[...]] in _Mathematica_
     T & operator [] (mint i) const { return tensor_data[i]; }
 
+    /// Iterator to the beginning of the Tensor data
     T *begin() const { return data(); }
+
+    /// Iterator past the end of the Tensor data
     T *end() const { return begin() + length(); }
 
-    /// The type of the Tensor, may be `MType_Integer=2`, `MType_Real=3` or `MType_Complex=4`
-    mint type() const { return detail::libraryType<T>(); }
+    /// The type of the Tensor; may be `MType_Integer=2`, `MType_Real=3` or `MType_Complex=4`
+    constexpr mint type() const { return detail::libraryType<T>(); }
 
-    /** Convert to the given type of Tensor
+    /** \brief Create a new Tensor of the given type from this Tensor's data
      *  \tparam U is the element type of the result.
      */
     template<typename U>
@@ -378,8 +396,8 @@ typedef TensorRef<complex_t> ComplexTensorRef;
 /// @}
 
 
-/// Wrapper class for `MTensor` pointers to rank-2 tensors
-/**
+/** \brief Wrapper class for `MTensor` pointers to rank-2 tensors
+ *
  * Remember that \c MTensor stores data in row-major order.
  *
  * \sa TensorRef, CubeRef
@@ -404,6 +422,9 @@ public:
 
     /// Number of columns in the matrix
     mint cols() const { return ncols; }
+
+    /// Returns 2 for a matrix
+    constexpr mint rank() const { return 2; }
 
     /// Index into a matrix using row and column indices
     T & operator () (mint i, mint j) const { return (*this)[ncols*i + j]; }
@@ -445,7 +466,10 @@ public:
     /// Number of slices in the cube
     mint slices() const { return nslices; }
 
-    /// Index into a cube using slicem row, and column indices
+    /// Returns 3 for a cube
+    constexpr mint rank() const { return 3; }
+
+    /// Index into a cube using slice, row, and column indices
     T & operator () (mint i, mint j, mint k) const { return (*this)[i*nrows*ncols + j*ncols + k]; }
 };
 
@@ -457,7 +481,7 @@ typedef CubeRef<complex_t>  ComplexCubeRef;
 
 
 /** \brief Create a Tensor of the given dimensions
- *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
+ *  \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`.
  *  \param dims are the dimensions
  */
 template<typename T>
@@ -469,7 +493,7 @@ inline TensorRef<T> makeTensor(std::initializer_list<mint> dims) {
 }
 
 /** \brief Create a Tensor of the given dimensions.
- *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
+ *  \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`.
  *  \param rank is the Tensor depth
  *  \param dims are the dimensions stored in a C array of length \c rank and type \c mint
  */
@@ -482,7 +506,7 @@ inline TensorRef<T> makeTensor(mint rank, mint *dims) {
 }
 
 /** \brief Create a Tensor of the given dimensions.
- *  \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`.
+ *  \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`.
  *  \param rank is the Tensor depth
  *  \param dims are the dimensions stored in a C array of length \c rank and type \c U
  */
@@ -493,8 +517,8 @@ inline TensorRef<T> makeTensor(mint rank, const U *dims) {
 }
 
 
-/** \brief Creates a vector (rank-1 Tensor) of the given length
- * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+/** \brief Create a vector (rank-1 Tensor) of the given length
+ * \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`
  * \param length is the vector length
  */
 template<typename T>
@@ -502,8 +526,8 @@ inline TensorRef<T> makeVector(mint length) {
     return makeTensor<T>({length});
 }
 
-/** \brief Creates a vector (rank-1 Tensor) of the given length and copies the contents of a C array into it
- * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+/** \brief Create a vector (rank-1 Tensor) of the given length and copies the contents of a C array into it
+ * \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`
  * \param length is the length of the C array
  * \param data points to the contents of the C array
  */
@@ -514,8 +538,8 @@ inline TensorRef<T> makeVector(mint length, const U *data) {
     return t;
 }
 
-/** \brief Creates a vector (rank-1 Tensor) from an intializer list
- * \tparam T is the Tensor type, can be `mint`, `double` or `mma::m_complex`
+/** \brief Create a vector (rank-1 Tensor) from an initializer list
+ * \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`
  * \param values will be copied into the Tensor
  */
 template<typename T>
@@ -526,17 +550,17 @@ inline TensorRef<T> makeVector(std::initializer_list<T> values) {
 }
 
 
-/** \brief Creates a matrix (rank-2 Tensor) of the given dimensions
+/** \brief Create a matrix (rank-2 Tensor) of the given dimensions
  * \param nrow is the number of rows
  * \param ncol is the number of columns
- * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
+ * \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`
  */
 template<typename T>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     return makeTensor<T>({nrow, ncol});
 }
 
-/// Creates a matrix (rank-2 Tensor) of the given dimensions and copies the contents of a row-major storage C array into it
+/// Create a matrix (rank-2 Tensor) of the given dimensions and copy the contents of a row-major storage C array into it
 template<typename T, typename U>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol, const U *data) {
     MatrixRef<T> t = makeMatrix<T>(nrow, ncol);
@@ -544,7 +568,7 @@ inline MatrixRef<T> makeMatrix(mint nrow, mint ncol, const U *data) {
     return t;
 }
 
-/// Creates  matrix (rank-2 Tensor) using from a nested intializer list.
+/// Create a matrix (rank-2 Tensor) from a nested initializer list.
 template<typename T>
 inline MatrixRef<T> makeMatrix(std::initializer_list<std::initializer_list<T>> values) {
     MatrixRef<T> t = makeMatrix<T>(values.size(), values.size() ? values.begin()->size() : 0);
@@ -559,7 +583,7 @@ inline MatrixRef<T> makeMatrix(std::initializer_list<std::initializer_list<T>> v
     return t;
 }
 
-/// Creates a matrix (rank-2 Tensor) of the given dimensions and copies the contents of a column-major storage C array into it
+/// Create a matrix (rank-2 Tensor) of the given dimensions and copy the contents of a column-major storage C array into it
 template<typename T, typename U>
 inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
     TensorRef<T> t = makeMatrix<T>(nrow, ncol);
@@ -568,8 +592,8 @@ inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
 }
 
 
-/** \brief Creates a rank-3 Tensor of the given dimensions
- * \tparam T is the type of the Tensor, can be `mint`, `double` or `mma::m_complex`
+/** \brief Create a rank-3 Tensor of the given dimensions
+ * \tparam T is the type of the Tensor; can be `mint`, `double` or `mma::m_complex`
  * \param nslice is the number of slices
  * \param nrow is the number of rows
  * \param ncol is the number of columns
@@ -579,7 +603,7 @@ inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol) {
     return makeTensor<T>({nslice, nrow, ncol});
 }
 
-/// Creates a rank-3 Tensor of the given dimensions and copies the contents of a C array into it
+/// Create a rank-3 Tensor of the given dimensions and copy the contents of a C array into it
 template<typename T, typename U>
 inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
     CubeRef<T> t = makeCube<T>(nslice, nrow, ncol);
@@ -587,7 +611,7 @@ inline CubeRef<T> makeCube(mint nslice, mint nrow, mint ncol, const U *data) {
     return t;
 }
 
-/// Creates a rank-3 Tensor from a nested initializer list
+/// Create a rank-3 Tensor from a nested initializer list
 template<typename T>
 inline CubeRef<T> makeCube(std::initializer_list<std::initializer_list<std::initializer_list<T>>> values) {
     size_t ns = values.size();
@@ -613,6 +637,9 @@ template<typename T> class SparseMatrixRef;
 
 /** \brief Wrapper class for `MSparseArray` pointers
  *
+ * Specified as `LType[SparseArray, T, rank]` in an `LTemplate` in _Mathematica_,
+ * where `T` is one of `Integer`, `Real` or `Complex`.
+ *
  * \sa SparseMatrixRef
  * \sa makeSparseArray(), makeSparseMatrix()
  */
@@ -623,8 +650,6 @@ class SparseArrayRef {
     const IntTensorRef ci; // column indices
     const TensorRef<T> ev; // explicit values, ev.nullQ() may be true
     T &iv;                 // implicit value
-
-    SparseArrayRef & operator = (const SparseArrayRef &) = delete;
 
     static TensorRef<T> getExplicitValues(const MSparseArray &msa) {
         MTensor *ev = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(msa);
@@ -664,10 +689,13 @@ public:
         detail::libraryType<T>(); // causes compile time error if T is invalid
     }
 
+    /// The references `MSparseArray`
     MSparseArray sparseArray() const { return sa; }
 
+    /// Rank of the SparseArray
     mint rank() const { return libData->sparseLibraryFunctions->MSparseArray_getRank(sa); }
 
+    /// Dimensions of the SparseArray
     const mint *dimensions() const { return libData->sparseLibraryFunctions->MSparseArray_getDimensions(sa); }
 
     /// The number of explicitly stored positions
@@ -682,7 +710,7 @@ public:
 
     mint shareCount() const { return libData->sparseLibraryFunctions->MSparseArray_shareCount(sa); }
 
-    /// Creates a copy of the referenced SparseArray
+    /// Create a copy of the referenced SparseArray
     SparseArrayRef clone() const {
         MSparseArray c = NULL;
         int err = libData->sparseLibraryFunctions->MSparseArray_clone(sa, &c);
@@ -690,7 +718,9 @@ public:
         return c;
     }
 
-    /** \brief  Creates a new integer Tensor containing the indices of non-default (i.e. explicit) values in the sparse array.
+    /** \brief  Create a new integer Tensor containing the indices of non-default (i.e. explicit) values in the sparse array.
+     *
+     *  The positions use 1-based indexing.
      *
      *  You are responsible for freeing this data structure using the TensorRef::free() function when done using it.
      */
@@ -711,7 +741,7 @@ public:
         }
     }
 
-    /** \brief Returns the column indices of the SparseArray's internal CSR representation, as an integer Tensor.
+    /** \brief The column indices of the SparseArray's internal CSR representation, as an integer Tensor.
      *
      * This function is useful when converting a SparseArray for use with another library that also
      * uses a CSR or CSC representation.
@@ -725,7 +755,7 @@ public:
         return ci;
     }
 
-    /** \brief Returns the row pointers of the SparseArray's internal CSR representation, as a rank-1 integer Tensor.
+    /** \brief The row pointers of the SparseArray's internal CSR representation, as a rank-1 integer Tensor.
      *
      * This function is useful when converting a SparseArray for use with another library that also
      * uses a CSR or CSC representation.
@@ -735,15 +765,17 @@ public:
      */
     IntTensorRef rowPointers() const { return rp; }
 
-    /// True if the sparse array has explicit values.  Pattern arrays do not have explicit values.
+    /// Does the SparseArray store explicit values?  Pattern arrays do not have explicit values.
     bool explicitValuesQ() const { return ! ev.nullQ(); }
 
-    /** \brief Returns the explicit values in the sparse array as a Tensor.
+    /** \brief The explicit values in the SparseArray as a Tensor.
      *
      * The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
      * Clone it before returning it to the kernel using \ref clone().
      *
-     * For pattern arrays a \ref LibraryError exception is thrown.
+     * For pattern arrays, which do not have explicit values, a \ref LibraryError exception is thrown.
+     *
+     * \sa explicitValuesQ()
      */
     TensorRef<T> explicitValues() const {
         if (ev.nullQ())
@@ -751,10 +783,12 @@ public:
         return ev;
     }
 
-    /// Returns the background element of the sparse array
+    /// The implicit value (also call background or default value) of the SparseArray
     T &implicitValue() const { return iv; }
 
     /** \brief Creates a new SparseArray in which explicitly stored values that are equal to the current implicit value are eliminated.
+     *
+     * Useful when the explicit values or the implicit value has been changed, and a recomputation of the CSR structure is desired.
      *
      * Should not be used on a pattern array.
      */
@@ -783,7 +817,7 @@ public:
         return msa;
     }
 
-    /// Creates a new dense Tensor containing the same elements as the sparse array
+    /// Creates a new Tensor (dense array) containing the same elements as the SparseArray
     TensorRef<T> toTensor() const {
         MTensor t = NULL;
         int err = libData->sparseLibraryFunctions->MSparseArray_toMTensor(sa, &t);
@@ -791,8 +825,8 @@ public:
         return t;
     }
 
-    /// Returns the element type of the sparse array
-    mint type() const { return detail::libraryType<T>(); }
+    /// The element type of the SparseArray; may be `MType_Integer=2`, `MType_Real=3` or `MType_Complex=4`
+    constexpr mint type() const { return detail::libraryType<T>(); }
 };
 
 
@@ -818,13 +852,13 @@ public:
 
     /// Bidirectional iterator for enumerating the explicitly stored values and positions of a sparse matrix.
     class iterator : public std::iterator<std::bidirectional_iterator_tag, T> {
-        SparseMatrixRef &sm;
+        const SparseMatrixRef *smp;
         mint row_index, index;
 
         friend class SparseMatrixRef;
 
-        iterator(const SparseMatrixRef &sm, const mint &row_index, const mint &index) :
-            sm(sm),
+        iterator(const SparseMatrixRef *smp, const mint &row_index, const mint &index) :
+            smp(smp),
             row_index(row_index),
             index(index)
         { /* empty */ }
@@ -832,19 +866,20 @@ public:
     public:
 
         iterator(const iterator &) = default;
+        iterator & operator = (const iterator &) = default;
 
         /** \brief Access explicit value.
          *
          * Should not be used with pattern arrays. There is no safety check for this.
          */
-        T &operator *() const { return sm.ev[index]; }
+        T &operator *() const { return smp->ev[index]; }
 
         bool operator == (const iterator &it) const { return index == it.index; }
         bool operator != (const iterator &it) const { return index != it.index; }
 
         iterator &operator ++ () {
             index++;
-            while (sm.rp[row_index+1] == index && row_index < sm.size())
+            while (smp->rp[row_index+1] == index && row_index < smp->size())
                 row_index++;
             return *this;
         }
@@ -856,7 +891,7 @@ public:
         }
 
         iterator &operator -- () {
-            while (sm.rp[row_index] == index && row_index > 0)
+            while (smp->rp[row_index] == index && row_index > 0)
                 row_index--;
             index--;
             return *this;
@@ -869,7 +904,7 @@ public:
         }
 
         mint row() const { return row_index; } ///< Row of the referenced element (0-based indexing)
-        mint col() const { return sm.ci[index]-1; } ///< Column of the referenced element (0-based indexing)
+        mint col() const { return smp->ci[index]-1; } ///< Column of the referenced element (0-based indexing)
     };
 
     SparseMatrixRef(const SparseArrayRef<T> &sa) : SparseArrayRef<T>(sa)
@@ -886,6 +921,8 @@ public:
 
     /// Number of columns in the sparse matrix
     mint cols() const { return ncols; }
+
+    constexpr mint rank() const { return 2; }
 
     /** \brief Index into a sparse matrix (read-only, 0-based)
      *
@@ -921,12 +958,12 @@ public:
         mint row_index = 0;
         while (rp[row_index+1] == 0 && row_index < size())
             row_index++;
-        return iterator{*this, row_index, 0};
+        return iterator{this, row_index, 0};
     }
 
     /// Iterator to the end of explicit values and positions
     iterator end() const {
-        return iterator{*this, rows(), size()};
+        return iterator{this, rows(), size()};
     }
 };
 
@@ -982,7 +1019,7 @@ template<typename T>
 inline SparseMatrixRef<T> makeSparseMatrix(IntMatrixRef pos, TensorRef<T> vals, mint nrow, mint ncol, T imp = 0) {
     massert(pos.cols() == 2);
 
-    auto dims = detail::AutoFree(makeVector<mint>({nrow, ncol}));
+    detail::LTAutoFree<TensorRef<mint>> dims{makeVector<mint>({nrow, ncol})};
     SparseMatrixRef<T> sa = makeSparseArray(pos, vals, dims, imp);
 
     return sa;
@@ -999,18 +1036,18 @@ namespace detail { // private
             "Only int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t, int64_t, uint64_t, float, double, complex_float_t, complex_double_t are allowed in mma::RawArrayRef<...>.");
     }
 
-    template<> inline rawarray_t libraryRawType<int8_t>()   { return MRawArray_Type_Bit8;   }
-    template<> inline rawarray_t libraryRawType<uint8_t>()  { return MRawArray_Type_Ubit8;  }
-    template<> inline rawarray_t libraryRawType<int16_t>()  { return MRawArray_Type_Bit16;  }
-    template<> inline rawarray_t libraryRawType<uint16_t>() { return MRawArray_Type_Ubit16; }
-    template<> inline rawarray_t libraryRawType<int32_t>()  { return MRawArray_Type_Bit32;  }
-    template<> inline rawarray_t libraryRawType<uint32_t>() { return MRawArray_Type_Ubit32; }
-    template<> inline rawarray_t libraryRawType<int64_t>()  { return MRawArray_Type_Bit64;  }
-    template<> inline rawarray_t libraryRawType<uint64_t>() { return MRawArray_Type_Ubit64; }
-    template<> inline rawarray_t libraryRawType<float>()    { return MRawArray_Type_Real32; }
-    template<> inline rawarray_t libraryRawType<double>()   { return MRawArray_Type_Real64; }
-    template<> inline rawarray_t libraryRawType<complex_float_t>()  { return MRawArray_Type_Float_Complex; }
-    template<> inline rawarray_t libraryRawType<complex_double_t>() { return MRawArray_Type_Double_Complex; }
+    template<> constexpr rawarray_t libraryRawType<int8_t>()   { return MRawArray_Type_Bit8;   }
+    template<> constexpr rawarray_t libraryRawType<uint8_t>()  { return MRawArray_Type_Ubit8;  }
+    template<> constexpr rawarray_t libraryRawType<int16_t>()  { return MRawArray_Type_Bit16;  }
+    template<> constexpr rawarray_t libraryRawType<uint16_t>() { return MRawArray_Type_Ubit16; }
+    template<> constexpr rawarray_t libraryRawType<int32_t>()  { return MRawArray_Type_Bit32;  }
+    template<> constexpr rawarray_t libraryRawType<uint32_t>() { return MRawArray_Type_Ubit32; }
+    template<> constexpr rawarray_t libraryRawType<int64_t>()  { return MRawArray_Type_Bit64;  }
+    template<> constexpr rawarray_t libraryRawType<uint64_t>() { return MRawArray_Type_Ubit64; }
+    template<> constexpr rawarray_t libraryRawType<float>()    { return MRawArray_Type_Real32; }
+    template<> constexpr rawarray_t libraryRawType<double>()   { return MRawArray_Type_Real64; }
+    template<> constexpr rawarray_t libraryRawType<complex_float_t>()  { return MRawArray_Type_Float_Complex; }
+    template<> constexpr rawarray_t libraryRawType<complex_double_t>() { return MRawArray_Type_Double_Complex; }
 
     inline const char *rawTypeMathematicaName(rawarray_t rt) {
         switch (rt) {
@@ -1041,8 +1078,6 @@ template<typename T> class RawArrayRef;
 class GenericRawArrayRef {
     const MRawArray ra;
     const mint len;
-
-    GenericRawArrayRef & operator = (const GenericRawArrayRef &) = delete;
 
 public:
     GenericRawArrayRef(const MRawArray &mra) :
@@ -1076,11 +1111,23 @@ public:
 
     const mint *dimensions() const { return libData->rawarrayLibraryFunctions->MRawArray_getDimensions(ra); }
 
-    /// Convert to the given type of RawArray; same as `MRawArray_convertType`
+    /// Creates a copy of the referenced RawArray
+    GenericRawArrayRef clone() const {
+        MRawArray c = NULL;
+        int err = libData->rawarrayLibraryFunctions->MRawArray_clone(rawArray(), &c);
+        if (err) throw LibraryError("MRawArray_clone() failed.", err);
+        return c;
+    }
+
+    /** \brief Convert to the given type of RawArray; same as `MRawArray_convertType`
+     *  \tparam U is the element type of the result
+     */
     template<typename U>
     RawArrayRef<U> convertTo() const {
-        // TODO check error?
-        return libData->rawarrayLibraryFunctions->MRawArray_convertType(ra, detail::libraryRawType<U>());
+        MRawArray res = libData->rawarrayLibraryFunctions->MRawArray_convertType(ra, detail::libraryRawType<U>());
+        if (! res)
+            throw LibraryError("MRawArray_convertType() failed.");
+        return res;
     }
 
     rawarray_t type() const { return libData->rawarrayLibraryFunctions->MRawArray_getType(ra); }
@@ -1112,7 +1159,8 @@ public:
         checkType();
     }
 
-    RawArrayRef(const GenericRawArrayRef &gra) :
+    // explicit conversion required to prevent accidental auto-conversion between RawArrays of different types
+    explicit RawArrayRef(const GenericRawArrayRef &gra) :
         GenericRawArrayRef(gra),
         array_data(reinterpret_cast<T *>(libData->rawarrayLibraryFunctions->MRawArray_getData(gra.rawArray())))
     {
@@ -1135,7 +1183,7 @@ public:
     T *begin() const { return data(); }
     T *end() const { return begin() + length(); }
 
-    rawarray_t type() const { return detail::libraryRawType<T>(); }
+    constexpr rawarray_t type() const { return detail::libraryRawType<T>(); }
 };
 
 /** \brief Creates a RawArray of the given dimensions
@@ -1254,11 +1302,11 @@ namespace detail { // private
             "Only im_bit_t, im_byte_t, im_bit16_t, im_real32_t, im_real_t are allowed in mma::ImageRef<...>.");
     }
 
-    template<> inline imagedata_t libraryImageType<im_bit_t>()    { return MImage_Type_Bit;   }
-    template<> inline imagedata_t libraryImageType<im_byte_t>()   { return MImage_Type_Bit8;  }
-    template<> inline imagedata_t libraryImageType<im_bit16_t>()  { return MImage_Type_Bit16;  }
-    template<> inline imagedata_t libraryImageType<im_real32_t>() { return MImage_Type_Real32; }
-    template<> inline imagedata_t libraryImageType<im_real_t>()   { return MImage_Type_Real;  }
+    template<> constexpr imagedata_t libraryImageType<im_bit_t>()    { return MImage_Type_Bit;   }
+    template<> constexpr imagedata_t libraryImageType<im_byte_t>()   { return MImage_Type_Bit8;  }
+    template<> constexpr imagedata_t libraryImageType<im_bit16_t>()  { return MImage_Type_Bit16;  }
+    template<> constexpr imagedata_t libraryImageType<im_real32_t>() { return MImage_Type_Real32; }
+    template<> constexpr imagedata_t libraryImageType<im_real_t>()   { return MImage_Type_Real;  }
 
 
     inline const char *imageTypeMathematicaName(imagedata_t it) {
@@ -1279,17 +1327,120 @@ namespace detail { // private
 template<typename T> class ImageRef;
 template<typename T> class Image3DRef;
 
-/// Wrapper class for `MImage` pointers; unspecialized base class. Typically used through \ref ImageRef or \ref Image3DRef.
+/** \brief Wrapper class for `MImage` pointers referring to 2D images; unspecialized base class. Typically used through \ref ImageRef.
+ *
+ * \sa GenericImage3DRef
+ */
 class GenericImageRef {
+    const MImage im;
+    const mint len;
+    const mint nrows, ncols, nchannels;
+    const bool interleaved, alphaChannel;
+
+public:
+    GenericImageRef(const MImage &mim) :
+        im(mim),
+        len(libData->imageLibraryFunctions->MImage_getFlattenedLength(im)),
+        nrows(libData->imageLibraryFunctions->MImage_getRowCount(im)),
+        ncols(libData->imageLibraryFunctions->MImage_getColumnCount(im)),
+        nchannels(libData->imageLibraryFunctions->MImage_getChannels(im)),
+        interleaved(libData->imageLibraryFunctions->MImage_interleavedQ(im)),
+        alphaChannel(libData->imageLibraryFunctions->MImage_alphaChannelQ(im))
+    {
+        massert(libData->imageLibraryFunctions->MImage_getRank(im) == 2);
+    }
+
+    /// The referenced \c MImage
+    MImage image() const { return im; }
+
+    /// Total number of pixels in all image channels. Same as \c MImage_getFlattenedLength. \sa channelSize()
+    mint length() const { return len; }
+
+    /// Total number of pixels in all image channels; synonym of \ref length(). \sa channelSize()
+    mint size() const { return length(); }
+
+    /// The number of image rows
+    mint rows() const { return nrows; }
+
+    /// The number of image columns
+    mint cols() const { return ncols; }
+
+    /// The number of pixels in a single image channel
+    mint channelSize() const { return rows()*cols(); }
+
+    /// Returns 2 for 2D images
+    constexpr mint rank() const { return 2; }
+
+    /// The number of image channels
+    mint channels() const { return nchannels; }
+
+    /// The number of non-alpha channels. Same as \ref channels() if the image has no alpha channel; one less otherwise.
+    mint nonAlphaChannels() const { return alphaChannelQ() ? channels()-1 : channels(); }
+
+    /// Are channels stored in interleaved mode? Interleaved means e.g. `rgbrgbrgb...` instead of `rrr...ggg...bbb...` for an RGB image.
+    bool interleavedQ() const { return interleaved; }
+
+    /// Does the image have an alpha channel?
+    bool alphaChannelQ() const { return alphaChannel; }
+
+    /// The image colour space
+    colorspace_t colorSpace() const {
+        return libData->imageLibraryFunctions->MImage_getColorSpace(im);
+    }
+
+    /// Create a copy of the referenced Image
+    GenericImageRef clone() const {
+        MImage c = NULL;
+        int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
+        if (err) throw LibraryError("MImage_clone() failed.", err);
+        return c;
+    }
+
+    /// Free the referenced \c MImage; same as \c MImage_free
+    void free() const { libData->imageLibraryFunctions->MImage_free(im); }
+
+    void disown() const { libData->imageLibraryFunctions->MImage_disown(im); }
+    void disownAll() const { libData->imageLibraryFunctions->MImage_disownAll(im); }
+
+    mint shareCount() const { return libData->imageLibraryFunctions->MImage_shareCount(im); }
+
+    /** \brief Convert to the given type of Image; same as `MImage_convertType`.
+     *  \param interleaving specifies whether to store the data in interleaved mode. See \ref interleavedQ()
+     *  \tparam U is the pixel type of the result.
+     *
+     *  Returns a new image that must be freed explicitly unless returned to the kernel. See \ref free().
+     */
+    template<typename U>
+    ImageRef<U> convertTo(bool interleaving) const {
+        MImage res = libData->imageLibraryFunctions->MImage_convertType(im, detail::libraryImageType<U>(), interleaving);
+        if (! res)
+            throw LibraryError("MImage_convertType() failed.");
+        return res;
+    }
+
+    /// Convert to the given type of Image. The interleaving mode is preserved.
+    template<typename U>
+    ImageRef<U> convertTo() const { return convertTo<U>(interleavedQ()); }
+
+    /// Returns the image/pixel type
+    imagedata_t type() const {
+        return libData->imageLibraryFunctions->MImage_getDataType(im);
+    }
+};
+
+
+/** \brief Wrapper class for `MImage` pointers referring to 3D images; unspecialized base class. Typically used through \ref Image3DRef.
+ *
+ * \sa GenericImageRef
+ */
+class GenericImage3DRef {
     const MImage im;
     const mint len;
     const mint nrows, ncols, nslices, nchannels;
     const bool interleaved, alphaChannel;
 
-    GenericImageRef & operator = (const GenericImageRef &) = delete;
-
 public:
-    GenericImageRef(const MImage &mim) :
+    GenericImage3DRef(const MImage &mim) :
         im(mim),
         len(libData->imageLibraryFunctions->MImage_getFlattenedLength(im)),
         nrows(libData->imageLibraryFunctions->MImage_getRowCount(im)),
@@ -1298,50 +1449,60 @@ public:
         nchannels(libData->imageLibraryFunctions->MImage_getChannels(im)),
         interleaved(libData->imageLibraryFunctions->MImage_interleavedQ(im)),
         alphaChannel(libData->imageLibraryFunctions->MImage_alphaChannelQ(im))
-    { }
+    {
+        massert(libData->imageLibraryFunctions->MImage_getRank(im) == 3);
+    }
 
-    /// Returns the referenced \c MImage
+    /// The referenced \c MImage
     MImage image() const { return im; }
 
-    /// Returns the total number of pixels in all image channels. Same as \c MImage_getFlattenedLength. \sa channelSize
+    /// The total number of pixels in all image channels. Same as \c MImage_getFlattenedLength. \sa channelSize()
     mint length() const { return len; }
 
-    /// Returns the total number of pixels in all image channels, synonym of \ref length(). \sa channelSize
+    /// The total number of pixels in all image channels, synonym of \ref length(). \sa channelSize()
     mint size() const { return length(); }
 
-    /// Returns the number of image rows
+    /// The number of image rows
     mint rows() const { return nrows; }
 
-    /// Returns the number of image columns
+    /// The number of image columns
     mint cols() const { return ncols; }
 
-    /// Returns the number of image slices for 3D images; for 2D images it returns 1.
+    /// The number of image slices in the Image3D
     mint slices() const { return nslices; }
 
-    /// Returns the number of pixels in a single image channel.
+    /// The number of pixels in a single image channel.
     mint channelSize() const { return slices()*rows()*cols(); }
 
-    /// Returns 2 for 3D images and 3 for 3D images.
-    mint rank() const { return libData->imageLibraryFunctions->MImage_getRank(im); }
+    /// Returns 3 for 3D images.
+    constexpr mint rank() const { return 3; }
 
-    /// Returns the number of image channels
+    /// The number of image channels
     mint channels() const { return nchannels; }
 
-    /// Returns the number of non-alpha channels. Same as \ref channels() if the image has no alpha channel; one less otherwise.
+    /// The number of non-alpha channels. Same as \ref channels() if the image has no alpha channel; one less otherwise.
     mint nonAlphaChannels() const { return alphaChannelQ() ? channels()-1 : channels(); }
 
-    /// Returns true if image channels are stored in interleaved mode, e.g. `rgbrgbrgb...` instead of `rrr...ggg...bbb...` for an RGB image.
+    /// Are channels stored in interleaved mode? Interleaved means e.g. `rgbrgbrgb...` instead of `rrr...ggg...bbb...` for an RGB image.
     bool interleavedQ() const { return interleaved; }
 
     /// Does the image have an alpha channel?
     bool alphaChannelQ() const { return alphaChannel; }
 
-    /// Returns the image colour space
+    /// The image colour space
     colorspace_t colorSpace() const {
         return libData->imageLibraryFunctions->MImage_getColorSpace(im);
     }
 
-    /// Frees the referenced \c MImage, same as \c MImage_free
+    /// Create a copy of the referenced Image3D
+    GenericImage3DRef clone() const {
+        MImage c = NULL;
+        int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
+        if (err) throw LibraryError("MImage_clone() failed.", err);
+        return c;
+    }
+
+    /// Free the referenced \c MImage; same as \c MImage_free
     void free() const { libData->imageLibraryFunctions->MImage_free(im); }
 
     void disown() const { libData->imageLibraryFunctions->MImage_disown(im); }
@@ -1349,18 +1510,23 @@ public:
 
     mint shareCount() const { return libData->imageLibraryFunctions->MImage_shareCount(im); }
 
-    /** \brief Convert to the given type of Image; same as `MImage_convertType`
-     *  \param interleaving specifies whether to store the data in interleaved mode. See \ref interleavedQ
+    /** \brief Convert to the given type of Image3D; same as `MImage_convertType`.
+     *  \param interleaving specifies whether to store the data in interleaved mode. See \ref interleavedQ()
      *  \tparam U is the pixel type of the result.
+     *
+     *  Returns a new image that must be freed explicitly unless returned to the kernel. See \ref free().
      */
     template<typename U>
-    ImageRef<U> convertTo(bool interleaving) const {
-        return libData->imageLibraryFunctions->MImage_convertType(im, detail::libraryImageType<U>(), interleaving);
+    Image3DRef<U> convertTo(bool interleaving) const {
+        MImage res = libData->imageLibraryFunctions->MImage_convertType(im, detail::libraryImageType<U>(), interleaving);
+        if (! res)
+            throw LibraryError("MImage_convertType() failed.");
+        return res;
     }
 
-    /// Convert the image to the given type of \ref ImageRef. The interleaving mode is preserved.
+    /// Convert to the given type of Image3D. The interleaving mode is preserved.
     template<typename U>
-    ImageRef<U> convertTo() const { return convertTo<U>(interleavedQ()); }
+    Image3DRef<U> convertTo() const { return convertTo<U>(interleavedQ()); }
 
     /// Returns the image/pixel type
     imagedata_t type() const {
@@ -1417,14 +1583,14 @@ public:
 
     pixel_iterator operator - (ptrdiff_t n) const { return pixel_iterator(ptr - n*step, step); }
 
-    ptrdiff_t operator - (const pixel_iterator &it) const { (ptr - it.ptr)/step; }
+    ptrdiff_t operator - (const pixel_iterator &it) const { return (ptr - it.ptr)/step; }
 
     T & operator [] (mint i) { return ptr[i*step]; }
 
-    bool operator < (const pixel_iterator &it) const { ptr < it.ptr; }
-    bool operator > (const pixel_iterator &it) const { ptr > it.ptr; }
-    bool operator <= (const pixel_iterator &it) const { ptr <= it.ptr; }
-    bool operator >= (const pixel_iterator &it) const { ptr >= it.ptr; }
+    bool operator < (const pixel_iterator &it) const { return ptr < it.ptr; }
+    bool operator > (const pixel_iterator &it) const { return ptr > it.ptr; }
+    bool operator <= (const pixel_iterator &it) const { return ptr <= it.ptr; }
+    bool operator >= (const pixel_iterator &it) const { return ptr >= it.ptr; }
 };
 
 
@@ -1456,13 +1622,11 @@ public:
     ImageRef(const MImage &mim) :
         GenericImageRef(mim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(mim)))
-    {
-        if (GenericImageRef::rank() != 2)
-            throw LibraryError("2D image expected.", LIBRARY_TYPE_ERROR);
-    }
+    { }
 
+    // explicit conversion required to prevent accidental auto-conversion between Images of different types or Image and Image3D
     /// Cast a GenericImageRef to a type-specialized 2D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
-    ImageRef(const GenericImageRef &gim) :
+    explicit ImageRef(const GenericImageRef &gim) :
         GenericImageRef(gim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(gim.image())))
     {
@@ -1474,15 +1638,9 @@ public:
                 << detail::imageTypeMathematicaName(expected) << " expected.";
             throw LibraryError(err.str(), LIBRARY_TYPE_ERROR);
         }
-
-        if (GenericImageRef::rank() != 2)
-            throw LibraryError("2D image expected.", LIBRARY_TYPE_ERROR);
     }
 
-    /// Returns 2 for a 2D image.
-    mint rank() const { return 2; }
-
-    /// Creates a copy of the referenced Image
+    /// Create a copy of the referenced Image
     ImageRef clone() const {
         MImage c = NULL;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
@@ -1490,16 +1648,16 @@ public:
         return c;
     }
 
-    /// Pointer to the image data
+    /// Pointer to the image data; synonym of \ref begin()
     T *data() const { return image_data; }
 
-    /// Returns an iterator to the beginning of the image data
+    /// Iterator to the beginning of the image data
     T *begin() const { return data(); }
 
-    /// Returns an iterator to the end of the image data
+    /// Iterator past the end of the image data
     T *end() const { return begin() + length(); }
 
-    /// Returns a pixel iterator to the beginning of \p channel
+    /// Pixel iterator to the beginning of \p channel
     pixel_iterator pixelBegin(mint channel) const {
         if (interleavedQ())
             return pixel_iterator(image_data + channel, channels());
@@ -1507,12 +1665,12 @@ public:
             return pixel_iterator(image_data + channelSize()*channel, 1);
     }
 
-    /// Returns an iterator to the end of \p channel
+    /// Pixel iterator past the end of \p channel
     pixel_iterator pixelEnd(mint channel) const {
         return pixelBegin(channel) + channelSize();
     }
 
-    /// Index into the image
+    /// Index into the Image by pixel coordinates and channel
     T &operator ()(mint row, mint col, mint channel = 0) const {
         if (interleavedQ())
             return image_data[row*cols()*channels() + col*channels()+ channel];
@@ -1520,8 +1678,8 @@ public:
             return image_data[channel*rows()*cols() + row*cols() + col];
     }
 
-    /// Returns the image/pixel type
-    imagedata_t type() const { return detail::libraryImageType<T>(); }
+    /// The element / pixel type of the Image
+    constexpr imagedata_t type() const { return detail::libraryImageType<T>(); }
 };
 
 
@@ -1536,13 +1694,13 @@ public:
  *  `"Real32"` | `im_real32_t` |  `float`
  *  `"Real"`   | `im_real_t`   |  `double`
  *
- * Note that this class only holds a reference to an Image. Multiple \ref Image3DRef
- * or \ref GenericImageRef objects may point to the same Image.
+ * Note that this class only holds a reference to an Image3D. Multiple \ref Image3DRef
+ * or \ref GenericImage3DRef objects may point to the same Image3D.
  *
  * \sa ImageRef
  */
 template<typename T>
-class Image3DRef : public GenericImageRef {
+class Image3DRef : public GenericImage3DRef {
     T * const image_data;
 
 public:
@@ -1551,35 +1709,27 @@ public:
     typedef class pixel_iterator<T> pixel_iterator;
 
     Image3DRef(const MImage &mim) :
-        GenericImageRef(mim),
+        GenericImage3DRef(mim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(mim)))
-    {
-        if (GenericImageRef::rank() != 3)
-            throw LibraryError("3D image expected.", LIBRARY_TYPE_ERROR);
-    }
+    { }
 
+    // explicit conversion required to prevent accidental auto-conversion between Image3Ds of different types or Image and Image3D
     /// Cast a GenericImageRef to a type-specialized 3D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
-    Image3DRef(const GenericImageRef &gim) :
-        GenericImageRef(gim),
+    explicit Image3DRef(const GenericImage3DRef &gim) :
+        GenericImage3DRef(gim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(gim.image())))
     {
         imagedata_t received = gim.type();
         imagedata_t expected = detail::libraryImageType<T>();
         if (received != expected) {
             std::ostringstream err;
-            err << "Image of type " << detail::imageTypeMathematicaName(received) << " received, "
+            err << "Image3D of type " << detail::imageTypeMathematicaName(received) << " received, "
                 << detail::imageTypeMathematicaName(expected) << " expected.";
             throw LibraryError(err.str(), LIBRARY_TYPE_ERROR);
         }
-
-        if (GenericImageRef::rank() != 3)
-            throw LibraryError("3D image expected.", LIBRARY_TYPE_ERROR);
     }
 
-    /// Returns 3 for a 3D image
-    mint rank() const { return 3; }
-
-    /// Creates a copy of the referenced Image3D
+    /// Create a copy of the referenced Image3D
     Image3DRef clone() const {
         MImage c = NULL;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
@@ -1590,13 +1740,13 @@ public:
     /// Pointer to the image data
     T *data() const { return image_data; }
 
-    /// Returns an iterator to the beginning of the image data
+    /// Iterator to the beginning of the image data
     T *begin() const { return data(); }
 
-    /// Returns an iterator to the end of the image data
+    /// Iterator past the end of the image data
     T *end() const { return begin() + length(); }
 
-    /// Returns a pixel iterator to the beginning of \p channel
+    /// Pixel iterator to the beginning of \p channel
     pixel_iterator pixelBegin(mint channel) const {
         if (interleavedQ())
             return pixel_iterator(image_data + channel, channels());
@@ -1604,12 +1754,12 @@ public:
             return pixel_iterator(image_data + channelSize()*channel, 1);
     }
 
-    /// Returns an iterator to the end of \p channel
+    /// Pixel iterator past the end of \p channel
     pixel_iterator pixelEnd(mint channel) const {
         return pixelBegin(channel) + channelSize();
     }
 
-    /// Index into the image
+    /// Index into the Image3D by pixel coordinates and channel
     T &operator ()(mint slice, mint row, mint col, mint channel = 0) const {
         if (interleavedQ())
             return image_data[slice*rows()*cols()*channels() + row*cols()*channels() + col*channels() + channel];
@@ -1617,8 +1767,8 @@ public:
             return image_data[channel*slices()*rows()*cols() + slice*rows()*cols() + row*cols() + col];
     }
 
-    /// Returns the image/pixel type
-    imagedata_t type() const { return detail::libraryImageType<T>(); }
+    /// The element / pixel type of the Image3D
+    constexpr imagedata_t type() const { return detail::libraryImageType<T>(); }
 };
 
 

@@ -34,69 +34,87 @@ struct LinkDemo {
     }
 
     /* LTemplate comes with the mlstream.h auxiliary header, which makes it easier
-     * to read the argument, check for errors, and return a result.
+     * to read the arguments, check for errors, and return a result.
      * It uses a streams-like interface.
      */
-    void reverse2(MLINK ml) {
+    void reverse2(MLINK link) {
         // A "context string" may optionally be passed to mlStream ("reverse2").
         // This will be prepended to any automatically generated error messages.
-        mlStream link(ml, "reverse2");
-        link >> mlCheckArgs(1); // expecting a single argument
+        mlStream ml(link, "reverse2");
+        ml >> mlCheckArgs(1); // expecting a single argument
 
         std::string str;
-        link >> str; // read a string
+        ml >> str; // read a string
         std::reverse(str.begin(), str.end()); // reverse it
 
-        link.newPacket(); // must call newPacket() before returning results
-        link << str; // resturn a single result
+        ml.newPacket(); // must call newPacket() before returning results; same as MLNewPacket()
+        ml << str; // resturn a single result
     }
 
-    void addTwo(MLINK ml) {
-        mlStream link(ml); // the context string may be omitted
-        link >> mlCheckArgs(2); // two arguments expected
+    void addTwo(MLINK link) {
+        mlStream ml(link); // the context string may be omitted
+        ml >> mlCheckArgs(2); // two arguments expected
 
         mint a, b;
-        link >> a >> b; // read two integers
+        ml >> a >> b; // read two integers
 
-        link.newPacket();
-
-        link << a+b;
+        ml.newPacket();
+        ml << a+b; // return their sum
     }
 
-    // Compute the sum and produce of the elements of a list
-    void prodSum(MLINK ml) {
-        mlStream link(ml, "prodSum");
-        link >> mlCheckArgs(1);
+    // Compute the product and sum of the elements of a list
+    void prodSum(MLINK link) {
+        mlStream ml(link, "prodSum");
+        ml >> mlCheckArgs(1);
 
         // vectors can be read directly form mlStream
         std::vector<double> vec;
-        link >> vec;
+        ml >> vec;
 
-        double sum = 0.0;
         double prod = 1.0;
+        double sum = 0.0;
         for (const auto &el : vec) {
-            sum += el;
             prod *= el;
+            sum += el;            
         }
 
-        link.newPacket();
-        // Returning multiple results:
-        link << mlHead("List", 2) /* a list of two elements */
-             << sum << prod; /* now put the correct number of list elements */
+        ml.newPacket();
+
+        // To return multiple results, they must be explicitly placed into a List
+        ml << mlHead("List", 2) // a list of two elements
+           << prod << sum; // now put the correct number of list elements
     }
 
     // Compute the square root of the elements of a list.
-    void sqrtList(MLINK ml) {
-        mlStream link(ml, "sqrtList");
-        link >> mlCheckArgs(1);
+    void sqrtList(MLINK link) {
+        mlStream ml(link, "sqrtList");
+        ml >> mlCheckArgs(1);
 
         std::vector<double> vec;
-        link >> vec;
+        ml >> vec;
 
         for (auto &el : vec)
             el = std::sqrt(el);
 
-        link.newPacket();
-        link << vec; // vectors can be returned directly
+        ml.newPacket();
+        ml << vec; // vectors can be returned directly
+    }
+
+    // Concatenate an arbitrary number of strings
+    void strcat(MLINK link) {
+        mlStream ml(link, "strcat");
+
+        // We do not check for the number of arguments;
+        // instead, we read all arguments into a string vector
+        std::vector<std::string> vec;
+        ml >> vec;
+
+        // Concatenate the strings
+        std::string result;
+        for (const auto &el : vec)
+            result += el;
+
+        ml.newPacket();
+        ml << result;
     }
 };
