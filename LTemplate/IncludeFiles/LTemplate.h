@@ -225,7 +225,7 @@ extern const std::map<mint, Class *> &getCollection();
  */
 template<typename Class>
 inline Class &getInstance(mint id) {
-    auto collection = getCollection<Class>();
+    const auto &collection = getCollection<Class>();
     auto it = collection.find(id);
     if (it == collection.end())
         throw LibraryError("Managed library expression instance does not exist.");
