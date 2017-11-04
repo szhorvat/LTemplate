@@ -95,7 +95,7 @@ enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
  */
 void message(const char *msg, MessageType type = M_INFO);
 
-inline void message(std::string msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
+inline void message(const std::string &msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
 
 
 /** \brief Call _Mathematica_'s `Print[]`.
@@ -117,7 +117,7 @@ inline void print(const char *msg) {
 }
 
 /// Call _Mathematica_'s `Print[]`, `std::string` argument version.
-inline void print(std::string msg) { print(msg.c_str()); }
+inline void print(const std::string &msg) { print(msg.c_str()); }
 
 
 /** \brief Can be used to output with _Mathematica_'s `Print[]` in a manner similar to `std::cout`.
@@ -141,7 +141,7 @@ class LibraryError {
 
 public:
     explicit LibraryError(int err = LIBRARY_FUNCTION_ERROR) : has_msg(false), err_code(err) { }
-    LibraryError(std::string s, int err = LIBRARY_FUNCTION_ERROR) : msg(s), has_msg(true), err_code(err) { }
+    explicit LibraryError(const std::string &s, int err = LIBRARY_FUNCTION_ERROR) : msg(s), has_msg(true), err_code(err) { }
 
     const std::string &message() const { return msg; }
     bool has_message() const { return has_msg; }
