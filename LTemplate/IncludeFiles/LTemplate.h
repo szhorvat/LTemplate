@@ -865,8 +865,9 @@ public:
 
     public:
 
+        iterator() = default;
         iterator(const iterator &) = default;
-        iterator & operator = (const iterator &) = default;
+        iterator &operator = (const iterator &) = default;
 
         /** \brief Access explicit value.
          *
@@ -1549,7 +1550,9 @@ class pixel_iterator : public std::iterator<std::random_access_iterator_tag, T> 
 
 public:
 
+    pixel_iterator() = default;
     pixel_iterator(const pixel_iterator &) = default;
+    pixel_iterator &operator = (const pixel_iterator &) = default;
 
 
     bool operator == (const pixel_iterator &it) const { return ptr == it.ptr; }
