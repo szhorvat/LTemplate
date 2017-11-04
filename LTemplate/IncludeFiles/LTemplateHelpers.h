@@ -102,7 +102,7 @@ class MBuffer : public std::streambuf {
     std::vector<char_type> buf;
 
 public:
-    MBuffer(std::size_t buf_size = 4096) : buf(buf_size + 1) {
+    explicit MBuffer(std::size_t buf_size = 4096) : buf(buf_size + 1) {
         setp(&buf.front(), &buf.back());
     }
 
