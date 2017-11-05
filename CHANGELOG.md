@@ -1,3 +1,9 @@
+#### Version 0.5.1
+
+ - `GenericImageRef` split into `GenericImageRef` / `GenericImage3DRef`
+ - Bug fixes
+ - Expanded documentation and examples
+
 #### Version 0.5
 
  - Expanded SparseArray support, added `SparseMatrixRef`.
