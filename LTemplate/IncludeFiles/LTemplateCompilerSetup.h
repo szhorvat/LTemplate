@@ -9,4 +9,8 @@
 #define LTEMPLATE_RAWARRAY
 #endif
 
+#ifdef _WIN32
+#define NOMINMAX
+#endif
+
 #endif // LTEMPLATE_COMPILER_SETUP_H
