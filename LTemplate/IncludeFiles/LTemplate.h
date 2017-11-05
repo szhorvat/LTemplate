@@ -845,7 +845,6 @@ class SparseMatrixRef : public SparseArrayRef<T> {
     using SparseArrayRef<T>::iv;
 
 public:
-    using SparseArrayRef<T>::rank;
     using SparseArrayRef<T>::dimensions;
     using SparseArrayRef<T>::size;
     using SparseArrayRef<T>::explicitValuesQ;
@@ -910,7 +909,7 @@ public:
 
     SparseMatrixRef(const SparseArrayRef<T> &sa) : SparseArrayRef<T>(sa)
     {
-        if (rank() != 2)
+        if (SparseArrayRef<T>::rank() != 2)
             throw LibraryError("SparseMatrixRef: Matrix expected.");
         const mint *dims = dimensions();
         nrows = dims[0];
