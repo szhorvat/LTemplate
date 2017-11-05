@@ -125,7 +125,7 @@ struct MOutFlushGuard {
 
 
 // Handles unknown exceptions in top-level functions.
-void handleUnknownException(const char *what, const char *funname) {
+inline void handleUnknownException(const char *what, const char *funname) {
     std::ostringstream msg;
     msg << "Unknown exception caught in "
         << funname
