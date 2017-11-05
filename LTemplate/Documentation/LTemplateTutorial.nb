@@ -160,7 +160,8 @@ Cell[BoxData[
            RowBox[{"\"\<trace\>\"", ",", 
             RowBox[{"{", 
              RowBox[{"{", 
-              RowBox[{"Real", ",", "2"}], "}"}], "}"}], ",", "Real"}], 
+              RowBox[{"Real", ",", "2"}], "}"}], " ", 
+             RowBox[{"(*", " ", "matrix", " ", "*)"}], "}"}], ",", "Real"}], 
            "]"}]}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
        "]"}], "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
   ";"}]], "Input",
@@ -404,7 +405,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"class Demo1:\\n    Integer addTwo(Integer, Integer)\\n    Real \
 trace(List<Real, 2>)\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info103717406654-4019821"]
+ CellTags->"Info133718806199-5756252"]
 }, Open  ]],
 
 Cell["\<\
@@ -465,7 +466,7 @@ Cell[BoxData[
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input",
  ExpressionUUID -> "c359428e-f4fc-44ea-a2c6-9b8de312d1b3"],
 
-Cell[BoxData["2.583120776527476`"], "Output",
+Cell[BoxData["2.4624144396484793`"], "Output",
  ExpressionUUID -> "c13fa8fa-3f46-4269-a071-2cf724290580"]
 }, Open  ]],
 
@@ -2047,12 +2048,12 @@ Cell[BoxData[{
   "code", "=", 
    "\"\<\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\n\
 class VectorDemo {\n\tstd::vector<double> v;\npublic:\n\t// set elements of \
-the vector\n\tvoid set(mma::RealTensorRef t) {\n\t\tv.resize(t.length());\n\t\
-\tstd::copy(t.begin(), t.end(), v.begin());\n\t}\n\n\t// dot product with \
-another vector\n\tdouble dot(const VectorDemo &vec) {\n\t\tif (v.size() != \
-vec.v.size())\n\t\t\tthrow mma::LibraryError(\\\"Incompatible vector \
-sizes\\\");\n\t\treturn std::inner_product(v.begin(), v.end(), vec.v.begin(), \
-0.0);\n\t}\n};\n\>\""}], ";"}], "\[IndentingNewLine]", 
+the vector\n\tvoid set(mma::RealTensorRef t) {\n\t\tv.assign(t.begin(), \
+t.end());\n\t}\n\n\t// dot product with another vector\n\tdouble dot(const \
+VectorDemo &vec) {\n\t\tif (v.size() != vec.v.size())\n\t\t\tthrow \
+mma::LibraryError(\\\"Incompatible vector sizes\\\");\n\t\treturn \
+std::inner_product(v.begin(), v.end(), vec.v.begin(), 0.0);\n\t}\n};\n\>\""}],
+   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Export", "[", 
    RowBox[{"\"\<VectorDemo.h\>\"", ",", "code", ",", "\"\<String\>\""}], 
@@ -2598,7 +2599,6 @@ Cell[BoxData[
           ButtonNote->"LTemplate`"], 
          ButtonBox["NormalizeTemplate",
           BaseStyle->"InformationLink",
-          
           ButtonData:>{
            "Info913717407495-9227688", {"NormalizeTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
@@ -3410,7 +3410,7 @@ Cell["\<\
 LType[Image, type]\t\t\tImageRef<type>
 LType[Image3D, type]\t\tImage3DRef<type>
 LType[Image]\t\t\t\tGenericImageRef
-LType[Image3D]\t\t\t\tGenericImageRef\
+LType[Image3D]\t\t\t\tGenericImage3DRef\
 \>", "Program"],
 
 Cell["TODO", "Text"]
@@ -3630,8 +3630,8 @@ WindowMargins->{{225, Automatic}, {Automatic, 75}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 CommonDefaultFormatTypes->{"TextInline"->StandardForm},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -3642,7 +3642,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Subsubsection"], ShowGroupOpener -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, 2016)", 
+  "10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, 2014)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 

@@ -191,8 +191,8 @@ WindowMargins->{{Automatic, 169}, {Automatic, 10}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 CommonDefaultFormatTypes->{"TextInline"->StandardForm},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 

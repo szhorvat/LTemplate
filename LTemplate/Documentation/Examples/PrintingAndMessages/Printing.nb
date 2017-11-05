@@ -240,9 +240,10 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value must be \
-positive.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"The value must be positive.\\\"\\)\
+\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "655db173-eb2d-4167-808e-f1d194644760"],
 
 Cell[BoxData[
@@ -295,9 +296,10 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "info"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Hello from \
-Message!\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"Hello from Message!\\\"\\)\[NoBreak]\"\
+\>"}]], "Message", "MSG",
  ExpressionUUID -> "424eee77-650c-42ae-a335-e550cf345d42"]
 }, Open  ]],
 
@@ -312,9 +314,10 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Error encountered.\\\\\\\"\
-\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG"]
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"Error \
+encountered.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -327,9 +330,10 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "info"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"The value is 42.\\\\\\\"\\\
-\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"The value is \
+42.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "e2b1d362-349e-499f-bd0f-70e0e1d3d89a"]
 }, Open  ]],
 
@@ -383,12 +387,12 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "assert"}], "MessageName"], ":", 
-  " ", "\<\"Assertion failed: \[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"42 == \
-137, file \
+   RowBox[{"LTemplate", "::", "assert"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Assertion failed: \[NoBreak]\\!\\(\\\"42 == 137, file \
 /Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
-PrintingAndMessages/Printing.h, line 67\\\\\\\"\\\"}]\\)\[NoBreak].\"\>"}]], \
-"Message", "MSG",
+PrintingAndMessages/Printing.h, line 67\\\"\\)\[NoBreak].\"\>"}]], "Message", \
+"MSG",
  ExpressionUUID -> "dcf44bc0-82df-49b6-8b39-f851369c95ce"],
 
 Cell[BoxData[
@@ -419,12 +423,12 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"Unknown exception caught \
-in Printing::exception(). The library may be in an inconsistent state. It is \
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"Unknown exception caught in \
+Printing::exception(). The library may be in an inconsistent state. It is \
 recommended that you restart the kernel now to avoid \
-instability.\\\\\\\\nvector\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", \
-"MSG",
+instability.\\\\nvector\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "4b958576-2c0e-4050-aa31-432503d82f65"],
 
 Cell[BoxData[
@@ -438,8 +442,8 @@ WindowSize->{808, 751},
 WindowMargins->{{124, Automatic}, {36, Automatic}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 

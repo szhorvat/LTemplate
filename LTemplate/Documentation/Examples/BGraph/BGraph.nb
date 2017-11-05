@@ -182,7 +182,7 @@ Cell[BoxData[
     RGBColor[0, 0, 
      Rational[2, 3]]]],
   Editable->False]], "Print",
- ExpressionUUID -> "45483da9-a286-471b-b009-19b3b967f092"],
+ ExpressionUUID -> "26b4ea99-649a-4493-8698-93dea00ec109"],
 
 Cell[BoxData[
  StyleBox["\<\"Generating library code ...\"\>",
@@ -197,7 +197,7 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print",
- ExpressionUUID -> "28bfd165-8ae5-45a3-a4c7-5af42b66a785"],
+ ExpressionUUID -> "26b4ea99-649a-4493-8698-93dea00ec109"],
 
 Cell[BoxData[
  StyleBox["\<\"Compiling library code ...\"\>",
@@ -212,7 +212,7 @@ Cell[BoxData[
     Rational[2, 3]],
   FontColor->RGBColor[0, 0, 
     Rational[2, 3]]]], "Print",
- ExpressionUUID -> "48c79bcf-4c3b-4c4f-9290-9a813741d266"]
+ ExpressionUUID -> "26b4ea99-649a-4493-8698-93dea00ec109"]
 }, Open  ]],
 
 Cell[BoxData["\<\"/Users/szhorvat/Library/Mathematica/SystemFiles/\
@@ -300,21 +300,21 @@ Cell[BoxData[
        4, 9}, {5, 10}, {6, 7}, {6, 10}, {7, 8}, {8, 9}, {9, 10}}}, {
       VertexCoordinates -> {{0.9510565162951535, 0.30901699437494745`}, {
         0.5877852522924732, -0.8090169943749473}, {-0.587785252292473, \
--0.8090169943749475}, {-0.9510565162951536, 
+-0.8090169943749476}, {-0.9510565162951536, 
         0.30901699437494723`}, {-2.4492935982947064`*^-16, 1.}, {
         1.902113032590307, 0.6180339887498949}, {
         1.1755705045849465`, -1.6180339887498947`}, {-1.175570504584946, \
--1.618033988749895}, {-1.9021130325903073`, 
+-1.6180339887498951`}, {-1.9021130325903073`, 
         0.6180339887498945}, {-4.898587196589413*^-16, 2.}}}]]}, 
     TagBox[
      GraphicsGroupBox[
       GraphicsComplexBox[{{0.9510565162951535, 0.30901699437494745`}, {
        0.5877852522924732, -0.8090169943749473}, {-0.587785252292473, \
--0.8090169943749475}, {-0.9510565162951536, 
+-0.8090169943749476}, {-0.9510565162951536, 
        0.30901699437494723`}, {-2.4492935982947064`*^-16, 1.}, {
        1.902113032590307, 0.6180339887498949}, {
        1.1755705045849465`, -1.6180339887498947`}, {-1.175570504584946, \
--1.618033988749895}, {-1.9021130325903073`, 
+-1.6180339887498951`}, {-1.9021130325903073`, 
        0.6180339887498945}, {-4.898587196589413*^-16, 2.}}, {
         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
          {Arrowheads[0.], ArrowBox[{1, 3}, 0.03574187784409402]}, 
@@ -342,8 +342,9 @@ Cell[BoxData[
     AllowKernelInitialization->False]],
   DefaultBaseStyle->{
    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
-  FormatType->TraditionalForm,
-  FrameTicks->None]], "Output",
+  FrameTicks->None,
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]]]], "Output",
  ExpressionUUID -> "2728ee8c-fc48-4a9d-9129-9d80455b0b70"]
 }, Open  ]],
 
@@ -507,8 +508,9 @@ Cell[BoxData[
     AllowKernelInitialization->False]],
   DefaultBaseStyle->{
    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
-  FormatType->TraditionalForm,
-  FrameTicks->None]], "Output",
+  FrameTicks->None,
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]]]], "Output",
  ExpressionUUID -> "d2a5a57b-d954-4d4d-823c-a3e6f55586e9"]
 }, Open  ]],
 
@@ -717,8 +719,9 @@ Cell[BoxData[
     AllowKernelInitialization->False]],
   DefaultBaseStyle->{
    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
-  FormatType->TraditionalForm,
-  FrameTicks->None]], "Output",
+  FrameTicks->None,
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]]]], "Output",
  ExpressionUUID -> "21ac32cf-65f2-4897-aa63-dbc1bfa803be"]
 }, Open  ]],
 
@@ -948,8 +951,9 @@ Cell[BoxData[
     AllowKernelInitialization->False]],
   DefaultBaseStyle->{
    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
-  FormatType->TraditionalForm,
-  FrameTicks->None]], "Output",
+  FrameTicks->None,
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]]]], "Output",
  ExpressionUUID -> "4581a286-c75f-4757-8653-4b6d4378c180"]
 }, Open  ]],
 
@@ -974,7 +978,8 @@ WindowSize->{808, 755},
 WindowMargins->{{302, Automatic}, {Automatic, 40}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
+

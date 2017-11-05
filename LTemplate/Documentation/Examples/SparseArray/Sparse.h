@@ -73,6 +73,13 @@ public:
             mma::mout << "(" << it.row() << ", " << it.col() << ") " << *it << '\n';
     }
 
+    // Find the smallest and largest elements of a sparse array
+    mma::RealTensorRef minmax(mma::SparseArrayRef<double> sa) {
+        auto mm = std::minmax_element(sa.explicitValues().begin(), sa.explicitValues().end());
+        auto res = std::minmax({*mm.first, *mm.second, sa.implicitValue()});
+        return mma::makeVector<double>({res.first, res.second});
+    }
+
 
     // CREATING SPARSE ARRAYS FROM SCRATCH
 
@@ -130,7 +137,7 @@ public:
         return sa.resetImplicitValue();
     }
 
-    // Recomute the sparse structure based on a user-specified implicit value
+    // Recompute the sparse structure based on a user-specified implicit value
     mma::SparseArrayRef<double> newImplicitValue(mma::SparseArrayRef<double> sa, double iv) {
         return sa.resetImplicitValue(iv);
     }

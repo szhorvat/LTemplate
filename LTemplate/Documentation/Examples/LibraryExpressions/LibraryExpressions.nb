@@ -310,7 +310,7 @@ Cell[BoxData[
  RowBox[{"v1", "=", 
   RowBox[{"toVecExpr", "[", 
    RowBox[{"{", 
-    RowBox[{"1", ",", "2", ",", "3", ",", "4"}], "}"}], "]"}]}]], "Input",
+    RowBox[{"1.6", ",", "2", ",", "3", ",", "4"}], "}"}], "]"}]}]], "Input",
  ExpressionUUID -> "3305886a-0a00-4b43-adf5-f3d3fc544331"],
 
 Cell[BoxData[
@@ -344,7 +344,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"1.`", ",", "2.`", ",", "3.`", ",", "4.`"}], "}"}]], "Output",
+  RowBox[{"1.6`", ",", "2.`", ",", "3.`", ",", "4.`"}], "}"}]], "Output",
  ExpressionUUID -> "f9a27d1e-e6e5-4737-b63c-124ae123eee0"]
 }, Open  ]],
 
@@ -368,7 +368,7 @@ Cell[BoxData[
    RowBox[{"ManagedLibraryExpressionID", "[", "v2", "]"}], "]"}]}]], "Input",
  ExpressionUUID -> "22cca200-8d33-4b30-a1c9-5cb06dd6bef4"],
 
-Cell[BoxData["20.`"], "Output",
+Cell[BoxData["22.4`"], "Output",
  ExpressionUUID -> "ad417a0b-38c6-476c-bdd1-5b96bc6e7926"]
 }, Open  ]],
 
@@ -385,7 +385,7 @@ Cell[BoxData[
    RowBox[{"\"\<value\>\"", "[", "]"}]}]}]], "Input",
  ExpressionUUID -> "4a458cca-6c38-47ca-a63b-986694f0a950"],
 
-Cell[BoxData["20.`"], "Output",
+Cell[BoxData["22.4`"], "Output",
  ExpressionUUID -> "938f5fab-15f5-4195-8281-1b90b5fa2071"]
 }, Open  ]],
 
@@ -441,7 +441,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"5.`", ",", "5.`", ",", "5.`", ",", "5.`"}], "}"}]], "Output",
+  RowBox[{"5.6`", ",", "5.`", ",", "5.`", ",", "5.`"}], "}"}]], "Output",
  ExpressionUUID -> "3e36e89b-5ed2-47a1-82c5-7a544e8fc7f2"]
 }, Open  ]],
 
@@ -488,7 +488,8 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"6.`", ",", "7.`", ",", "8.`", ",", "9.`"}], "}"}]], "Output",
+  RowBox[{"7.199999999999999`", ",", "7.`", ",", "8.`", ",", "9.`"}], 
+  "}"}]], "Output",
  ExpressionUUID -> "bebf8d06-f688-4185-b32a-d834e1cd51bd"]
 }, Open  ]],
 
@@ -620,9 +621,10 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LibraryFunction", "::", "noinst"}], "MessageName"], ":", 
-  " ", "\<\"Managed library expression instance does not exist. \
-\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+   RowBox[{"LibraryFunction", "::", "noinst"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Managed library expression instance does not exist. \\!\\(\
+\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
 ButtonFrame->None, ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote \
 -> \\\"LibraryFunction::noinst\\\"]\\)\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "60e15e21-1284-4ec8-a7d0-024e642d2f55"],
@@ -696,8 +698,8 @@ WindowSize->{808, 751},
 WindowMargins->{{12, Automatic}, {Automatic, 24}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 

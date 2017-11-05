@@ -205,9 +205,9 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"obj", "@", 
   RowBox[{"\"\<add\>\"", "[", 
-   RowBox[{"42", ",", "137"}], "]"}]}]], "Input"],
+   RowBox[{"42", ",", "137.2"}], "]"}]}]], "Input"],
 
-Cell[BoxData["179.`"], "Output"]
+Cell[BoxData["179.2`"], "Output"]
 }, Open  ]],
 
 Cell["Passing in the wrong type of argument results in an error:", "Text"],
@@ -222,14 +222,14 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LibraryFunction", "::", "cfsa"}], "MessageName"], ":", 
-  " ", "\<\"Argument \[NoBreak]\\!\\(\\*RowBox[{\\\"\[ImaginaryI]\\\"}]\\)\
-\[NoBreak] at position \[NoBreak]\\!\\(\\*RowBox[{\\\"2\\\"}]\\)\[NoBreak] \
-should be a \[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"machine-size real number\\\
-\\\\\"\\\"}]\\)\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
-ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
-ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote -> \
-\\\"LibraryFunction::cfsa\\\"]\\)\"\>"}]], "Message", "MSG"],
+   RowBox[{"LibraryFunction", "::", "cfsa"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Argument \[NoBreak]\\!\\(\[ImaginaryI]\\)\[NoBreak] at \
+position \[NoBreak]\\!\\(2\\)\[NoBreak] should be a \
+\[NoBreak]\\!\\(\\\"machine-size real number\\\"\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote \
+-> \\\"LibraryFunction::cfsa\\\"]\\)\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
  RowBox[{
@@ -255,9 +255,8 @@ Cell[BoxData[
            
            ImageSize->
             Dynamic[{
-             Automatic, 
-              3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
-               Magnification])}]], 
+             Automatic, 3.5 CurrentValue["FontCapHeight"]/
+              AbsoluteCurrentValue[Magnification]}]], 
           GraphicsBox[
            {Thickness[0.038461538461538464`], 
             {FaceForm[{GrayLevel[0.93], Opacity[1.]}], 
@@ -364,9 +363,8 @@ TVVwWKy880/7FHWIexrkIfLX1RzOMDZZVjHIOaDkh3vSDuj5AwCF11Vc
            
            ImageSize->
             Dynamic[{
-             Automatic, 
-              3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
-               Magnification])}]], 
+             Automatic, 3.5 CurrentValue["FontCapHeight"]/
+              AbsoluteCurrentValue[Magnification]}]], 
           GraphicsBox[
            {Thickness[0.038461538461538464`], 
             {FaceForm[{GrayLevel[0.93], Opacity[1.]}], 
@@ -707,8 +705,9 @@ RpOTnIHx1OqPQ6hIESdG0SBFiB/d/tnl/wAxYkpd
   GridLinesStyle->Directive[
     GrayLevel[0.5, 0.4]],
   Method->{
-   "DefaultBoundaryStyle" -> Automatic, "DefaultPlotStyle" -> 
-    Automatic}]], "Output"]
+   "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+    "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+    "RangePadding" -> Scaled[0.05]}]], "Output"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -717,8 +716,8 @@ WindowMargins->{{92, Automatic}, {-4, Automatic}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 CommonDefaultFormatTypes->{"TextInline"->StandardForm},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 
