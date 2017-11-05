@@ -313,7 +313,7 @@ inline mlStream & operator << (mlStream &ml, const std::list<T> &ls) {
     template<typename T, \
              typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
     inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) { \
-        const CTYPE *data = vec.size() == 0 ? NULL : reinterpret_cast<const CTYPE *>(vec.data()); \
+        const CTYPE *data = vec.empty() ? NULL : reinterpret_cast<const CTYPE *>(vec.data()); \
         if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
             ml.error("Cannot return vector of " #MTYPE); \
         return ml; \
@@ -326,7 +326,7 @@ MLSTREAM_DEF_VEC_PUT_INTEGRAL(Integer64, mlint64)
 // Put floating point element types
 #define MLSTREAM_DEF_VEC_PUT(MTYPE, CTYPE) \
     inline mlStream & operator << (mlStream &ml, const std::vector<CTYPE> &vec) { \
-        const CTYPE *data = vec.size() == 0 ? NULL : vec.data(); \
+        const CTYPE *data = vec.empty() ? NULL : vec.data(); \
         if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
             ml.error("Cannot return vector of " #MTYPE); \
         return ml; \
