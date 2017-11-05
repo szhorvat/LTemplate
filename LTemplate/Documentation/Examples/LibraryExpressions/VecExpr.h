@@ -25,7 +25,7 @@ public:
     double inner(const VecExpr &v) const {
         if (vec.size() != v.vec.size())
             throw mma::LibraryError("VecExprs are of inconsistent sizes.");
-        return std::inner_product(vec.begin(), vec.end(), v.vec.begin(), 0);
+        return std::inner_product(vec.begin(), vec.end(), v.vec.begin(), 0.0);
     }
 
     // Set this vector to the sum of an arbitrary number of other vectors
