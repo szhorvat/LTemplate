@@ -64,10 +64,6 @@
 
 #include "LTemplate.h"
 
-#ifndef LTEMPLATE_USE_CXX11
-#error C++11 compiler required for  mlstream.h
-#endif
-
 #include <vector>
 #include <list>
 #include <string>
@@ -88,12 +84,13 @@ class mlStream {
 
 public:
     explicit mlStream(MLINK link) : lp(link) { }
-    mlStream(MLINK lp_, std::string context_) : lp(lp_), context(context_) { }
+    mlStream(MLINK link, const std::string &context) : lp(link), context(context) { }
 
+    /// Retrieve the stored `MLINK`
     MLINK link() { return lp; }
 
     /// Throws a \ref mma::LibraryError with a given message.
-    [[ noreturn ]] void error(const std::string err) {
+    [[ noreturn ]] void error(const std::string &err) {
         std::ostringstream msg;
         if (! context.empty())
             msg << context << ": ";
@@ -101,6 +98,7 @@ public:
         throw mma::LibraryError(msg.str());
     }
 
+    /// Equivalent to `MLNewPacket()`
     void newPacket() {
         MLNewPacket(lp);
     }

@@ -699,7 +699,7 @@ public:
     const mint *dimensions() const { return libData->sparseLibraryFunctions->MSparseArray_getDimensions(sa); }
 
     /// The number of explicitly stored positions
-    mint length() const { return ci.length(); }
+    mint length() const { return ci.length(); /* use ci because ev may be null */}
 
     /// The number of explicitly stored positions, alias for length()
     mint size() const { return length(); }
