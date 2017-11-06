@@ -77,7 +77,11 @@ static_assert(sizeof(int) == 4 ,    "MathLink type size mismatch: sizeof(int) !=
 static_assert(sizeof(mlint64) == 8, "MathLink type size mismatch: sizeof(mlint64) != 8.");
 
 
-/// Wrapper for `MLINK` to allow using extractors and inserters
+/** \brief Wrapper for `MLINK` to allow using extractors and inserters
+ *
+ *  \param link is the MLINK object to wrap
+ *  \param context is a string that will be prepended to any message reported using error()
+ */
 class mlStream {
     MLINK lp;
     std::string context;
@@ -107,7 +111,7 @@ public:
 
 // Special
 
-/// Must be the first item extracted from mlStream, checks number of arguments and prepares for reading them.
+/// Must be the first item extracted from an mlStream, checks number of arguments and prepares for reading them.
 struct mlCheckArgs {
     int argc;
 
@@ -130,8 +134,16 @@ inline mlStream & operator >> (mlStream &ml, const mlCheckArgs &ca) {
 }
 
 
-/// Used for inserting a head with the given argument count into mlStream.
-/** Tyically used with the head List when returning multiple results. */
+/** \brief Used for inserting a head with the given argument count into an mlStream.
+ *
+ * Typically used with the head `List` when returning multiple results.
+ *
+ * The following example returns the complex number `3 - 2I`.
+ *
+ * \code
+ * ml << mlHead("Complex", 2) << 3 << -2;
+ * \endcode
+ */
 struct mlHead {
     const char *head;
     int argc;
@@ -149,7 +161,20 @@ inline mlStream & operator << (mlStream &ml, const mlHead &head) {
 }
 
 
-/// Used for inserting a symbol into mlStream
+/** \brief Used for inserting a symbol into an mlStream
+ *
+ * The following example returns `True` or `False` based on a Boolean variable.
+ *
+ * \code
+ * mlStream ml(link);
+ * bool b;
+ * // ...
+ * ml.newPacket();
+ * ml << (b ? mlSymbol("True") : mlSymbol("False"));
+ * \endcode
+ *
+ * While this is convenient for a single result, Boolean arrays are much faster to transfer as integers.
+ */
 struct mlSymbol {
     const char *symbol;
 
@@ -166,7 +191,15 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 }
 
 
-/// Used for discarding a given number of expressions from an mlStream
+/** \brief Used for discarding a given number of expressions from an mlStream
+ *
+ * The following example reads 3 arguments, but does not use the second one.
+ *
+ * \code
+ * mlStream ml(link);
+ * ml >> mlCheckArgs(3) >> x >> mlDiscard() >> y;
+ * \endcode
+ */
 struct mlDiscard {
     const int count;
     explicit mlDiscard(int count = 1) : count(count) { }
@@ -258,6 +291,7 @@ inline mlStream & operator << (mlStream &ml, const char *s) {
         ml.error("Cannot return string");
     return ml;
 }
+
 
 // TensorRef
 
