@@ -203,17 +203,24 @@ inline void disownString(const char *str) {
 namespace detail {
     template<typename LT>
     class LTAutoFree {
+        bool active;
         LT ref;
     public:
-        LTAutoFree(const LT &ref) : ref(ref) { }
-        ~LTAutoFree() { ref.free(); }
+        LTAutoFree(const LT &ref) : active(true), ref(ref) { }
+        LTAutoFree(LTAutoFree &&af) : LTAutoFree(af.ref) { af.active = false; }
+        ~LTAutoFree() { if (active) ref.free(); }
+
+        LTAutoFree() = delete;
         LTAutoFree(const LTAutoFree &) = delete;
         LTAutoFree & operator = (const LTAutoFree &) = delete;
 
         operator LT & () { return ref; }
 
-        LT & operator -> () { return ref; }
+        LT * operator -> () { return &ref; }
     };
+
+    template<typename T>
+    LTAutoFree<T> autoFree(const T &ref) { return LTAutoFree<T>(ref); }
 }
 
 
@@ -1019,7 +1026,7 @@ template<typename T>
 inline SparseMatrixRef<T> makeSparseMatrix(IntMatrixRef pos, TensorRef<T> vals, mint nrow, mint ncol, T imp = 0) {
     massert(pos.cols() == 2);
 
-    detail::LTAutoFree<TensorRef<mint>> dims{makeVector<mint>({nrow, ncol})};
+    auto dims = detail::autoFree(makeVector<mint>({nrow, ncol}));
     SparseMatrixRef<T> sa = makeSparseArray(pos, vals, dims, imp);
 
     return sa;
