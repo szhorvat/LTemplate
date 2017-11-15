@@ -88,6 +88,7 @@ $lazyLoading := warnConfig
 (* Show error and abort when ConfigureLTemplate[] was not called. *)
 warnConfig := (Print["FATAL ERROR: Must call ConfigureLTemplate[] when embedding LTemplate into another package. Aborting ..."]; Abort[])
 
+ByteArray[{0}]; (* "Prime" ByteArray to work around 10.4 bug where returning ByteArrays works only after they have been used once *)
 
 LibraryFunction::noinst = "Managed library expression instance does not exist.";
 
@@ -160,6 +161,7 @@ depthNullPattern = PatternSequence[] | depthPattern; (* like depthPattern, but a
 arrayPattern = LType[List, numericTypePattern, depthNullPattern]; (* disallow MTensor without explicit element type specification *)
 sparseArrayPattern = LType[SparseArray, numericTypePattern, depthNullPattern]; (* disallow SparseArray without explicit element type specification *)
 rawArrayPattern = LType[RawArray, rawTypePattern] | LType[RawArray];
+byteArrayPattern = LType[ByteArray];
 imagePattern = LType[Image|Image3D, imageTypePattern] | LType[Image|Image3D];
 
 (*
@@ -179,7 +181,7 @@ normalizeTypesRules = Dispatch@{
 
   (* convert string heads to symbols *)
   (* must only be used on type lists as an LTemplate expression may contain other strings *)
-  head : "List"|"SparseArray"|"Image"|"Image3D"|"RawArray" :> Symbol[head],
+  head : "List"|"SparseArray"|"Image"|"Image3D"|"RawArray"|"ByteArray" :> Symbol[head],
 
   (* convert LibraryDataType to the more general LType *)
   LibraryDataType[args__] :> LType[args]
@@ -187,7 +189,7 @@ normalizeTypesRules = Dispatch@{
 
 (* These heads are allowed to appear on their own, without being wrapped in LType/LibraryDataType.
    This is for consistency with plain LibraryLink. *)
-nakedHeads = RawArray|Image|Image3D;
+nakedHeads = ByteArray|RawArray|Image|Image3D;
 wrapNakedHeadsRules = Dispatch@{
   expr : LType[___] :> expr, (* do not wrap if already wrapped *)
   type : nakedHeads :> LType[type]
@@ -284,7 +286,7 @@ validateFun[LOFun[name_]] :=
 
 (* must be called within validateTemplate, uses location *)
 validateType[numericTypePattern|"Boolean"|"UTF8String"|LExpressionID[_String]] := True
-validateType[{arrayPattern|sparseArrayPattern|rawArrayPattern|imagePattern, passingMethodPattern}] := True
+validateType[{arrayPattern|sparseArrayPattern|rawArrayPattern|byteArrayPattern|imagePattern, passingMethodPattern}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 (* must be called within validateTemplate, uses location *)
@@ -613,6 +615,8 @@ types = Dispatch@{
       ],
 
   {LType[RawArray], ___} -> {"mma::GenericRawArrayRef", "mma::detail::getGenericRawArray", "mma::detail::setGenericRawArray"},
+
+  {LType[ByteArray], ___} -> {"mma::RawArrayRef<uint8_t>", "mma::detail::getRawArray<uint8_t>", "mma::detail::setRawArray<uint8_t>"},
 
   {LType[Image, type_], ___} :>
       With[
