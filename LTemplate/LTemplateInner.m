@@ -411,7 +411,7 @@ transTemplate[LTemplate[libname_String, classes_]] :=
 
         CFunction["extern \"C\" DLLEXPORT mint",
           "WolframLibrary_getVersion", {},
-          "return 3"
+          "return WolframLibraryVersion"
         ],
         "",
         CFunction["extern \"C\" DLLEXPORT int",
