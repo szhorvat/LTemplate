@@ -779,7 +779,7 @@ compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : Option
         driver = OptionValue["Compiler"];
         If[driver === Automatic, driver = DefaultCCompiler[]];
         If[driver === $Failed, Throw[$Failed, compileTemplate]];
-        If[Not@Developer`SymbolQ[driver],
+        If[Not@MatchQ[driver, _Symbol],
           Message[CompileTemplate::comp, driver];
           Throw[$Failed, compileTemplate]
         ];
