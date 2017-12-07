@@ -13,9 +13,9 @@ LFun::usage =
     "LFun[name, LinkObject, LinkObject] represents a function that uses MathLink/WSTP based passing. The shorthand LFun[name, LinkObject] can also be used.";
 
 LType::usage =
-     "LType[head] represents an array library type corresponding to head.\n" <>
-     "LType[head, etype] represents an array library corresponding to head, with element type etype.\n" <>
-     "LType[head, etype, d] represents an array library corresponding to head, with element type etype and depth/rank d.";
+     "LType[head] represents an array-like library type corresponding to head.\n" <>
+     "LType[head, etype] represents an array-like library type corresponding to head, with element type etype.\n" <>
+     "LType[head, etype, d] represents an array-like library type corresponding to head, with element type etype and depth/rank d.";
 
 TranslateTemplate::usage = "TranslateTemplate[template] translates the template into C++ code.";
 
@@ -113,12 +113,8 @@ LClassContext[] = Context[LTemplate] <> "Classes`";
 
 (***************** SymbolicC extensions *******************)
 
-(* CDeclareAssign[type, var, value] represents
-     type var = value;
-*)
-
+CDeclareAssign::usage = "CDeclareAssign[type, var, value] represents 'type var = value;'.";
 SymbolicC`Private`IsCExpression[ _CDeclareAssign ] := True
-
 GenerateCode[CDeclareAssign[typeArg_, idArg_, rhs_], opts : OptionsPattern[]] :=
     Module[{type, id},
       type = Flatten[{typeArg}];
@@ -128,20 +124,18 @@ GenerateCode[CDeclareAssign[typeArg_, idArg_, rhs_], opts : OptionsPattern[]] :=
       GenerateCode[CAssign[type <> " " <> id, rhs], opts]
     ]
 
-(* CInlineCode["some code"] will prevent semicolons from being added at the end of "some code" when used in a list *)
-
+CInlineCode::usage = "CInlineCode[\"some code\"] will prevent semicolons from being added at the end of \"some code\" when used in a list.";
 GenerateCode[CInlineCode[arg_], opts : OptionsPattern[]] := GenerateCode[arg, opts]
 
-(* CTryCatch[tryCode, catchArg, catchCode] represents
-     try { tryCode } catch (catchArg) { catchCode }
-*)
-
+CTryCatch::usage = "CTryCatch[tryCode, catchArg, catchCode] represents 'try { tryCode } catch (catchArg) { catchCode }'.";
 GenerateCode[CTryCatch[try_, arg_, catch_], opts : OptionsPattern[]] :=
     GenerateCode[CTry[try], opts] <> "\n" <> GenerateCode[CCatch[arg, catch], opts]
 
+CTry::usage = "CTry[tryCode] represents the fragment 'try { tryCode }'. Use CTryCatch instead.";
 GenerateCode[CTry[try_], opts : OptionsPattern[]] :=
     "try\n" <> GenerateCode[CBlock[try], opts]
 
+CCatch::usage = "CCatch[catchArg, catchCode] represents the fragment 'catch (catchArg) { catchCode }'. Use CTryCatch instead.";
 GenerateCode[CCatch[arg_, catch_], opts : OptionsPattern[]] :=
     "catch (" <> SymbolicC`Private`formatArgument[arg, opts] <> ")\n" <>
         GenerateCode[CBlock[catch], opts]
