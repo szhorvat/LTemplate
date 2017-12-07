@@ -16,4 +16,4 @@ For an example of an application that uses and embeds LTemplate, see [IGraph/M][
 
  [1]: http://www.wolfram.com/mathematica/
  [2]: https://reference.wolfram.com/language/LibraryLink/tutorial/Overview.html
- [3]: https://github.com/szhorvat/IGraphM
+ [3]: https://szhorvat.net/mathematica/IGraphM
