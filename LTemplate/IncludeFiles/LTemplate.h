@@ -886,7 +886,7 @@ public:
 
         iterator &operator ++ () {
             index++;
-            while (smp->rp[row_index+1] == index && row_index < smp->size())
+            while (smp->rp[row_index+1] == index && index < smp->size())
                 row_index++;
             return *this;
         }
