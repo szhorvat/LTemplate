@@ -963,7 +963,7 @@ public:
      */
     iterator begin() const {
         mint row_index = 0;
-        while (rp[row_index+1] == 0 && row_index < size())
+        while (rp[row_index+1] == 0 && row_index < rp.size())
             row_index++;
         return iterator{this, row_index, 0};
     }
