@@ -382,7 +382,7 @@ inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) {
 #define MLSTREAM_DEF_VEC_GET_INTEGRAL(MTYPE, CTYPE) \
     template<typename T, \
              typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0> \
-    inline mlStream & operator >> (mlStream &ml, std::vector<CTYPE> &vec) { \
+    inline mlStream & operator >> (mlStream &ml, std::vector<T> &vec) { \
         CTYPE *data; \
         int count; \
         if (! MLGet ## MTYPE ## List(ml.link(), &data, &count)) \
