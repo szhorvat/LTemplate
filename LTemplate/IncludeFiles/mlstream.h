@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Szabolcs Horvát.
+ * Copyright (c) 2018 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */
@@ -13,7 +13,7 @@
  * LTemplate itself does not depend on mlstream.h, so if you don't use this header,
  * feel free to remove it from your project.  mlstream.h is not meant as a general
  * MathLink interface.  It is specifically designed for handling arguments and return
- * values in conjunction with LTemplate and `LinkObject` based functions.
+ * values in conjunction with LTemplate and `LinkObject`-based functions.
  * To do this, mlstream functions are usually called in a specific sequence, as
  * illustrated below.
  *

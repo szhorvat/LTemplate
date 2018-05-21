@@ -3158,8 +3158,8 @@ Cell[TextData[{
  ExpressionUUID -> "0cb5adf7-80c7-4871-960e-dd1549cf6402"],
 
 Cell["\<\
-Note: LTemplate requires a C++11 capable compiler. GCC 4.8 and MSVC 2015 have \
-been tested.\
+Note: LTemplate requires a C++11 capable compiler. It has been tested with \
+GCC 4.8 and MSVC 2015, as well as with later versions.\
 \>", "Text"],
 
 Cell[CellGroupData[{

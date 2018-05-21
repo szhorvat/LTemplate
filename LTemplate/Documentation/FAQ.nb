@@ -10,11 +10,11 @@ Cell["What is LTemplate?", "Subsection",
  ExpressionUUID -> "e800e0bf-3d74-4a5b-be42-25cbbd33f0a3"],
 
 Cell[TextData[{
- "LTemplate is a system that considerably speeds up ",
+ "LTemplate is a system that makes ",
  ButtonBox["LibraryLink",
   BaseStyle->"Link",
   ButtonData->"paclet:LibraryLink/tutorial/Overview"],
- " development."
+ " development fast and convenient."
 }], "Text",
  ExpressionUUID -> "84bc5199-cfac-4299-bbcf-7a325adebdda"],
 
@@ -28,9 +28,11 @@ generating repetitive code based on \[OpenCurlyDoubleQuote]templates\
 by ",
  StyleBox["MathLink",
   FontSlant->"Italic"],
- "\[CloseCurlyQuote]s .tm files. It also provides easy to use C++ wrapper \
-classes for the usual LibraryLink types, as well as a number of convenience \
-functions for faster development and debugging."
+ "\[CloseCurlyQuote]s ",
+ StyleBox[".tm", "Program"],
+ " files. It also provides easy to use C++ wrapper classes for the usual \
+LibraryLink types, as well as a number of convenience functions for faster \
+development and debugging."
 }], "Text",
  ExpressionUUID -> "5c9c4883-d28c-4484-a0dd-dbdec923af1b"]
 }, Open  ]],
@@ -134,8 +136,8 @@ Can I use LTemplate to generate an interface to an existing class?\
  ExpressionUUID -> "1e1f3d74-d37e-4ca9-9add-9bd3b2dc3f03"],
 
 Cell["\<\
-No. Just like library functions, LTemplate classes must follow certain \
-conventions.\
+No. Just like LibraryLink\[CloseCurlyQuote]s library functions, LTemplate \
+classes must follow certain conventions.\
 \>", "Text",
  ExpressionUUID -> "6149f3af-6968-4612-821d-e0bb36832284"],
 
@@ -155,7 +157,8 @@ Cell["Can I use C instead of C++?", "Subsection",
 Cell["\<\
 LTemplate requires the use of C++. It is the features that C++ provides over \
 C that made it possible to construct an easier-to-use interface than the C \
-LibraryLink API.\
+LibraryLink API. However, LTemplate only requires the use of relatively basic \
+C++ features.\
 \>", "Text",
  ExpressionUUID -> "648cfb8b-abac-4831-a302-3630b1347094"]
 }, Open  ]],
@@ -218,10 +221,11 @@ Cell[CellGroupData[{
 Cell["Can I use the LibraryLink C API with LTemplate?", "Subsection",
  ExpressionUUID -> "3869333c-c237-439b-9bda-cb8b0d1121c5"],
 
-Cell["\<\
-Yes, the C functions from WolframLibrary.h can be used in a library built \
-with LTemplate.\
-\>", "Text",
+Cell[TextData[{
+ "Yes, the C functions from ",
+ StyleBox["WolframLibrary.h", "Program"],
+ " can be used in a library built with LTemplate."
+}], "Text",
  ExpressionUUID -> "e578081d-e797-43a6-8e7c-e0a6ececb829"],
 
 Cell[TextData[{
@@ -312,8 +316,8 @@ WindowSize->{641, 852},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 
