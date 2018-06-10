@@ -10,7 +10,9 @@
 #endif
 
 #ifdef _WIN32
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #endif
 
 #endif // LTEMPLATE_COMPILER_SETUP_H
