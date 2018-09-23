@@ -1641,7 +1641,7 @@ public:
     { }
 
     // explicit conversion required to prevent accidental auto-conversion between Images of different types or Image and Image3D
-    /// Cast a GenericImageRef to a type-specialized 2D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
+    /// Cast a GenericImageRef to a type-specialized 2D image. The pixel type must agree with that of the generic image, otherwise an error is thrown.
     explicit ImageRef(const GenericImageRef &gim) :
         GenericImageRef(gim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(gim.image())))
@@ -1730,7 +1730,7 @@ public:
     { }
 
     // explicit conversion required to prevent accidental auto-conversion between Image3Ds of different types or Image and Image3D
-    /// Cast a GenericImageRef to a type-specialized 3D image. The pixel type and dimension must agree with that of the generic image, otherwise an error is thrown.
+    /// Cast a GenericImage3DRef to a type-specialized 3D image. The pixel type must agree with that of the generic image, otherwise an error is thrown.
     explicit Image3DRef(const GenericImage3DRef &gim) :
         GenericImage3DRef(gim),
         image_data(reinterpret_cast<T *>(libData->imageLibraryFunctions->MImage_getRawData(gim.image())))
