@@ -358,7 +358,7 @@ public:
 
     /// Create a copy of the referenced Tensor
     TensorRef clone() const {
-        MTensor c = NULL;
+        MTensor c = nullptr;
         int err = libData->MTensor_clone(t, &c);
         if (err) throw LibraryError("MTensor_clone() failed.", err);
         return c;
@@ -386,7 +386,7 @@ public:
      */
     template<typename U>
     TensorRef<U> convertTo() const {
-        MTensor mt = NULL;
+        MTensor mt = nullptr;
         int err = libData->MTensor_new(detail::libraryType<U>(), rank(), dimensions(), &mt);
         if (err) throw LibraryError("MTensor_new() failed.", err);
         TensorRef<U> tr(mt);
@@ -396,7 +396,7 @@ public:
 
     /// Create a new SparseArray from the Tensor data
     SparseArrayRef<T> toSparseArray() const {
-        MSparseArray sa = NULL;
+        MSparseArray sa = nullptr;
         int err = libData->sparseLibraryFunctions->MSparseArray_fromMTensor(t, NULL, &sa);
         if (err) throw LibraryError("MSparseArray_fromMTensor() failed.", err);
         return sa;
@@ -500,7 +500,7 @@ typedef CubeRef<complex_t>  ComplexCubeRef;
  */
 template<typename T>
 inline TensorRef<T> makeTensor(std::initializer_list<mint> dims) {
-    MTensor t = NULL;
+    MTensor t = nullptr;
     int err = libData->MTensor_new(detail::libraryType<T>(), dims.size(), dims.begin(), &t);
     if (err) throw LibraryError("MTensor_new() failed.", err);
     return t;
@@ -513,7 +513,7 @@ inline TensorRef<T> makeTensor(std::initializer_list<mint> dims) {
  */
 template<typename T>
 inline TensorRef<T> makeTensor(mint rank, mint *dims) {
-    MTensor t = NULL;
+    MTensor t = nullptr;
     int err = libData->MTensor_new(detail::libraryType<T>(), rank, dims, &t);
     if (err) throw LibraryError("MTensor_new() failed.", err);
     return t;
@@ -667,7 +667,7 @@ class SparseArrayRef {
 
     static TensorRef<T> getExplicitValues(const MSparseArray &msa) {
         MTensor *ev = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(msa);
-        if (*ev == NULL)
+        if (*ev == nullptr)
             return TensorRef<T>();
         else
             return TensorRef<T>(*ev);
@@ -677,7 +677,7 @@ class SparseArrayRef {
         MTensor *ci = libData->sparseLibraryFunctions->MSparseArray_getColumnIndices(msa);
 
         // Ensure that sparse arrays always have a (possibly empty) column indices vector
-        if (*ci == NULL) {
+        if (*ci == nullptr) {
             mint dims[2] = {0, libData->sparseLibraryFunctions->MSparseArray_getRank(msa)};
             libData->MTensor_new(MType_Integer, 2, dims, ci);
         }
@@ -726,7 +726,7 @@ public:
 
     /// Create a copy of the referenced SparseArray
     SparseArrayRef clone() const {
-        MSparseArray c = NULL;
+        MSparseArray c = nullptr;
         int err = libData->sparseLibraryFunctions->MSparseArray_clone(sa, &c);
         if (err) throw LibraryError("MSparseArray_clone() failed.", err);
         return c;
@@ -739,7 +739,7 @@ public:
      *  You are responsible for freeing this data structure using the TensorRef::free() function when done using it.
      */
     IntTensorRef explicitPositions() const {
-        MTensor mt = NULL;
+        MTensor mt = nullptr;
         int err = libData->sparseLibraryFunctions->MSparseArray_getExplicitPositions(sa, &mt);
         if (err) throw LibraryError("MSParseArray_getExplicitPositions() failed.", err);
 
@@ -807,7 +807,7 @@ public:
      * Should not be used on a pattern array.
      */
     SparseArrayRef resetImplicitValue() const {
-        MSparseArray msa = NULL;
+        MSparseArray msa = nullptr;
         int err = libData->sparseLibraryFunctions->MSparseArray_resetImplicitValue(sa, NULL, &msa);
         if (err) throw LibraryError("MSparseArray_resetImplicitValue() failed.", err);
         return msa;
@@ -817,9 +817,9 @@ public:
      *  \param iv is the new implicit value
      */
     SparseArrayRef resetImplicitValue(const T &iv) const {
-        MSparseArray msa = NULL;
+        MSparseArray msa = nullptr;
 
-        MTensor it = NULL;
+        MTensor it = nullptr;
         int err = libData->MTensor_new(detail::libraryType<T>(), 0, NULL, &it);
         if (err) throw LibraryError("MTensor_new() failed.", err);
         *detail::getData<T>(it) = iv;
@@ -833,7 +833,7 @@ public:
 
     /// Creates a new Tensor (dense array) containing the same elements as the SparseArray
     TensorRef<T> toTensor() const {
-        MTensor t = NULL;
+        MTensor t = nullptr;
         int err = libData->sparseLibraryFunctions->MSparseArray_toMTensor(sa, &t);
         if (err) throw LibraryError("MSparseArray_toMTensor() failed.", err);
         return t;
@@ -996,13 +996,13 @@ inline SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, In
     massert(pos.cols() == dims.size());
     massert(pos.rows() == vals.size());
 
-    MTensor it = NULL;
-    err = libData->MTensor_new(detail::libraryType<T>(), 0, NULL, &it);
+    MTensor it = nullptr;
+    err = libData->MTensor_new(detail::libraryType<T>(), 0, nullptr, &it);
     if (err)
         throw LibraryError("makeSparseArray: MTensor_new() failed.", err);
     *detail::getData<T>(it) = imp;
 
-    MSparseArray sa = NULL;
+    MSparseArray sa = nullptr;
     err = libData->sparseLibraryFunctions->MSparseArray_fromExplicitPositions(pos.tensor(), vals.tensor(), dims.tensor(), it, &sa);
     libData->MTensor_free(it);
     if (err)
@@ -1013,7 +1013,7 @@ inline SparseArrayRef<T> makeSparseArray(IntMatrixRef pos, TensorRef<T> vals, In
     // never returns a pattern array.
     MTensor *ev;
     ev = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa);
-    if (*ev == NULL) {
+    if (*ev == nullptr) {
         mint evdims[1] = {0};
         libData->MTensor_new(detail::libraryType<T>(), 1, evdims, ev);
     }
@@ -1127,7 +1127,7 @@ public:
 
     /// Creates a copy of the referenced RawArray
     GenericRawArrayRef clone() const {
-        MRawArray c = NULL;
+        MRawArray c = nullptr;
         int err = libData->rawarrayLibraryFunctions->MRawArray_clone(rawArray(), &c);
         if (err) throw LibraryError("MRawArray_clone() failed.", err);
         return c;
@@ -1183,7 +1183,7 @@ public:
 
     /// Creates a copy of the referenced RawArray
     RawArrayRef clone() const {
-        MRawArray c = NULL;
+        MRawArray c = nullptr;
         int err = libData->rawarrayLibraryFunctions->MRawArray_clone(rawArray(), &c);
         if (err) throw LibraryError("MRawArray_clone() failed.", err);
         return c;
@@ -1206,7 +1206,7 @@ public:
  */
 template<typename T>
 inline RawArrayRef<T> makeRawArray(std::initializer_list<mint> dims) {
-    MRawArray ra = NULL;
+    MRawArray ra = nullptr;
     int err = libData->rawarrayLibraryFunctions->MRawArray_new(detail::libraryRawType<T>(), dims.size(), dims.begin(), &ra);
     if (err) throw LibraryError("MRawArray_new() failed.", err);
     return ra;
@@ -1219,7 +1219,7 @@ inline RawArrayRef<T> makeRawArray(std::initializer_list<mint> dims) {
  */
 template<typename T>
 inline RawArrayRef<T> makeRawArray(mint rank, const mint *dims) {
-    MRawArray ra = NULL;
+    MRawArray ra = nullptr;
     int err = libData->rawarrayLibraryFunctions->MRawArray_new(detail::libraryRawType<T>(), rank, dims, &ra);
     if (err) throw LibraryError("MRawArray_new() failed.", err);
     return ra;
@@ -1404,7 +1404,7 @@ public:
 
     /// Create a copy of the referenced Image
     GenericImageRef clone() const {
-        MImage c = NULL;
+        MImage c = nullptr;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
         if (err) throw LibraryError("MImage_clone() failed.", err);
         return c;
@@ -1510,7 +1510,7 @@ public:
 
     /// Create a copy of the referenced Image3D
     GenericImage3DRef clone() const {
-        MImage c = NULL;
+        MImage c = nullptr;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
         if (err) throw LibraryError("MImage_clone() failed.", err);
         return c;
@@ -1658,7 +1658,7 @@ public:
 
     /// Create a copy of the referenced Image
     ImageRef clone() const {
-        MImage c = NULL;
+        MImage c = nullptr;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
         if (err) throw LibraryError("MImage_clone() failed.", err);
         return c;
@@ -1747,7 +1747,7 @@ public:
 
     /// Create a copy of the referenced Image3D
     Image3DRef clone() const {
-        MImage c = NULL;
+        MImage c = nullptr;
         int err = libData->imageLibraryFunctions->MImage_clone(image(), &c);
         if (err) throw LibraryError("MImage_clone() failed.", err);
         return c;
@@ -1798,7 +1798,7 @@ public:
  */
 template<typename T>
 inline ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
-    MImage mim = NULL;
+    MImage mim = nullptr;
     libData->imageLibraryFunctions->MImage_new2D(width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
 }
@@ -1815,7 +1815,7 @@ inline ImageRef<T> makeImage(mint width, mint height, mint channels = 1, bool in
  */
 template<typename T>
 inline Image3DRef<T> makeImage3D(mint slices, mint width, mint height, mint channels = 1, bool interleaving = true, colorspace_t colorspace = MImage_CS_Automatic) {
-    MImage mim = NULL;
+    MImage mim = nullptr;
     libData->imageLibraryFunctions->MImage_new3D(slices, width, height, channels, detail::libraryImageType<T>(), colorspace, interleaving, &mim);
     return mim;
 }

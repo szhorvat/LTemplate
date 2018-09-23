@@ -207,7 +207,7 @@ struct mlDiscard {
 
 inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
     for (int i=0; i < drop.count; ++i)
-        if (! MLTransferExpression(NULL, ml.link()))
+        if (! MLTransferExpression(nullptr, ml.link()))
             ml.error("Cannot discard expression");
     return ml;
 }
@@ -306,7 +306,7 @@ inline mlStream & operator << (mlStream &ml, mma::IntTensorRef t) {
   if (! MLPutInteger32Array(ml.link(), reinterpret_cast<int *>(t.data()), dims, NULL, rank))
       ml.error("Cannot return Integer Tensor.");
   #else
-  if (! MLPutInteger64Array(ml.link(), reinterpret_cast<mlint64 *>(t.data()), dims, NULL, rank))
+  if (! MLPutInteger64Array(ml.link(), reinterpret_cast<mlint64 *>(t.data()), dims, nullptr, rank))
       ml.error("Cannot return Integer Tensor.");
   #endif
   return ml;
@@ -319,7 +319,7 @@ inline mlStream & operator << (mlStream &ml, mma::RealTensorRef t) {
     int dims[maxrank];
     massert(rank <= maxrank);
     std::copy(mdims, mdims + rank, dims);
-    if (! MLPutReal64Array(ml.link(), t.data(), dims, NULL, rank))
+    if (! MLPutReal64Array(ml.link(), t.data(), dims, nullptr, rank))
         ml.error("Cannot return Real Tensor");
     return ml;
 }
@@ -345,7 +345,7 @@ inline mlStream & operator << (mlStream &ml, const std::list<T> &ls) {
     template<typename T, \
              typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value && sizeof(T) == sizeof(CTYPE), int>::type = 0 > \
     inline mlStream & operator << (mlStream &ml, const std::vector<T> &vec) { \
-        const CTYPE *data = vec.empty() ? NULL : reinterpret_cast<const CTYPE *>(vec.data()); \
+        const CTYPE *data = vec.empty() ? nullptr : reinterpret_cast<const CTYPE *>(vec.data()); \
         if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
             ml.error("Cannot return vector of " #MTYPE); \
         return ml; \
@@ -358,7 +358,7 @@ MLSTREAM_DEF_VEC_PUT_INTEGRAL(Integer64, mlint64)
 // Put floating point element types
 #define MLSTREAM_DEF_VEC_PUT(MTYPE, CTYPE) \
     inline mlStream & operator << (mlStream &ml, const std::vector<CTYPE> &vec) { \
-        const CTYPE *data = vec.empty() ? NULL : vec.data(); \
+        const CTYPE *data = vec.empty() ? nullptr : vec.data(); \
         if (! MLPut ## MTYPE ## List(ml.link(), data, vec.size())) \
             ml.error("Cannot return vector of " #MTYPE); \
         return ml; \
