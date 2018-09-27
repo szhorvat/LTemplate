@@ -57,6 +57,16 @@ inline void setRawArray(MArgument marg, RawArrayRef<T> &val) { MArgument_setMRaw
 inline void setGenericRawArray(MArgument marg, GenericRawArrayRef &val) { MArgument_setMRawArray(marg, val.rawArray()); }
 #endif // LTEMPLATE_RAWARRAY
 
+#ifdef LTEMPLATE_NUMERICARRAY
+template<typename T>
+inline NumericArrayRef<T> getNumericArray(MArgument marg) { return MArgument_getMNumericArray(marg); }
+inline GenericNumericArrayRef getGenericNumericArray(MArgument marg) { return MArgument_getMNumericArray(marg); }
+
+template<typename T>
+inline void setNumericArray(MArgument marg, NumericArrayRef<T> &val) { MArgument_setMNumericArray(marg, val.numericArray()); }
+inline void setGenericNumericArray(MArgument marg, GenericNumericArrayRef &val) { MArgument_setMNumericArray(marg, val.numericArray()); }
+#endif // LTEMPLATE_NUMERICARRAY
+
 inline complex_t getComplex(MArgument marg) {
     mcomplex c = MArgument_getComplex(marg);
     return complex_t(c.ri[0], c.ri[1]);

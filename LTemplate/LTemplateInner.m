@@ -155,6 +155,7 @@ depthNullPattern = PatternSequence[] | depthPattern; (* like depthPattern, but a
 arrayPattern = LType[List, numericTypePattern, depthNullPattern]; (* disallow MTensor without explicit element type specification *)
 sparseArrayPattern = LType[SparseArray, numericTypePattern, depthNullPattern]; (* disallow SparseArray without explicit element type specification *)
 rawArrayPattern = LType[RawArray, rawTypePattern] | LType[RawArray];
+numericArrayPattern = LType[NumericArray, rawTypePattern] | LType[NumericArray]
 byteArrayPattern = LType[ByteArray];
 imagePattern = LType[Image|Image3D, imageTypePattern] | LType[Image|Image3D];
 
@@ -175,7 +176,7 @@ normalizeTypesRules = Dispatch@{
 
   (* convert string heads to symbols *)
   (* must only be used on type lists as an LTemplate expression may contain other strings *)
-  head : "List"|"SparseArray"|"Image"|"Image3D"|"RawArray"|"ByteArray" :> Symbol[head],
+  head : "List"|"SparseArray"|"Image"|"Image3D"|"RawArray"|"NumericArray"|"ByteArray" :> Symbol[head],
 
   (* convert LibraryDataType to the more general LType *)
   LibraryDataType[args__] :> LType[args]
@@ -183,21 +184,21 @@ normalizeTypesRules = Dispatch@{
 
 (* These heads are allowed to appear on their own, without being wrapped in LType/LibraryDataType.
    This is for consistency with plain LibraryLink. *)
-nakedHeads = ByteArray|RawArray|Image|Image3D;
+nakedHeads = ByteArray|RawArray|NumericArray|Image|Image3D;
 wrapNakedHeadsRules = Dispatch@{
   expr : LType[___] :> expr, (* do not wrap if already wrapped *)
   type : nakedHeads :> LType[type]
 };
 
 elemTypeAliases = Dispatch@{
-  LType[RawArray, "Byte"]    :> LType[RawArray, "UnsignedInteger8"],
-  LType[RawArray, "Bit16"]   :> LType[RawArray, "UnsignedInteger16"],
+  LType[h: RawArray|NumericArray, "Byte"]    :> LType[h, "UnsignedInteger8"],
+  LType[h: RawArray|NumericArray, "Bit16"]   :> LType[h, "UnsignedInteger16"],
   (* omit "Integer" because the naming is confusing and people may assume it's "Integer64" *)
-  (* LType[RawArray, "Integer"]          :> LType[RawArray, "Integer32"], *)
-  LType[RawArray, "Float"]   :> LType[RawArray, "Real32"],
-  LType[RawArray, "Double"]  :> LType[RawArray, "Real64"],
-  LType[RawArray, "Real"]    :> LType[RawArray, "Real64"],
-  LType[RawArray, "Complex"] :> LType[RawArray, "Complex128"],
+  (* LType[h: RawArray|NumericArray, "Integer"]          :> LType[h, "Integer32"], *)
+  LType[h: RawArray|NumericArray, "Float"]   :> LType[h, "Real32"],
+  LType[h: RawArray|NumericArray, "Double"]  :> LType[h, "Real64"],
+  LType[h: RawArray|NumericArray, "Real"]    :> LType[h, "Real64"],
+  LType[h: RawArray|NumericArray, "Complex"] :> LType[h, "Complex128"],
 
   LType[h : Image|Image3D, "UnsignedInteger8"]  :> LType[h, "Byte"],
   LType[h : Image|Image3D, "UnsignedInteger16"] :> LType[h, "Bit16"],
@@ -280,7 +281,7 @@ validateFun[LOFun[name_]] :=
 
 (* must be called within validateTemplate, uses location *)
 validateType[numericTypePattern|"Boolean"|"UTF8String"|LExpressionID[_String]] := True
-validateType[{arrayPattern|sparseArrayPattern|rawArrayPattern|byteArrayPattern|imagePattern, passingMethodPattern}] := True
+validateType[{arrayPattern|sparseArrayPattern|rawArrayPattern|numericArrayPattern|byteArrayPattern|imagePattern, passingMethodPattern}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 (* must be called within validateTemplate, uses location *)
@@ -610,6 +611,14 @@ types = Dispatch@{
 
   {LType[RawArray], ___} -> {"mma::GenericRawArrayRef", "mma::detail::getGenericRawArray", "mma::detail::setGenericRawArray"},
 
+  {LType[NumericArray, type_], ___} :>
+      With[
+        {ctype = rawTypes[type]},
+        {"mma::NumericArrayRef<" <> ctype <> ">", "mma::detail::getNumericArray<" <> ctype <> ">", "mma::detail::setNumericArray<" <> ctype <> ">"}
+      ],
+
+  {LType[NumericArray], ___} -> {"mma::GenericNumericArrayRef", "mma::detail::getGenericNumericArray", "mma::detail::setGenericNumericArray"},
+
   {LType[ByteArray], ___} -> {"mma::RawArrayRef<uint8_t>", "mma::detail::getRawArray<uint8_t>", "mma::detail::setRawArray<uint8_t>"},
 
   {LType[Image, type_], ___} :>
@@ -713,7 +722,7 @@ loadFun[libname_, classname_][LOFun[name_String]] :=
 (* For types that need to be translated to LibraryFunctionLoad compatible forms before loading. *)
 loadingTypes = Dispatch@{
   LExpressionID[_] -> Integer,
-  {LType[RawArray, ___], passing___} :> {RawArray, passing},
+  {LType[h: RawArray|NumericArray, ___], passing___} :> {h, passing},
   {LType[args__], passing___} :> {LibraryDataType[args], passing}
 };
 

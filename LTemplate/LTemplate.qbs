@@ -5,7 +5,7 @@ Product {
     Depends { name: "cpp" }
 
     // Set the path to Mathematica's $InstallationDirectory here:
-    property string mmaInstallDir: "/Applications/Mathematica 11.3.app/Contents/"
+    property string mmaInstallDir: "/Applications/Mathematica 12.0.app/Contents/"
 
     cpp.cxxLanguageVersion: "c++11"
 
@@ -22,7 +22,7 @@ Product {
 
     cpp.defines: base.concat([
         'LTEMPLATE_MESSAGE_SYMBOL="LTemplate`LTemplate"',
-        "LTEMPLATE_MMA_VERSION=1130",
+        "LTEMPLATE_MMA_VERSION=1200",
     ])
 
     FileTagger {

@@ -9,6 +9,10 @@
 #define LTEMPLATE_RAWARRAY
 #endif
 
+#if LTEMPLATE_MMA_VERSION >= 1200 && defined (LTEMPLATE_USE_CXX11)
+#define LTEMPLATE_NUMERICARRAY
+#endif
+
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX

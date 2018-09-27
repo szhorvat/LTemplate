@@ -39,6 +39,10 @@
 #include "WolframRawArrayLibrary.h"
 #endif
 
+#ifdef LTEMPLATE_NUMERICARRAY
+#include "WolframNumericArrayLibrary.h"
+#endif
+
 // mathlink.h defines P. It has a high potential for conflict, so we undefine it.
 // It is normally only used with .tm files and it is not needed for LTemplate.
 #undef P
@@ -1148,7 +1152,7 @@ public:
 };
 
 
-/// Wrapper class for `MRawArray` pointers.
+/// Wrapper class for `MRawArray` pointers. Available only in Mathematica 10.4 and later. With Mathematica 12.0 or later, use \ref NumericArrayRef instead.
 template<typename T>
 class RawArrayRef : public GenericRawArrayRef {
     T * const array_data;
@@ -1258,6 +1262,257 @@ inline RawArrayRef<T> makeRawVector(mint length, const T *data) {
 }
 
 #endif // LTEMPLATE_RAWARRAY
+
+
+//////////////////////////////////////////  NUMERIC ARRAY HANDLING  //////////////////////////////////////////
+
+/*
+ * NumericArray was added in Mathematica 12.0. It is identical to the earlier RawArray, and converts seamlessly from it,
+ * but it is now fully documented. The old RawArray LibraryLink interface is still present, so we keep RawArrayRef for
+ * backwards compatibility.
+ *
+ * Differences in the RawArray and NumericArray LibraryLink API:
+ *  - Some enum values in MNumericArray_Data_Type have been renamed.
+ *  - The converrType method now takes a third argument which specifies the method of conversion.
+ *    These correspond to the third argument of the NumericArray Mathematica function.
+ */
+
+#ifdef LTEMPLATE_NUMERICARRAY
+
+namespace detail { // private
+    template<typename T> inline numericarray_data_t libraryNumericType() {
+        static_assert(std::is_same<T, T&>::value,
+            "Only int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t, int64_t, uint64_t, float, double, complex_float_t, complex_double_t are allowed in mma::NumericArrayRef<...>.");
+    }
+
+    template<> inline numericarray_data_t libraryNumericType<int8_t>()   { return MNumericArray_Type_Bit8;   }
+    template<> inline numericarray_data_t libraryNumericType<uint8_t>()  { return MNumericArray_Type_UBit8;  }
+    template<> inline numericarray_data_t libraryNumericType<int16_t>()  { return MNumericArray_Type_Bit16;  }
+    template<> inline numericarray_data_t libraryNumericType<uint16_t>() { return MNumericArray_Type_UBit16; }
+    template<> inline numericarray_data_t libraryNumericType<int32_t>()  { return MNumericArray_Type_Bit32;  }
+    template<> inline numericarray_data_t libraryNumericType<uint32_t>() { return MNumericArray_Type_UBit32; }
+    template<> inline numericarray_data_t libraryNumericType<int64_t>()  { return MNumericArray_Type_Bit64;  }
+    template<> inline numericarray_data_t libraryNumericType<uint64_t>() { return MNumericArray_Type_UBit64; }
+    template<> inline numericarray_data_t libraryNumericType<float>()    { return MNumericArray_Type_Real32; }
+    template<> inline numericarray_data_t libraryNumericType<double>()   { return MNumericArray_Type_Real64; }
+    template<> inline numericarray_data_t libraryNumericType<complex_float_t>()  { return MNumericArray_Type_Complex_Real32; }
+    template<> inline numericarray_data_t libraryNumericType<complex_double_t>() { return MNumericArray_Type_Complex_Real64; }
+
+    inline const char *numericTypeMathematicaName(numericarray_data_t rt) {
+        switch (rt) {
+        case MNumericArray_Type_UBit8:          return "UnsignedInteger8";
+        case MNumericArray_Type_Bit8:           return "Integer8";
+        case MNumericArray_Type_UBit16:         return "UnsignedInteger16";
+        case MNumericArray_Type_Bit16:          return "Integer16";
+        case MNumericArray_Type_UBit32:         return "UnsignedInteger32";
+        case MNumericArray_Type_Bit32:          return "Integer32";
+        case MNumericArray_Type_UBit64:         return "UnsignedInteger64";
+        case MNumericArray_Type_Bit64:          return "Integer64";
+        case MNumericArray_Type_Real32:         return "Real32";
+        case MNumericArray_Type_Real64:         return "Real64";
+        case MNumericArray_Type_Complex_Real32:  return "Complex32";
+        case MNumericArray_Type_Complex_Real64: return "Complex64";
+        case MNumericArray_Type_Undef:          return "Undefined";
+        default:                            return "Unknown"; // should never reach here
+        }
+    }
+
+} // end namespace detail
+
+
+template<typename T> class NumericArrayRef;
+
+
+/// Wrapper class for `MNumericArray` pointers; unspecialized base class. Typically used through \ref NumericArrayRef.
+class GenericNumericArrayRef {
+    const MNumericArray na;
+    const mint len;
+
+public:
+    GenericNumericArrayRef(const MNumericArray &mra) :
+        na(mra),
+        len(libData->numericarrayLibraryFunctions->MNumericArray_getFlattenedLength(mra))
+    { }
+
+    /// Returns the referenced \c MNumericArray
+    MNumericArray numericArray() const { return na; }
+
+    /// Returns the rank of the NumericArray, same as \c MNumericArray_getRank
+    mint rank() const { return libData->numericarrayLibraryFunctions->MNumericArray_getRank(na); }
+
+    /// Returns the number of elements in the NumericArray, same as \c MNumericArray_getFlattenedLength
+    mint length() const { return len; }
+
+    /// Returns the number of elements in the NumericArray, synonym of \ref length()
+    mint size() const { return length(); }
+
+    /// Frees the referenced NumericArray, same as \c MNumericArray_free
+    /**
+     * Warning: multiple \ref NumericArrayRef objects may reference the same \c MNumericArray.
+     * Freeing the \c MNumericArray invalidates all references to it.
+     */
+    void free() const { libData->numericarrayLibraryFunctions->MNumericArray_free(na); }
+
+    void disown() const { libData->numericarrayLibraryFunctions->MNumericArray_disown(na); }
+    void disownAll() const { libData->numericarrayLibraryFunctions->MNumericArray_disownAll(na); }
+
+    mint shareCount() const { return libData->numericarrayLibraryFunctions->MNumericArray_shareCount(na); }
+
+    const mint *dimensions() const { return libData->numericarrayLibraryFunctions->MNumericArray_getDimensions(na); }
+
+    /// Creates a copy of the referenced NumericArray
+    GenericNumericArrayRef clone() const {
+        MNumericArray c = nullptr;
+        int err = libData->numericarrayLibraryFunctions->MNumericArray_clone(numericArray(), &c);
+        if (err) throw LibraryError("MNumericArray_clone() failed.", err);
+        return c;
+    }
+
+    /// Used in \ref convertTo to specify the element type conversion method. The names are consistent with the coercion methods of `NumericArray` in Mathematica.
+    enum ConversionMethod {
+        Check = 1, ///< Throw a \ref LibraryError if any values do not fit in target type without modification.
+        Clip, ///< Allow only clipping during conversion, but not rounding.
+        Round, ///< Allow only rounding during conversion, but not clipping.
+        ClipAndRound, ///< Allow both clipping and rounding. This is the default in \ref convertTo.
+        ClipAndScale, ///< Scale the range of the input type to the range of the output type. The range of floating point types is taken to be 0..1. Out-of-range floating point values are clipped.
+        Cast, ///< Convert as a C compiler would during casting.
+        Reinterpret ///< Reinterpret bit patterns. The size of the input and output types must be the same, except when converting from a larger integral type to a smaller one.
+    };
+
+    /** \brief Convert to the given type of NumericArray; same as `MNumericArray_convertType`
+     *  \tparam U is the element type of the result
+     *
+     * If any of the element values cannot be converted to the target type with the specified conversion method, a \ref LibraryError
+     * will be thrown. The conversion may fail with any of the conversion methods.  For example, complex types cannot be converted to
+     * non-complex ones.
+     */
+    template<typename U>
+    NumericArrayRef<U> convertTo(ConversionMethod method = ClipAndRound) const {
+        MNumericArray res = libData->numericarrayLibraryFunctions->MNumericArray_convertType(na, detail::libraryNumericType<U>(), static_cast<numericarray_convert_method_t>(method));
+        if (! res)
+            throw LibraryError("MNumericArray_convertType() failed. Check that all values can be coerced into the target type with the given conversion method.");
+        return res;
+    }
+
+    template<typename U>
+    NumericArrayRef<U> convertTo(numericarray_convert_method_t method) const {
+        return convertTo<U>(ConversionMethod(method));
+    }
+
+    numericarray_data_t type() const { return libData->numericarrayLibraryFunctions->MNumericArray_getType(na); }
+};
+
+
+/// Wrapper class for `MNumericArray` pointers. Available only in Mathematica 12.0 and later.
+template<typename T>
+class NumericArrayRef : public GenericNumericArrayRef {
+    T * const array_data;
+
+    void checkType() {
+        numericarray_data_t received = GenericNumericArrayRef::type();
+        numericarray_data_t expected = detail::libraryNumericType<T>();
+        if (received != expected) {
+            std::ostringstream err;
+            err << "NumericArray of type " << detail::numericTypeMathematicaName(received) << " received, "
+                << detail::numericTypeMathematicaName(expected) << " expected.";
+            throw LibraryError(err.str(), LIBRARY_TYPE_ERROR);
+        }
+    }
+
+public:
+
+    NumericArrayRef(const MNumericArray &mra) :
+        GenericNumericArrayRef(mra),
+        array_data(reinterpret_cast<T *>(libData->numericarrayLibraryFunctions->MNumericArray_getData(mra)))
+    {
+        checkType();
+    }
+
+    // explicit conversion required to prevent accidental auto-conversion between NumericArrays of different types
+    explicit NumericArrayRef(const GenericNumericArrayRef &gra) :
+        GenericNumericArrayRef(gra),
+        array_data(reinterpret_cast<T *>(libData->numericarrayLibraryFunctions->MNumericArray_getData(gra.numericArray())))
+    {
+        checkType();
+    }
+
+    /// Creates a copy of the referenced NumericArray
+    NumericArrayRef clone() const {
+        MNumericArray c = nullptr;
+        int err = libData->numericarrayLibraryFunctions->MNumericArray_clone(numericArray(), &c);
+        if (err) throw LibraryError("MNumericArray_clone() failed.", err);
+        return c;
+    }
+
+    /// Returns a pointer to the underlying storage of the corresponding \c MNumericArray
+    T *data() const { return array_data; }
+
+    T & operator [] (mint i) const { return array_data[i]; }
+
+    T *begin() const { return data(); }
+    T *end() const { return begin() + length(); }
+
+    numericarray_data_t type() const { return detail::libraryNumericType<T>(); }
+};
+
+/** \brief Creates a NumericArray of the given dimensions
+ *  \tparam T is the array element type
+ *  \param dims are the array dimensions
+ */
+template<typename T>
+inline NumericArrayRef<T> makeNumericArray(std::initializer_list<mint> dims) {
+    MNumericArray na = nullptr;
+    int err = libData->numericarrayLibraryFunctions->MNumericArray_new(detail::libraryNumericType<T>(), dims.size(), dims.begin(), &na);
+    if (err) throw LibraryError("MNumericArray_new() failed.", err);
+    return na;
+}
+
+/** \brief Create a NumericArray of the given dimensions.
+ *  \tparam T is the array element type
+ *  \param rank is the NumericArray depth
+ *  \param dims are the dimensions stored in a C array of length \c rank and type \c mint
+ */
+template<typename T>
+inline NumericArrayRef<T> makeNumericArray(mint rank, const mint *dims) {
+    MNumericArray na = nullptr;
+    int err = libData->numericarrayLibraryFunctions->MNumericArray_new(detail::libraryNumericType<T>(), rank, dims, &na);
+    if (err) throw LibraryError("MNumericArray_new() failed.", err);
+    return na;
+}
+
+/** \brief Create a NumericArray of the given dimensions.
+ *  \tparam T is the array element type
+ *  \param rank is the NumericArray depth
+ *  \param dims are the dimensions stored in a C array of length \c rank and type \c U
+ */
+template<typename T, typename U>
+inline NumericArrayRef<T> makeNumericArray(mint rank, const U *dims) {
+    std::vector<mint> d(dims, dims+rank);
+    return makeNumericArray<T>(rank, d.data());
+}
+
+/** \brief Creates a rank-1 NumericArray of the given length
+ *  \tparam T is the array element type
+ *  \param length is the vector length
+ */
+template<typename T>
+inline NumericArrayRef<T> makeNumericVector(mint length) {
+    return makeNumericArray<T>({length});
+}
+
+/** \brief Creates a rank-1 NumericArray of the given type from a C array of the corresponding type
+ *  \tparam T is the array element type
+ *  \param length is the vector length
+ *  \param data will be copied into the numeric vector
+ */
+template<typename T>
+inline NumericArrayRef<T> makeNumericVector(mint length, const T *data) {
+    auto na = makeNumericVector<T>(length);
+    std::copy(data, data+length, na.begin());
+    return na;
+}
+
+#endif // LTEMPLATE_NUMERICARRAY
 
 
 
