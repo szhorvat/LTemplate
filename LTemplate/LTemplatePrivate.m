@@ -9,7 +9,7 @@
  * then immediately call ConfigureLTemplate[].
  *)
 
-BeginPackage["`LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
+BeginPackage["`LTemplate`", {"SymbolicC`", "CCompilerDriver`"}]
 
 (* Note: Do not Protect symbols when LTemplate is loaded privately. *)
 

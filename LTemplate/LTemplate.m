@@ -13,7 +13,7 @@
 (* :Keywords: LibraryLink, C++, Template, Code generation *)
 (* :Discussion: This package simplifies writing LibraryLink code by auto-generating the boilerplate code. *)
 
-BeginPackage["LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
+BeginPackage["LTemplate`", {"SymbolicC`", "CCompilerDriver`"}]
 
 Unprotect["LTemplate`*"];
 

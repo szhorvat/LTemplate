@@ -764,15 +764,23 @@ LExpressionList[classname_String] := LExpressionList@Symbol@symName[classname]
 
 CompileTemplate::comp = "The compiler specification `` is invalid. It must be a symbol.";
 
-CompileTemplate[tem_, sources_List, opt : OptionsPattern[CreateLibrary]] :=
-    With[{t = NormalizeTemplate[tem]},
-      If[validateTemplate[t],
-        compileTemplate[t, sources, opt],
-        $Failed
-      ]
-    ]
+If[TrueQ[$noCompile],
 
-CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] := CompileTemplate[tem, {}, opt]
+  (* If CCompilerDriver has not been loaded: *)
+  CompileTemplate::disabled = "Template compilation is disabled.";
+  CompileTemplate[___] := (Message[CompileTemplate::disabled]; $Failed);
+  ,
+
+  (* If CCompilerDriver is available: *)
+  CompileTemplate[tem_, sources_List, opt : OptionsPattern[CreateLibrary]] :=
+      With[{t = NormalizeTemplate[tem]},
+        If[validateTemplate[t],
+          compileTemplate[t, sources, opt],
+          $Failed
+        ]
+      ];
+  CompileTemplate[tem_, opt : OptionsPattern[CreateLibrary]] := CompileTemplate[tem, {}, opt];
+]
 
 compileTemplate[tem: LTemplate[libname_String, classes_], sources_, opt : OptionsPattern[CreateLibrary]] :=
     Catch[
