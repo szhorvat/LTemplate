@@ -662,13 +662,16 @@ LoadTemplate[tem_] :=
       ]
     ]
 
+(* We use FindLibrary for two reasons:
+   1. If the library is not found, we want to fail early with LibraryFunction::notfound
+   2. It is important to pass the full library path to LibraryFunctionLoad[]. If only a simple name is passed,
+      it will use FindLibrary[] to find the appropriate file. FindLibrary[] is several orders of magnitude slower than just
+      loading a function from a shared library. In fact, with this optimization, lazy loading might be pointless, as with
+      full library paths, LibraryFunctionLoad[] is faster than other operations done during template loading.
+ *)
 loadTemplate[tem : LTemplate[libname_String, classes_]] :=
     With[{lib = FindLibrary[libname]},
       Quiet@unloadTemplate[tem];
-      (* Use FindLibrary to fail early when the library is not found
-         Warning: using LibraryLoad instead of FindLibrary here would
-         prevent unloading from working at least on OS X.
-      *)
       If[lib =!= $Failed,
         loadClass[lib] /@ classes,
         Message[LibraryFunction::notfound, libname]
