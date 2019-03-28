@@ -24,7 +24,9 @@ ConfigureLTemplate[] (* use the default configuration *)
 
 EndPackage[]
 
-With[{syms = Names["LTemplate`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
+(* Note: Take care not to introduce any new symbols in this section as they would be created in Global` *)
+
+SetAttributes[Evaluate@Names["LTemplate`*"], {Protected, ReadProtected}];
 
 (* Add the class context to $ContextPath *)
 If[Not@MemberQ[$ContextPath, LClassContext[]],
