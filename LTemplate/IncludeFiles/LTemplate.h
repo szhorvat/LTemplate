@@ -1145,7 +1145,7 @@ public:
 };
 
 
-/// Wrapper class for `MRawArray` pointers. Available only in Mathematica 10.4 and later. With Mathematica 12.0 or later, use \ref NumericArrayRef instead.
+/// Wrapper class for `MRawArray` pointers. Available only in _Mathematica_ 10.4 and later. With _Mathematica_ 12.0 or later, use \ref NumericArrayRef instead.
 template<typename T>
 class RawArrayRef : public GenericRawArrayRef {
     T * const array_data;
@@ -1260,7 +1260,7 @@ inline RawArrayRef<T> makeRawVector(mint length, const T *data) {
 //////////////////////////////////////////  NUMERIC ARRAY HANDLING  //////////////////////////////////////////
 
 /*
- * NumericArray was added in Mathematica 12.0. It is identical to the earlier RawArray, and converts seamlessly from it,
+ * NumericArray was added in _Mathematica_ 12.0. It is identical to the earlier RawArray, and converts seamlessly from it,
  * but it is now fully documented. The old RawArray LibraryLink interface is still present, so we keep RawArrayRef for
  * backwards compatibility.
  *
@@ -1270,11 +1270,18 @@ inline RawArrayRef<T> makeRawVector(mint length, const T *data) {
  *      - Now returns an error code.
  *      - Can write into an existing NumericArray of the same dimensions. First argument should point to NULL
  *        (not be NULL) if a new NumericArray is to be created.
- *      - Conversion method can be specified. It corresponds to the third argument of the NumericArray Mathematica function.
+ *      - Conversion method can be specified. It corresponds to the third argument of the NumericArray _Mathematica_ function.
  *      - Tolerance can be given, to be used with floating point conversions.
  */
 
 #ifdef LTEMPLATE_NUMERICARRAY
+
+/** \brief Decimal digits per one bit (binary digit).
+ *
+ * Equal to \f$ \ln 2 / \ln 10 \f$.
+ * This constant is useful in setting the `tolerance` option of \ref GenericNumericArrayRef::convertTo.
+ */
+constexpr double decimalDigitsPerBit = 0.3010299956639812;
 
 namespace detail { // private
     template<typename T> inline numericarray_data_t libraryNumericType() {
@@ -1326,6 +1333,7 @@ class GenericNumericArrayRef {
     const mint len;
 
 public:
+
     GenericNumericArrayRef(const MNumericArray &mra) :
         na(mra),
         len(libData->numericarrayLibraryFunctions->MNumericArray_getFlattenedLength(mra))
@@ -1373,8 +1381,8 @@ public:
         ClipAndCoerce, ///< Clip to the target range and coerce into the target type.
         Round, ///< Round reals to integers.
         ClipAndRound, ///< Clip to the range and round reals to integers.
-        Scale, ///< Scale to the range (undocumented as of Mathematica 12.0).
-        ClipAndScale ///< Clip and scale to the range (undocumented as of Mathematica 12.0).
+        Scale, ///< Scale to the range (undocumented as of _Mathematica_ 12.0).
+        ClipAndScale ///< Clip and scale to the range (undocumented as of _Mathematica_ 12.0).
     };
 
     /** \brief Convert to the given type of NumericArray; same as `MNumericArray_convertType`
@@ -1383,11 +1391,15 @@ public:
      * \param method is the conversion method (see \ref ConversionMethod)
      * \param tolerance is the tolerance in decimal digits for checking whether a value can be accurately represented using the target type
      *
+     * The default tolerance corresponds to one binary digit for consistency with \c NumericArray in Mathematica.
+     * Use \ref decimalDigitsPerBit for conveniently specifying the tolerance in bits instead of decimal digits.
+     * Use e.g. \c 3*decimalDigitsPerBit to set 3 bits of tolerance.
+     *
      * If any of the element values cannot be converted to the target type with the specified conversion method, a \ref LibraryError
      * will be thrown.
      */
     template<typename U>
-    NumericArrayRef<U> convertTo(ConversionMethod method = ClipAndRound, double tolerance = 0.0) const {
+    NumericArrayRef<U> convertTo(ConversionMethod method = ClipAndRound, double tolerance = decimalDigitsPerBit) const {
         MNumericArray res = nullptr;
         auto err = libData->numericarrayLibraryFunctions->MNumericArray_convertType(&res, na, detail::libraryNumericType<U>(), static_cast<numericarray_convert_method_t>(method), tolerance);
         if (err)
@@ -1396,7 +1408,7 @@ public:
     }
 
     template<typename U>
-    NumericArrayRef<U> convertTo(numericarray_convert_method_t method, double tolerance = 0.0) const {
+    NumericArrayRef<U> convertTo(numericarray_convert_method_t method, double tolerance = decimalDigitsPerBit) const {
         return convertTo<U>(ConversionMethod(method), tolerance);
     }
 
@@ -1404,7 +1416,7 @@ public:
 };
 
 
-/// Wrapper class for `MNumericArray` pointers. Available only in Mathematica 12.0 and later.
+/// Wrapper class for `MNumericArray` pointers. Available only in _Mathematica_ 12.0 and later.
 template<typename T>
 class NumericArrayRef : public GenericNumericArrayRef {
     T * const array_data;
