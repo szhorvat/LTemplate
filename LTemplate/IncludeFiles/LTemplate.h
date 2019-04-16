@@ -1380,8 +1380,11 @@ public:
     /** \brief Convert to the given type of NumericArray; same as `MNumericArray_convertType`
      *  \tparam U is the element type of the result
      *
+     * \param method is the conversion method (see \ref ConversionMethod)
+     * \param tolerance is the tolerance in decimal digits for checking whether a value can be accurately represented using the target type
+     *
      * If any of the element values cannot be converted to the target type with the specified conversion method, a \ref LibraryError
-     * will be thrown. The conversion may fail with any of the conversion methods.
+     * will be thrown.
      */
     template<typename U>
     NumericArrayRef<U> convertTo(ConversionMethod method = ClipAndRound, double tolerance = 0.0) const {
@@ -1393,7 +1396,7 @@ public:
     }
 
     template<typename U>
-    NumericArrayRef<U> convertTo(numericarray_convert_method_t method, double tolerance) const {
+    NumericArrayRef<U> convertTo(numericarray_convert_method_t method, double tolerance = 0.0) const {
         return convertTo<U>(ConversionMethod(method), tolerance);
     }
 
