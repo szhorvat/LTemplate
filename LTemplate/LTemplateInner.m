@@ -619,7 +619,9 @@ types = Dispatch@{
 
   {LType[NumericArray], ___} -> {"mma::GenericNumericArrayRef", "mma::detail::getGenericNumericArray", "mma::detail::setGenericNumericArray"},
 
-  {LType[ByteArray], ___} -> {"mma::RawArrayRef<uint8_t>", "mma::detail::getRawArray<uint8_t>", "mma::detail::setRawArray<uint8_t>"},
+  (* Starting with LTemplate 0.6, ByteArray is mapped to NumericArrayRef instead of RawArrayRef *)
+  (* {LType[ByteArray], ___} -> {"mma::RawArrayRef<uint8_t>", "mma::detail::getRawArray<uint8_t>", "mma::detail::setRawArray<uint8_t>"}, *)
+  {LType[ByteArray], ___} -> {"mma::NumericArrayRef<uint8_t>", "mma::detail::getNumericArray<uint8_t>", "mma::detail::setNumericArray<uint8_t>"},
 
   {LType[Image, type_], ___} :>
       With[

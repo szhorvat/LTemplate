@@ -1273,8 +1273,12 @@ inline RawArrayRef<T> makeRawVector(mint length, const T *data) {
  *
  * Differences in the RawArray and NumericArray LibraryLink API:
  *  - Some enum values in MNumericArray_Data_Type have been renamed.
- *  - The converrType method now takes a third argument which specifies the method of conversion.
- *    These correspond to the third argument of the NumericArray Mathematica function.
+ *  - The convertType function has changed significantly:
+ *      - Now returns an error code.
+ *      - Can write into an existing NumericArray of the same dimensions. First argument should point to NULL
+ *        (not be NULL) if a new NumericArray is to be created.
+ *      - Conversion method can be specified. It corresponds to the third argument of the NumericArray Mathematica function.
+ *      - Tolerance can be given, to be used with floating point conversions.
  */
 
 #ifdef LTEMPLATE_NUMERICARRAY
@@ -1371,32 +1375,33 @@ public:
     /// Used in \ref convertTo to specify the element type conversion method. The names are consistent with the coercion methods of `NumericArray` in Mathematica.
     enum ConversionMethod {
         Check = 1, ///< Throw a \ref LibraryError if any values do not fit in target type without modification.
-        Clip, ///< Allow only clipping during conversion, but not rounding.
-        Round, ///< Allow only rounding during conversion, but not clipping.
-        ClipAndRound, ///< Allow both clipping and rounding. This is the default in \ref convertTo.
-        ClipAndScale, ///< Scale the range of the input type to the range of the output type. The range of floating point types is taken to be 0..1. Out-of-range floating point values are clipped.
-        Cast, ///< Convert as a C compiler would during casting.
-        Reinterpret ///< Reinterpret bit patterns. The size of the input and output types must be the same, except when converting from a larger integral type to a smaller one.
+        ClipAndCheck, ///< Clip to the target range and check that the values fit in the target type.
+        Coerce, ///< Coerce values into the target type.
+        ClipAndCoerce, ///< Clip to the target range and coerce into the target type.
+        Round, ///< Round reals to integers.
+        ClipAndRound, ///< Clip to the range and round reals to integers.
+        Scale, ///< Scale to the range (undocumented as of Mathematica 12.0).
+        ClipAndScale ///< Clip and scale to the range (undocumented as of Mathematica 12.0).
     };
 
     /** \brief Convert to the given type of NumericArray; same as `MNumericArray_convertType`
      *  \tparam U is the element type of the result
      *
      * If any of the element values cannot be converted to the target type with the specified conversion method, a \ref LibraryError
-     * will be thrown. The conversion may fail with any of the conversion methods.  For example, complex types cannot be converted to
-     * non-complex ones.
+     * will be thrown. The conversion may fail with any of the conversion methods.
      */
     template<typename U>
-    NumericArrayRef<U> convertTo(ConversionMethod method = ClipAndRound) const {
-        MNumericArray res = libData->numericarrayLibraryFunctions->MNumericArray_convertType(na, detail::libraryNumericType<U>(), static_cast<numericarray_convert_method_t>(method));
-        if (! res)
-            throw LibraryError("MNumericArray_convertType() failed. Check that all values can be coerced into the target type with the given conversion method.");
+    NumericArrayRef<U> convertTo(ConversionMethod method = ClipAndRound, double tolerance = 0.0) const {
+        MNumericArray res = nullptr;
+        auto err = libData->numericarrayLibraryFunctions->MNumericArray_convertType(&res, na, detail::libraryNumericType<U>(), static_cast<numericarray_convert_method_t>(method), tolerance);
+        if (err)
+            throw LibraryError("MNumericArray_convertType() failed. Check that all values can be converted to the target type using the specified method and tolerance.");
         return res;
     }
 
     template<typename U>
-    NumericArrayRef<U> convertTo(numericarray_convert_method_t method) const {
-        return convertTo<U>(ConversionMethod(method));
+    NumericArrayRef<U> convertTo(numericarray_convert_method_t method, double tolerance) const {
+        return convertTo<U>(ConversionMethod(method), tolerance);
     }
 
     numericarray_data_t type() const { return libData->numericarrayLibraryFunctions->MNumericArray_getType(na); }
