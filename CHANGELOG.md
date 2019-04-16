@@ -1,3 +1,27 @@
+#### Version 0.6
+
+ - Support for Mathematica 12.0 
+ - Support for `NumericArray`
+ - Incompatible change: `ByteArray`s are now mapped to `NumericArrayRef` instead of `RawArrayRef`
+ - Added `LTemplatePrivateNoCompile.m` as an alternative to `LTemplatePrivate.m`. It is to be used when embedding LTemplate in another package and only _loading support_ is needed (not _compilation support_). It does not load CCompilerDriver, which would be slow on Windows in some Mathematica versions.
+ - Minor non-critical bug fixes and performance improvements
+ - Documentation fixes
+
+#### Version 0.5.4
+
+ - Bug fix for `SparseArrayRef::iterator`
+ - Fix getting integral vectors with `mlstream`
+ - Documentation fixes
+
+#### Version 0.5.3
+
+ - Bug fix: in some cases, the row index was not correctly computed when using `SparseArrayRef::iterator`
+
+#### Version 0.5.2
+
+ - Bug fixes
+ - Support for ByteArray type specification
+
 #### Version 0.5.1
 
  - `GenericImageRef` split into `GenericImageRef` / `GenericImage3DRef`
