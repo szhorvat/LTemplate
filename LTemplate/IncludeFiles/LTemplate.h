@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Szabolcs Horvát.
+ * Copyright (c) 2019 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */
@@ -211,7 +211,7 @@ namespace detail {
         LT ref;
     public:
         LTAutoFree(const LT &ref) : active(true), ref(ref) { }
-        LTAutoFree(LTAutoFree &&af) : LTAutoFree(af.ref) { af.active = false; }
+        LTAutoFree(LTAutoFree &&af) noexcept : LTAutoFree(af.ref) { af.active = false; }
         ~LTAutoFree() { if (active) ref.free(); }
 
         LTAutoFree() = delete;

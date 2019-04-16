@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-(* :Copyright: (c) 2018 Szabolcs Horvat *)
+(* :Copyright: (c) 2019 Szabolcs Horvat *)
 (* :License: MIT license, see LICENSE.txt *)
 
 (* This file is read directly with Get in LTemplate.m or LTemplatePrivate.m *)
