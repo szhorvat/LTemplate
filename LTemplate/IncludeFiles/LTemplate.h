@@ -47,13 +47,6 @@
 // It is normally only used with .tm files and it is not needed for LTemplate.
 #undef P
 
-// undefine potentially disruptive macros created by windows.h
-#undef IN
-#undef OUT
-#undef OPTIONAL
-#undef near
-#undef far
-
 // Sanity check for the size of mint.
 #ifdef MINT_32
 static_assert(sizeof(mint) == 4, "MINT_32 defined but sizeof(mint) != 4.");
