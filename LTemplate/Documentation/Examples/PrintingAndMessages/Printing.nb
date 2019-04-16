@@ -5,7 +5,7 @@ Cell["Printing messages from an LTemplate library", "Section",
  ExpressionUUID -> "1afcf7ff-2148-49b1-bca3-c1d27cb68e11"],
 
 Cell[TextData[{
- "This example illustrates how to print form a library into a notebook (as in \
+ "This example illustrates how to print from a library into a notebook (as in \
 ",
  ButtonBox["Print",
   BaseStyle->"Link",
@@ -219,7 +219,7 @@ Cell[BoxData[
 }, Open  ]],
 
 Cell[TextData[{
- "Throwing a mma::LibraryError object causes the associate error message to \
+ "Throwing a mma::LibraryError object causes the associated error message to \
 be shown as an ",
  Cell[BoxData[
   FormBox[
@@ -240,10 +240,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"The value must be positive.\\\"\\)\
-\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"The value must be \
+positive.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "655db173-eb2d-4167-808e-f1d194644760"],
 
 Cell[BoxData[
@@ -257,7 +256,13 @@ Cell[BoxData[
   RowBox[{"\"\<set\>\"", "[", "42", "]"}]}]], "Input",
  ExpressionUUID -> "67abd17d-c6c3-42a0-857a-83db6147921e"],
 
-Cell["Printing directly into the notebook, as with Print:", "Text",
+Cell[TextData[{
+ "Printing directly into the notebook, as with ",
+ Cell[BoxData[
+  FormBox["Print", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ":"
+}], "Text",
  ExpressionUUID -> "7ca22b0f-a792-43c9-b519-d35e6babb132"],
 
 Cell[CellGroupData[{
@@ -296,10 +301,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"Hello from Message!\\\"\\)\[NoBreak]\"\
-\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"Hello from Message!\\\"\\)\[NoBreak]\"\>"}]], \
+"Message", "MSG",
  ExpressionUUID -> "424eee77-650c-42ae-a335-e550cf345d42"]
 }, Open  ]],
 
@@ -314,10 +318,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"Error \
-encountered.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"]
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"Error encountered.\\\"\\)\[NoBreak]\"\>"}]], \
+"Message", "MSG"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -330,10 +333,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "info"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"The value is \
-42.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "info"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"The value is 42.\\\"\\)\[NoBreak]\"\>"}]], \
+"Message", "MSG",
  ExpressionUUID -> "e2b1d362-349e-499f-bd0f-70e0e1d3d89a"]
 }, Open  ]],
 
@@ -387,9 +389,8 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "assert"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Assertion failed: \[NoBreak]\\!\\(\\\"42 == 137, file \
+   RowBox[{"LTemplate", "::", "assert"}], "MessageName"], ":", 
+  " ", "\<\"Assertion failed: \[NoBreak]\\!\\(\\\"42 == 137, file \
 /Users/szhorvat/Repos/LTemplate/LTemplate/Documentation/Examples/\
 PrintingAndMessages/Printing.h, line 67\\\"\\)\[NoBreak].\"\>"}]], "Message", \
 "MSG",
@@ -423,9 +424,8 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"Unknown exception caught in \
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"Unknown exception caught in \
 Printing::exception(). The library may be in an inconsistent state. It is \
 recommended that you restart the kernel now to avoid \
 instability.\\\\nvector\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG",

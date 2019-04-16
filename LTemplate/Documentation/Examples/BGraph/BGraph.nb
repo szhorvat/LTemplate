@@ -5,7 +5,7 @@ Cell["Interfacing with the Boost Graph Library", "Section",
  ExpressionUUID -> "aa884a08-8724-4a0b-bbe5-6894c36af936"],
 
 Cell["\<\
-This example shows how to create a class that represent a graph, and run \
+This example shows how to create a class that represents a graph, and run \
 various algorithms on it using the Boost Graph Library.\
 \>", "Text",
  ExpressionUUID -> "0ef29b79-5af8-4918-8a14-11a8a85e43d4"],
@@ -231,7 +231,7 @@ Cell["Create graphs", "Subsubsection",
 
 Cell["\<\
 Since LTemplate does not currently support passing arguments to constructors, \
-the BGraph object is creates in two steps:\
+the BGraph object is created in two steps:\
 \>", "Text",
  ExpressionUUID -> "0f5ba9c6-8c9c-4b01-a9df-1db10ffa1d04"],
 
@@ -978,8 +978,8 @@ WindowSize->{808, 755},
 WindowMargins->{{302, Automatic}, {Automatic, 40}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
-2014)",
+FrontEndVersion->"10.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 10, \
+2015)",
 StyleDefinitions->"Default.nb"
 ]
 

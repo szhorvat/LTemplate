@@ -265,7 +265,7 @@ Cell[TextData[{
   FormBox[
    RowBox[{"toVecExpr", "[", "]"}], TraditionalForm]],
   ExpressionUUID -> "c432be49-3b6a-4455-8461-7c215d3ad655"],
- " in such a way that it will bot accept any symbolic arguments, and use ",
+ " in such a way that it will not accept any symbolic arguments, and use ",
  Cell[BoxData[
   FormBox["Block", TraditionalForm]],
   ExpressionUUID -> "d2cf1e57-06de-4cb4-926a-d34e2562e95c"],
@@ -445,7 +445,7 @@ Cell[BoxData[
  ExpressionUUID -> "3e36e89b-5ed2-47a1-82c5-7a544e8fc7f2"]
 }, Open  ]],
 
-Cell["At this point we have three managed library expressions", "Text",
+Cell["At this point, we have three managed library expressions", "Text",
  ExpressionUUID -> "ae1326ce-2cbf-4e37-8780-c9340fc6fa10"],
 
 Cell[CellGroupData[{
@@ -563,7 +563,7 @@ to do this anyway for some reason, you can use the LibraryLink C API function \
  ButtonBox["TriangleDelete",
   BaseStyle->"Link",
   ButtonData->"paclet:TriangleLink/ref/TriangleDelete"],
- " functions of ",
+ " function of ",
  ButtonBox["TriangleLink",
   BaseStyle->"Link",
   ButtonData->"paclet:TriangleLink/guide/TriangleLink"],
@@ -621,10 +621,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LibraryFunction", "::", "noinst"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Managed library expression instance does not exist. \\!\\(\
-\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+   RowBox[{"LibraryFunction", "::", "noinst"}], "MessageName"], ":", 
+  " ", "\<\"Managed library expression instance does not exist. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
 ButtonFrame->None, ButtonData:>\\\"paclet:ref/LibraryFunction\\\", ButtonNote \
 -> \\\"LibraryFunction::noinst\\\"]\\)\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "60e15e21-1284-4ec8-a7d0-024e642d2f55"],

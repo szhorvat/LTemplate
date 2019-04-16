@@ -26,10 +26,10 @@ Cell[TextData[ButtonBox["https://mathematica.stackexchange.com/questions/\
  BaseStyle->"Hyperlink",
  ButtonData->{
    URL["https://mathematica.stackexchange.com/questions/91887/mathlink-wstp-\
-vs-librarylink-performance"], None},
+vs-librarylink-performance/12"], None},
  ButtonNote->
   "https://mathematica.stackexchange.com/questions/91887/mathlink-wstp-vs-\
-librarylink-performance"]], "Item",
+librarylink-performance/12"]], "Item",
  ExpressionUUID -> "16e90e3f-c037-4f85-97cb-622e2139b86d"],
 
 Cell[BoxData[{
@@ -318,9 +318,8 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"reverse2: 1 arguments expected, 2 \
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"reverse2: 1 argument expected, 2 \
 received.\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "b555dda9-2a07-4886-b6da-17876773c66b"],
 
@@ -395,10 +394,9 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"Integer64 expected.\\\"\\)\[NoBreak]\"\
-\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"Integer64 expected.\\\"\\)\[NoBreak]\"\>"}]], \
+"Message", "MSG",
  ExpressionUUID -> "304bb7e1-9adc-4e7f-942f-01f0825f3dbc"],
 
 Cell[BoxData[
@@ -439,9 +437,8 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"prodSum: Real64 list expected.\\\"\\)\
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"prodSum: Real64 list expected.\\\"\\)\
 \[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "a41bf603-f9d2-45a8-8d8b-4022c4c70f8b"],
 
@@ -613,12 +610,12 @@ Cell[BoxData[
   RowBox[{
    RowBox[{"{", 
     RowBox[{
-    "0.7096103335538102`", ",", "0.4687019472332188`", ",", 
-     "0.42600805948516807`"}], "}"}], ",", 
+    "0.4400929447288291`", ",", "0.35580944983968976`", ",", 
+     "0.6226563927874686`"}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{
-    "0.3443730267903935`", ",", "0.059763665685494294`", ",", 
-     "0.9137194711435197`"}], "}"}]}], "}"}]], "Output",
+    "0.07763187725628051`", ",", "0.3081456393842128`", ",", 
+     "0.19111291592768676`"}], "}"}]}], "}"}]], "Output",
  ExpressionUUID -> "db5c0e01-d1c0-42a1-80bf-6f83a0d5f478"]
 }, Open  ]]
 }, Open  ]]

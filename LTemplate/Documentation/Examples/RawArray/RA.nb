@@ -5,8 +5,37 @@ Cell["Working with RawArrays", \
 "Section",ExpressionUUID->"fff5ad90-c711-4958-b676-be343cf900c3"],
 
 Cell[TextData[{
- "This example demonstrates working with RawArrays. It requires Mathematica \
-11.1 or later because it uses the ",
+ StyleBox["Note: ",
+  FontWeight->"Bold"],
+ StyleBox["RawArrays, available in Mathematica 10.4 and later, are not \
+documented and not supported by Wolfram Research. Mathematica 12.0 replaces ",
+  
+  FontSlant->"Italic"],
+ Cell[BoxData["RawArray"],
+  FormatType->"StandardForm",
+  FontSlant->"Italic",ExpressionUUID->
+  "bf9ba4bf-9bb2-4cef-83a4-b640dc36c5ce"],
+ StyleBox[" with the documented ",
+  FontSlant->"Italic"],
+ Cell[BoxData["NumericArray"],
+  FormatType->"StandardForm",
+  FontSlant->"Italic",ExpressionUUID->
+  "04d40a53-9fd8-4e65-8f09-48aa2b32248b"],
+ StyleBox[". Consider using ",
+  FontSlant->"Italic"],
+ Cell[BoxData["NumericArray"],
+  FormatType->"StandardForm",
+  FontSlant->"Italic",ExpressionUUID->
+  "29aa7d1e-4bb6-4b28-ad40-c144b2ed6ad6"],
+ StyleBox[" instead.",
+  FontSlant->"Italic"]
+}], "Text",ExpressionUUID->"0f7c0727-0d43-4ea5-a912-e7713cf8a6a0"],
+
+Cell[TextData[{
+ "This example demonstrates working with RawArrays. It requires ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 11.1 or later because it uses the ",
  Cell[BoxData[
   ButtonBox["BinarySerialize",
    BaseStyle->"Hyperlink",
