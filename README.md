@@ -14,6 +14,9 @@ The `skeleton-project` directory contains a sample project that embeds LTemplate
 
 For an example of an application that uses and embeds LTemplate, see [IGraph/M][3].
 
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes between versions.
+
  [1]: http://www.wolfram.com/mathematica/
  [2]: https://reference.wolfram.com/language/LibraryLink/tutorial/Overview.html
  [3]: https://szhorvat.net/mathematica/IGraphM
+
