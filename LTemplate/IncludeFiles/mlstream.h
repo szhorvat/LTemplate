@@ -126,7 +126,7 @@ inline mlStream & operator >> (mlStream &ml, const mlCheckArgs &ca) {
 
     if (count != ca.argc){
         std::ostringstream msg;
-        msg << ca.argc << " arguments expected, " << count << " received";
+        msg << ca.argc << " argument" << (ca.argc == 1 ? "" : "s") << " expected, " << count << " received";
         ml.error(msg.str());
     }
 
