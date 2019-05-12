@@ -52,6 +52,7 @@
  *  - Strings (`std::string` or null-terminated C string)
  *  - `mma::RealTensorRef` and `mma::IntTensorRef` of arbitrary dimensions
  *  - `std::vector` or `std::list` holding any supported type (with optimization for `std::vector` holding numerical types)
+ *  - `std::pair` holding any two supported types
  *  - Symbols (mlSymbol) or functions (mlHead)
  *
  * **Receiving**
@@ -66,6 +67,7 @@
 
 #include <vector>
 #include <list>
+#include <utility>
 #include <string>
 #include <sstream>
 #include <type_traits>
@@ -427,5 +429,13 @@ inline mlStream & operator >> (mlStream &ml, std::vector<T> &vec) {
     return ml;
 }
 
+
+// Put an std::pair
+
+template<typename A, typename B>
+inline mlStream & operator << (mlStream &ml, const std::pair<A,B> &pair) {
+    ml << mlHead("List", 2) << pair.first << pair.second;
+    return ml;
+}
 
 #endif // MLSTREAM_H
