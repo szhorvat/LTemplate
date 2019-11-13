@@ -203,7 +203,7 @@ Cell[TextData[{
  " and ",
  StyleBox["WolframLibrary_uninitialize", "Program"],
  ". Add the initialization and cleanup code to the constructor and destructor \
-of a special class. The create a single instance of this class. The \
+of a special class. Then create a single instance of this class. The \
 destructor will be called when the library is unloaded."
 }], "Text",
  ExpressionUUID -> "c0e101f7-fb15-475d-86d2-91512f7e6871"],
@@ -211,7 +211,7 @@ destructor will be called when the library is unloaded."
 Cell["\<\
 A drawback of this method is that it cannot be controlled which classes and \
 which objects will be destroyed last. This will be remedied in a future \
-versions of LTemplate.\
+version of LTemplate.\
 \>", "Text",
  ExpressionUUID -> "8fdffd20-a2eb-4df5-903f-b07a1baec6b7"]
 }, Open  ]],
@@ -313,11 +313,11 @@ igraph graphs."
 }, Open  ]]
 },
 WindowSize->{641, 852},
-WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowMargins->{{183, Automatic}, {Automatic, 49}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
-2014)",
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
 StyleDefinitions->"Default.nb"
 ]
 

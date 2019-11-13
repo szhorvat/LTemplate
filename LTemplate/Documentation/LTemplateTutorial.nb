@@ -80,7 +80,7 @@ Cell[BoxData[
  RowBox[{"SetDirectory", "[", "$TemporaryDirectory", "]"}]], "Input",
  ExpressionUUID -> "32386343-6c6b-481f-a8fa-b0c064e62e40"],
 
-Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>\
+Cell[BoxData["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gq/T\"\>\
 "], "Output"]
 }, Open  ]],
 
@@ -219,8 +219,8 @@ Cell[BoxData[
    RowBox[{",", " ", 
     RowBox[{"\"\<ShellCommandFunction\>\"", " ", "\[Rule]", " ", "Print"}], 
     ",", " ", 
-    RowBox[{"\"\<ShellOutputFunction\>\"", "\[Rule]", "Print"}]}], "*)"}], 
-  "\[IndentingNewLine]", "]"}]], "Input",
+    RowBox[{"\"\<ShellOutputFunction\>\"", " ", "\[Rule]", " ", "Print"}]}], 
+   "*)"}], "\[IndentingNewLine]", "]"}]], "Input",
  ExpressionUUID -> "0f284a25-9bcc-49c1-a4e4-f4c8d0e35ee3"],
 
 Cell[CellGroupData[{
@@ -240,7 +240,7 @@ Cell[BoxData[
       Rational[2, 3]],
     FontColor->RGBColor[0, 0, 
       Rational[2, 3]]], "\[InvisibleSpace]", 
-   StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T\"\>",
+   StyleBox["\<\"/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gq/T\"\>",
     StripOnInput->False,
     LineColor->RGBColor[0, 0, 
       Rational[2, 3]],
@@ -256,7 +256,7 @@ Cell[BoxData[
    Style["Current directory is: ", 
     RGBColor[0, 0, 
      Rational[2, 3]]], 
-   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gn/T", 
+   Style["/private/var/folders/31/l_62jfs110lf0dh7k5n_y2th0000gq/T", 
     RGBColor[0, 0, 
      Rational[2, 3]]]],
   Editable->False]], "Print",
@@ -405,7 +405,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"class Demo1:\\n    Integer addTwo(Integer, Integer)\\n    Real \
 trace(List<Real, 2>)\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info133718806199-5756252"]
+ CellTags->"Info113768808382-3686832"]
 }, Open  ]],
 
 Cell["\<\
@@ -466,7 +466,7 @@ Cell[BoxData[
       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]}]], "Input",
  ExpressionUUID -> "c359428e-f4fc-44ea-a2c6-9b8de312d1b3"],
 
-Cell[BoxData["2.4624144396484793`"], "Output",
+Cell[BoxData["2.0009927926918922`"], "Output",
  ExpressionUUID -> "c13fa8fa-3f46-4269-a071-2cf724290580"]
 }, Open  ]],
 
@@ -500,9 +500,10 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"LTemplate", "::", "error"}], "MessageName"], ":", 
-  " ", "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"trace: Square matrix \
-expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
+   RowBox[{"LTemplate", "::", "error"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"trace: Square \
+matrix expected.\\\\\\\"\\\"}]\\)\[NoBreak]\"\>"}]], "Message", "MSG",
  ExpressionUUID -> "89f1b593-180d-43e6-b2ba-20f921e05c52"],
 
 Cell[BoxData[
@@ -2583,91 +2584,91 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"CompileTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"CompileTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LClassContext",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"LClassContext", "LTemplate`"}},
+           "Info203768808417-4566232", {"LClassContext", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LoadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"LoadTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"LoadTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["NormalizeTemplate",
           BaseStyle->"InformationLink",
           ButtonData:>{
-           "Info913717407495-9227688", {"NormalizeTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"NormalizeTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
         {
          ButtonBox["ConfigureLTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"ConfigureLTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"ConfigureLTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LExpressionID",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"LExpressionID", "LTemplate`"}},
+           "Info203768808417-4566232", {"LExpressionID", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"LTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"LTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["TranslateTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"TranslateTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"TranslateTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
         {
          ButtonBox["FormatTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"FormatTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"FormatTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LExpressionList",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"LExpressionList", "LTemplate`"}},
+           "Info203768808417-4566232", {"LExpressionList", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LType",
           BaseStyle->"InformationLink",
-          ButtonData:>{"Info913717407495-9227688", {"LType", "LTemplate`"}},
+          ButtonData:>{"Info203768808417-4566232", {"LType", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["UnloadTemplate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"UnloadTemplate", "LTemplate`"}},
+           "Info203768808417-4566232", {"UnloadTemplate", "LTemplate`"}},
           ButtonNote->"LTemplate`"]},
         {
          ButtonBox["LClass",
           BaseStyle->"InformationLink",
-          ButtonData:>{"Info913717407495-9227688", {"LClass", "LTemplate`"}},
+          ButtonData:>{"Info203768808417-4566232", {"LClass", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["LFun",
           BaseStyle->"InformationLink",
-          ButtonData:>{"Info913717407495-9227688", {"LFun", "LTemplate`"}},
+          ButtonData:>{"Info203768808417-4566232", {"LFun", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["Make",
           BaseStyle->"InformationLink",
-          ButtonData:>{"Info913717407495-9227688", {"Make", "LTemplate`"}},
+          ButtonData:>{"Info203768808417-4566232", {"Make", "LTemplate`"}},
           ButtonNote->"LTemplate`"], 
          ButtonBox["ValidTemplateQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info913717407495-9227688", {"ValidTemplateQ", "LTemplate`"}},
+           "Info203768808417-4566232", {"ValidTemplateQ", "LTemplate`"}},
           ButtonNote->"LTemplate`"]}
        },
        DefaultBaseStyle->"InfoGrid",
@@ -2741,7 +2742,8 @@ Cell[TextData[{
  " is mostly equivalent to ",
  Cell[BoxData["LibraryDataType"]],
  ", but shorter to type. It also supports element type specifications for \
-RawArrays."
+RawArrays and NumericArrays. Refer to the C++ section below for the mappings \
+between LType specifications and LTemplate\[CloseCurlyQuote]s C++ classes."
 }], "Text"],
 
 Cell[CellGroupData[{
@@ -3153,13 +3155,14 @@ Cell[TextData[{
   ButtonData->{
     URL["http://www.doxygen.org/"], None},
   ButtonNote->"http://www.doxygen.org/"],
- "."
+ ". Pre-built Doxygen HTML documentation is available from the Releases \
+section of LTemplate\[CloseCurlyQuote]s GitHub site."
 }], "Text",
  ExpressionUUID -> "0cb5adf7-80c7-4871-960e-dd1549cf6402"],
 
 Cell["\<\
 Note: LTemplate requires a C++11 capable compiler. It has been tested with \
-GCC 4.8 and MSVC 2015, as well as with later versions.\
+GCC 4.8 and MSVC 2015, as well as with later versions of the same compilers.\
 \>", "Text"],
 
 Cell[CellGroupData[{
@@ -3558,10 +3561,12 @@ Cell[CellGroupData[{
 Cell["Error handling and debugging", "Subsubsection",
  ExpressionUUID -> "45b8897f-d539-4098-bc8d-7abed08a3a07"],
 
-Cell["\<\
-An LTemplate function can report an error and exit immediately by throwing a \
-mma::LibraryError exception. The following constructors are available:\
-\>", "Text",
+Cell[TextData[{
+ "An LTemplate function can report an error and exit immediately by throwing \
+a ",
+ StyleBox["mma::LibraryError", "Program"],
+ " exception. The following constructors are available:"
+}], "Text",
  ExpressionUUID -> "31ad8e40-155f-4f71-8913-c105589d7f03"],
 
 Cell["\<\
@@ -3570,21 +3575,27 @@ LibraryError(std::string message, int error_code = LIBRARY_FUNCTION_ERROR);\
 \>", "Program",
  ExpressionUUID -> "e06b21af-2283-4b43-85d7-5a89e2997501"],
 
-Cell["\<\
-The massert() macro can be used as a direct alternative of the standard C \
-assert() macro.\
-\>", "Text"],
+Cell[TextData[{
+ "The ",
+ StyleBox["massert()", "Program"],
+ " macro can be used as a direct alternative of the standard C ",
+ StyleBox["assert()", "Program"],
+ " macro."
+}], "Text"],
 
 Cell["\<\
 massert(condition) // analogous to C's standard assert macro, but doesn't \
 kill the kernel\
 \>", "Program"],
 
-Cell["\<\
-Define NDEBUG to disable assert checking. LTemplate uses a few assert checks \
-internally. Defining NDEBUG will disable these and may provide a tiny \
-performance boost.\
-\>", "Text"]
+Cell[TextData[{
+ "Define the ",
+ StyleBox["NDEBUG", "Program"],
+ " macro to disable assert checking. LTemplate uses a few assert checks \
+internally. Defining ",
+ StyleBox["NDEBUG", "Program"],
+ " will disable these and may provide a tiny performance boost."
+}], "Text"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3604,10 +3615,12 @@ Cell[CellGroupData[{
 
 Cell["Other functions", "Subsubsection"],
 
-Cell["\<\
-To make a function abortable using Evaluation \[Rule] Abort Evaluation, \
-periodically run check_abort() in your function.\
-\>", "Text"],
+Cell[TextData[{
+ "To make a function abortable using Evaluation \[Rule] Abort Evaluation, \
+periodically run ",
+ StyleBox["mma::check_abort()", "Program"],
+ " in your function."
+}], "Text"],
 
 Cell["void check_abort(); // checks for an honours user aborts", "Program"],
 
@@ -3622,7 +3635,7 @@ template<typename T> const std::map<mint, Class *> &getCollection();\
 \>", "Program"]
 }, Closed]]
 }, Open  ]]
-}, Closed]]
+}, Open  ]]
 }, Open  ]]
 },
 WindowSize->{990, 700},
@@ -3630,8 +3643,8 @@ WindowMargins->{{225, Automatic}, {Automatic, 75}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 CommonDefaultFormatTypes->{"TextInline"->StandardForm},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, \
-2014)",
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -3642,7 +3655,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Subsubsection"], ShowGroupOpener -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 4, 2014)", 
+  "10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, 2016)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
