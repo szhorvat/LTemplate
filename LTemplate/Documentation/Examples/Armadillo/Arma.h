@@ -6,7 +6,7 @@
 #include <armadillo>
 
 // We start by defining conversion functions to/from Armadillo's basic datatypes:
-// matrices, column vectors and sparse matrices
+// matrices, column vectors and sparse matrices.
 
 // Armadillo stores matrices in column major order, while Mathematica uses row-major order.
 // It is thus fastest to convert an MTensor to/from its transposed Armadillo equivalent.
@@ -26,24 +26,24 @@ mma::TensorRef<T> fromArmaTransposed(const arma::Mat<T> &m) {
     return mma::makeMatrix<T>(m.n_cols, m.n_rows, m.memptr());
 }
 
-// Convert from Mathematica vector to Armadillo column vector without copying
+// Convert from Mathematica vector to Armadillo column vector without copying.
 template<typename T>
 arma::Col<T> toArmaVec(mma::TensorRef<T> v) {
     return arma::Col<T>(v.data(), v.size(), false /* do not copy */, false /* until resized */);
 }
 
-// Convert from Armadillo column vector to Mathematica vector with copying
+// Convert from Armadillo column vector to Mathematica vector with copying.
 template<typename T>
 mma::TensorRef<T> fromArmaVec(const arma::Col<T> &v) {
     return mma::makeVector<T>(v.size(), v.memptr());
 }
 
-// Convert from Mathematica sparse matrix to Armadillo sparse matrix
+// Convert from Mathematica sparse matrix to Armadillo sparse matrix.
 template<typename T>
 arma::SpMat<T> toArmaSparseTransposed(mma::SparseMatrixRef<T> sm) {
     return arma::SpMat<T>(
-            // column indices and row pointers must be explicitly converted
-            // because Armadillo uses unsigned integers while Mathematica uses signed ones
+            // Column indices and row pointers must be explicitly converted
+            // because Armadillo uses unsigned integers while Mathematica uses signed ones.
             arma::conv_to<arma::uvec>::from(toArmaVec(sm.columnIndices())) - 1, // convert to 0-based indices; Mathematica uses 1-based ones.
             arma::conv_to<arma::uvec>::from(toArmaVec(sm.rowPointers())),
             toArmaVec(sm.explicitValues()),
@@ -51,7 +51,7 @@ arma::SpMat<T> toArmaSparseTransposed(mma::SparseMatrixRef<T> sm) {
            );
 }
 
-// Convert from Armadillo sparse matrix to Mathematica SparseArray
+// Convert from Armadillo sparse matrix to Mathematica SparseArray.
 template<typename T>
 mma::SparseMatrixRef<T> fromArmaSparse(const arma::SpMat<T> &am) {
     // there are am.n_nonzero explicitly stored elements in am

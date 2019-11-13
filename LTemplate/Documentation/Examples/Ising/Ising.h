@@ -4,7 +4,7 @@
 #include <random>
 #include <cmath>
 
-// Auxiliary class for holding the spin state
+// Auxiliary class for holding the spin state.
 template<typename T>
 class Matrix {
     int nrows, ncols;
@@ -33,11 +33,11 @@ public:
 
 typedef Matrix<bool> StateMatrix;
 
-// Convert bool value to -1 or +1
+// Convert bool value to -1 or +1.
 inline int spin(bool b) { return 2*b-1; }
 
 
-// LTemplate class for the Ising model simulation
+// LTemplate class for the Ising model simulation.
 class Ising {
     std::mt19937 engine;
 
@@ -53,8 +53,10 @@ public:
     Ising() : engine{ std::random_device()() }, state(nullptr) { }
     ~Ising() { delete state; }
     
+    // Seed the random number generator.
     void seed(mint s) { engine.seed(s); }
     
+    // Set the Ising state.
     void setState(mma::IntMatrixRef mat) {
         if (mat.rows() < 2 || mat.cols() < 2)
             throw mma::LibraryError("State matrix must be at least of size 2 by 2.");
@@ -63,12 +65,14 @@ public:
         std::copy(mat.begin(), mat.end(), state->begin());
     }
     
+    // Retrieve the Ising state.
     mma::IntMatrixRef getState() const {
         if (! state)
             throw mma::LibraryError("State not set.");
         return mma::makeMatrix<mint>(state->rows(), state->cols(), state->begin());        
     }
     
+    // Compute the magnetization value.
     mint magnetization() const {
         if (! state)
             throw mma::LibraryError("State not set.");
@@ -78,6 +82,7 @@ public:
         return 2*total - state->size();
     }
     
+    // Compute the energy value.
     mint energy() const {
         if (! state)
             throw mma::LibraryError("State not set.");
@@ -91,6 +96,7 @@ public:
         return -E;
     }
     
+    // Simulate the Ising system for the given number of steps and the given temperature.
     void simulate(mint steps, double temp) {
         if (! state)
             throw mma::LibraryError("State not set.");
@@ -102,6 +108,7 @@ public:
         std::uniform_real_distribution<> rrand;
 
         for (mint i=0; i < steps; ++i) {
+            // Allow for aborting the simulation every 1000 steps.
             if (i % 1000 == 0)
                 mma::check_abort();
 

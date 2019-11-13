@@ -3,7 +3,7 @@
 #include <complex>
 
 struct Basics {
-    // Add two numbers
+    // Add two real numbers.
     double add(double x, double y) {
         return x+y;
     }

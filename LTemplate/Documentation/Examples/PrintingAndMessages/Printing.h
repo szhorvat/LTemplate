@@ -27,14 +27,14 @@ public:
      * Note that the output is only printed to the notebook when the
      * mma::mout buffer is flushed. This is most easily accomplished
      * by inserting an std::endl into the stream. Flushing effectively
-     * starts a new notebook cells.
+     * starts a new notebook cell.
      *
      * Due to how Mathematica's Print[] works, a newline is always
      * inserted at the end of the output, whether or not it was explicitly
      * sent to mma::mout.
      *
      * The buffer is always flushed when the library function exits,
-     * this the std::endl below is not strictly required.
+     * thus the std::endl below is not strictly required.
      */
     void printValue() const {
         mma::mout << "My value is " << positiveValue << "!" << std::endl;
