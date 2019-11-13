@@ -1,7 +1,8 @@
+// This is a QBS project file to be used with the Qt Creator IDE
+
 import qbs
 
 Product {
-    type: ["unknown"] // E.g. "application", "dynamiclibrary", "staticlibrary"
     Depends { name: "cpp" }
 
     // Set the path to Mathematica's $InstallationDirectory here:
