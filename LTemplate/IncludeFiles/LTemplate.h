@@ -92,7 +92,7 @@ enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
  *  \param msg is the text of the message
  *  \param type determines the message tag which will be used
  *
- * If `msg == NULL`, no message will be issued. This is for compatibility with other libraries
+ * If `msg == nullptr`, no message will be issued. This is for compatibility with other libraries
  * that may return a null pointer instead of message text.
  *
  * \sa print()
@@ -189,6 +189,15 @@ namespace detail { // private
         throw LibraryError();
     }
 } // end namespace detail
+
+
+/** \brief Return immediately to Mathematica with `LIBRARY_FUNCTION_ERROR`.
+ *
+ * This function is meant to be used only in situations where throwing an exception is not
+ * feasible, such as from callback functions passed to C code. It should be avoided in C++
+ * code as it does a `longjmp()`.
+ */
+[[ noreturn ]] void fatal_error();
 
 
 /// Check for and honour user aborts.
@@ -817,7 +826,7 @@ public:
         MSparseArray msa = nullptr;
 
         MTensor it = nullptr;
-        int err = libData->MTensor_new(detail::libraryType<T>(), 0, NULL, &it);
+        int err = libData->MTensor_new(detail::libraryType<T>(), 0, nullptr, &it);
         if (err) throw LibraryError("MTensor_new() failed.", err);
         *detail::getData<T>(it) = iv;
 

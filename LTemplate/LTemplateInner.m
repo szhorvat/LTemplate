@@ -340,18 +340,18 @@ setupCollection[classname_String] := {
     CReturn[collectionName[classname]]
   ],
   "",
-  CFunction["DLLEXPORT void", managerName[classname], {"WolframLibraryData libData", "mbool mode", "mint id"},
+  CFunction["void", managerName[classname], {"WolframLibraryData libData", "mbool mode", "mint id"},
     CInlineCode@StringTemplate[ (* TODO: Check if id exists, use assert *)
       "\
 if (mode == 0) { // create
-  `collection`[id] = new `class`();
+\t`collection`[id] = new `class`();
 } else {  // destroy
-  if (`collection`.find(id) == `collection`.end()) {
-    libData->Message(\"noinst\");
-    return;
-  }
-  delete `collection`[id];
-  `collection`.erase(id);
+\tif (`collection`.find(id) == `collection`.end()) {
+\t\tlibData->Message(\"noinst\");
+\t\treturn;
+\t}
+\tdelete `collection`[id];
+\t`collection`.erase(id);
 }\
 "][<|"collection" -> collectionName[classname], "class" -> classname|>]
   ],
@@ -478,6 +478,7 @@ transFun[classname_][LFun[name_String, args_List, ret_]] :=
         CFunction[libFunRet, funName[classname][name], libFunArgs,
           {
             CDeclare["mma::detail::MOutFlushGuard", "flushguard"],
+            CInlineCode@"if (setjmp(mma::detail::jmpbuf)) { return LIBRARY_FUNCTION_ERROR; }",
             (* TODO: check Argc is correct, use assert *)
             "const mint id = MArgument_getInteger(Args[0])",
             CInlineCode@StringTemplate[
@@ -508,6 +509,7 @@ transFun[classname_][LOFun[name_String]] :=
       CFunction[libFunRet, funName[classname][name], linkFunArgs,
         {
           CDeclare["mma::detail::MOutFlushGuard", "flushguard"],
+          CInlineCode@"if (setjmp(mma::detail::jmpbuf)) { return LIBRARY_FUNCTION_ERROR; }",
           CTry[
             (* try *) {
               CInlineCode@StringTemplate[
@@ -516,12 +518,12 @@ int id;
 int args = 2;
 
 if (! MLTestHeadWithArgCount(mlp, \"List\", &args))
-  return LIBRARY_FUNCTION_ERROR;
+\treturn LIBRARY_FUNCTION_ERROR;
 if (! MLGetInteger(mlp, &id))
-  return LIBRARY_FUNCTION_ERROR;
+\treturn LIBRARY_FUNCTION_ERROR;
 if (`collection`.find(id) == `collection`.end()) {
-  libData->Message(\"noinst\");
-  return LIBRARY_FUNCTION_ERROR;
+\tlibData->Message(\"noinst\");
+\treturn LIBRARY_FUNCTION_ERROR;
 }
 `collection`[id]->`funname`(mlp);
 "

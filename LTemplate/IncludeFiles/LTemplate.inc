@@ -8,12 +8,13 @@
 #include "LTemplate.h"
 #include "LTemplateHelpers.h"
 
+#include <csetjmp>
+#include <cstdio>
 
 namespace mma {
 
 
 WolframLibraryData libData;
-
 
 namespace detail { // private
 
@@ -49,10 +50,20 @@ namespace detail { // private
 
     static MBuffer mbuf;
 
+    static std::jmp_buf jmpbuf;
+
 } // end namespace detail
 
 
 std::ostream mout(&detail::mbuf);
+
+
+// It would be natural for fatal_error() to take a messae argument that will be printed before returning.
+// However, that would create an incentive to construct a string object that would need to be freed.
+// longjmp() prevents calls to desctructors, thus freeing the string would be complicated.
+void fatal_error() {
+    std::longjmp(detail::jmpbuf, 1);
+}
 
 
 void message(const char *msg, MessageType type) {
